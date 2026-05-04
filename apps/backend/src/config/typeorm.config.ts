@@ -12,7 +12,6 @@ export const typeormConfig: TypeOrmModuleOptions = {
   database: process.env.DB_NAME || 'licitapp',
   entities: ['dist/**/*.entity.js'],
   migrations: ['dist/database/migrations/*.js'],
-  synchronize: process.env.NODE_ENV !== 'production',
+  synchronize: false,
   logging: false,
-  dropSchema: process.env.NODE_ENV === 'development',
 };

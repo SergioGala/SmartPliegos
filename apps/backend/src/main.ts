@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
@@ -7,10 +9,6 @@ import { morganMiddleware } from './config/morgan.config';
 import { config } from './config/env.config';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
-
-// Desactivar warnings de deprecación
-process.removeAllListeners('warning');
-process.on('warning', () => {});
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
