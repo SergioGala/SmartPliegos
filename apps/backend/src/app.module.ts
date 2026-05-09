@@ -16,7 +16,6 @@ import { LicitacionesModule } from './modules/licitaciones/licitaciones.module';
 import { InvitationsModule } from './modules/invitations/invitations.module';
 import { AlertsModule } from './modules/alerts/alerts.module';
 import { SearchModule } from './modules/search/search.module';
-import { TagsModule } from './modules/tags/tags.module';
 import { OrganosModule } from './modules/organos/organos.module';
 
 @Module({
@@ -37,7 +36,6 @@ import { OrganosModule } from './modules/organos/organos.module';
     InvitationsModule,
     AlertsModule,
     SearchModule,
-    TagsModule,
     OrganosModule,
   ],
   controllers: [AppController],
