@@ -32,8 +32,6 @@ import { OrganizationEntity } from './entities/organization.entity';
 import {
   SecureAuthEndpoint,
   SecureOwnershipEndpoint,
-  LogAuditAction,
-  SecureDeleteEndpoint,
   RequireRoles,
   ValidateResourceExists,
 } from '../../common/decorators';
@@ -135,7 +133,7 @@ export class UsersController {
   @Patch(':userId')
   @SecureAuthEndpoint()
   @SecureOwnershipEndpoint('userId')
-  @LogAuditAction('USER_UPDATE')
+
   @ApiOperation({
     summary: 'Actualizar datos del usuario',
     description: 'Actualiza la información del usuario como nombre, teléfono, zona horaria, etc.',
@@ -178,7 +176,6 @@ export class UsersController {
   @Post(':userId/deactivate')
   @SecureAuthEndpoint()
   @SecureOwnershipEndpoint('userId')
-  @LogAuditAction('USER_DEACTIVATE')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
     summary: 'Desactivar usuario',
@@ -203,7 +200,6 @@ export class UsersController {
   @Post(':userId/activate')
   @SecureAuthEndpoint()
   @SecureOwnershipEndpoint('userId')
-  @LogAuditAction('USER_ACTIVATE')
   @ApiOperation({
     summary: 'Reactivar usuario',
     description: 'Reactiva una cuenta de usuario desactivada. El usuario vuelve a tener acceso al sistema.',
@@ -229,8 +225,7 @@ export class UsersController {
   @Delete(':userId')
   @SecureAuthEndpoint()
   @SecureOwnershipEndpoint('userId')
-  @LogAuditAction('USER_DELETE')
-  @SecureDeleteEndpoint(UserEntity, 'userId')
+  @ValidateResourceExists(UserEntity, 'userId')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({
     summary: 'Eliminar usuario',
@@ -327,7 +322,6 @@ export class UsersController {
    */
   @Patch('password/change')
   @SecureAuthEndpoint()
-  @LogAuditAction('PASSWORD_CHANGE')
   @ApiOperation({
     summary: 'Cambiar contraseña directa',
     description: 'Permite a un usuario autenticado cambiar su contraseña directamente. Requiere la contraseña anterior como validación de seguridad.',

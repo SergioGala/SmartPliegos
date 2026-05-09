@@ -13,10 +13,4 @@ export { ValidateOwnership } from './validate-ownership.decorator';
 export { SecureOwnershipEndpoint, SecureAuthEndpoint } from './secure-endpoint.decorator';
 export {
   ValidateResourceExists,
-  EnableSoftDelete,
-  LogAuditAction,
-  ValidateConcurrency,
-  SecureReadEndpoint,
-  SecureUpdateEndpoint,
-  SecureDeleteEndpoint,
 } from './resource-guards.decorator';

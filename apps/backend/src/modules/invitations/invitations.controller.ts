@@ -27,7 +27,7 @@ import {
 import { InvitationsService } from './invitations.service';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { RoleGuard, JwtAuthGuard } from '../../common/guards';
-import { RequireRoles, LogAuditAction, ValidateResourceExists } from '../../common/decorators';
+import { RequireRoles, ValidateResourceExists } from '../../common/decorators';
 import { Role } from '../users/enums';
 import { InvitationEntity } from './entities/invitation.entity';
 import { OrganizationEntity } from '../users/entities/organization.entity';
@@ -178,7 +178,6 @@ export class InvitationsController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @RequireRoles(Role.ORG_OWNER)
-  @LogAuditAction('INVITATION_CANCEL')
   @ValidateResourceExists(InvitationEntity, 'id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({

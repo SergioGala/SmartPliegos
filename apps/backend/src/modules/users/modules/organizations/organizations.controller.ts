@@ -35,7 +35,7 @@ import { OrganizationsService } from './organizations.service';
 import { UsersService } from '../../users.service';
 import { CreateOrganizationDto } from './dto';
 import { RoleGuard, JwtAuthGuard, OwnershipGuard } from '../../../../common/guards';
-import { RequireRoles, SuperAdminOnly, LogAuditAction, SecureOwnershipEndpoint, SecureAuthEndpoint, ValidateResourceExists, ValidateOwnership } from '../../../../common/decorators';
+import { RequireRoles, SuperAdminOnly, SecureOwnershipEndpoint, SecureAuthEndpoint, ValidateResourceExists, ValidateOwnership } from '../../../../common/decorators';
 import { Role } from '../../enums';
 import { OrganizationEntity, UserEntity } from '../../entities';
 
@@ -252,7 +252,6 @@ export class OrganizationsController {
   @UseGuards(JwtAuthGuard, OwnershipGuard, RoleGuard)
   @RequireRoles(Role.ORG_OWNER, Role.SUPER_ADMIN)
   @ValidateOwnership('id')
-  @LogAuditAction('ORG_UPDATE')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Actualizar organización',

@@ -23,8 +23,6 @@ import {
   CurrentUser,
   SecureAuthEndpoint,
   SecureOwnershipEndpoint,
-  LogAuditAction,
-  SecureDeleteEndpoint,
   ValidateResourceExists,
 } from '../../common/decorators';
 
@@ -42,7 +40,6 @@ export class AlertsController {
    */
   @Post()
   @SecureAuthEndpoint()
-  @LogAuditAction('ALERT_CREATE')
   @ApiOperation({
     summary: 'Crear nueva alerta',
     description:
@@ -128,7 +125,6 @@ export class AlertsController {
   @Patch(':id')
   @SecureAuthEndpoint()
   @SecureOwnershipEndpoint('id')
-  @LogAuditAction('ALERT_UPDATE')
   @ApiOperation({
     summary: 'Actualizar alerta',
     description: 'Actualiza los criterios y configuración de una alerta existente',
@@ -166,8 +162,7 @@ export class AlertsController {
   @Delete(':id')
   @SecureAuthEndpoint()
   @SecureOwnershipEndpoint('id')
-  @LogAuditAction('ALERT_DELETE')
-  @SecureDeleteEndpoint(AlertEntity, 'id')
+  @ValidateResourceExists(AlertEntity, 'id')
   @ApiOperation({
     summary: 'Eliminar alerta',
     description: 'Elimina una alerta personalizada',

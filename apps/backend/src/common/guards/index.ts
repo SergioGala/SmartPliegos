@@ -12,8 +12,6 @@ export * from './authorization';
 // Resource Management (Existence checks, Soft Delete)
 export * from './resource';
 
-// Data Integrity (Audit logging, Concurrency control)
-export * from './data-integrity';
 
 // Rate Limiting & Brute Force Protection
 export * from './rate-limiting';

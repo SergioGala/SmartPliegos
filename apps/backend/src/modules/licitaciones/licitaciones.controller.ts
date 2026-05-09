@@ -12,7 +12,7 @@ import {
 } from '@nestjs/swagger';
 import { LicitacionesService } from './licitaciones.service';
 import { SearchLicitacionesDto } from './dto/search-licitaciones.dto';
-import { ValidateResourceExists, EnableSoftDelete } from '../../common/decorators';
+import { ValidateResourceExists } from '../../common/decorators';
 import { Licitacion } from '../scraping/shared/entities/licitacion.entity';
 
 @ApiTags('📋 Licitaciones')
@@ -231,7 +231,6 @@ export class LicitacionesController {
    */
   @Get(':id')
   @ValidateResourceExists(Licitacion, 'id')
-  @EnableSoftDelete()
   @ApiOperation({
     summary: 'Obtener detalle de licitación',
     description:
