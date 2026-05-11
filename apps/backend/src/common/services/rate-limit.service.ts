@@ -90,7 +90,7 @@ export class RateLimitService {
       const currentCount = count ? parseInt(count) : 0;
 
       // Obtener TTL
-      let ttl = await this.redisClient.ttl(key);
+      const ttl = await this.redisClient.ttl(key);
       const isNewKey = ttl === -1 || ttl === -2;
 
       if (isNewKey) {

@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+ 
+ 
+ 
+ 
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -82,7 +82,7 @@ export class LicitacionesService {
       .addOpenDeadlineFilter(dto.soloConPlazo)
       .addOrganoFilter(dto.organoId)
       .applyOrderBy(
-        dto.sortBy as 'fecha' | 'importe' | 'deadline' | undefined,
+        dto.sortBy,
         dto.sortOrder,
       )
       .build();

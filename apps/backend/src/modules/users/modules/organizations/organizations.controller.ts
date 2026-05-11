@@ -289,7 +289,7 @@ export class OrganizationsController {
     
     const organization = await this.organizationsService.updateOrganization(
       id,
-      updateData as any,
+      updateData,
     );
 
     return {
