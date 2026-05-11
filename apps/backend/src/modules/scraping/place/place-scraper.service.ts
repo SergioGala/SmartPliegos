@@ -48,9 +48,7 @@ export class PlaceScraperService {
           headers: { Accept: 'application/atom+xml' },
           responseType: 'text',
           timeout: 30000,
-          httpsAgent: new https.Agent({
-            rejectUnauthorized: false,
-          }),
+          httpsAgent: new https.Agent(),
         });
         const data = response.data;
 
