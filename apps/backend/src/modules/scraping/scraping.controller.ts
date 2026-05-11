@@ -33,7 +33,10 @@ export class ScrapingController {
   ) {}
 
   @Post('place/run')
+  @SecureAuthEndpoint()
+  @RequireRoles(Role.SUPER_ADMIN)
   @HttpCode(HttpStatus.ACCEPTED)
+  
   @ApiOperation({
     summary: 'Ejecutar scraping de PLACE manualmente',
     description:
@@ -49,6 +52,8 @@ export class ScrapingController {
   }
 
   @Post('place/historical/:period')
+  @SecureAuthEndpoint()
+  @RequireRoles(Role.SUPER_ADMIN)
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiOperation({
     summary: 'Cargar histórico de PLACE por período',
@@ -70,6 +75,8 @@ export class ScrapingController {
   }
 
   @Post('place/historical-all')
+  @SecureAuthEndpoint()
+  @RequireRoles(Role.SUPER_ADMIN)
   @HttpCode(HttpStatus.ACCEPTED)
   @ApiOperation({
     summary: 'Cargar TODO el histórico de PLACE',
@@ -159,6 +166,8 @@ export class ScrapingController {
   }
 
   @Post('migrations/update-search-vector')
+  @SecureAuthEndpoint()
+  @RequireRoles(Role.SUPER_ADMIN)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Actualizar searchVector para búsqueda full-text',
@@ -200,6 +209,8 @@ export class ScrapingController {
   }
 
   @Post('migrations/create-search-trigger')
+  @SecureAuthEndpoint()
+  @RequireRoles(Role.SUPER_ADMIN)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Crear trigger para auto-actualizar searchVector',
