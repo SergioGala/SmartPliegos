@@ -116,6 +116,9 @@ export const ENV_SPEC: EnvVarSpec[] = [
   { name: 'REDIS_HOST', required: false, default: 'localhost' },
   { name: 'REDIS_PORT', required: false, default: '6379' },
   { name: 'REDIS_PASSWORD', required: false, default: '' },
+   
+  // ─── Sentry ───
+  { name: 'SENTRY_DSN', required: false },
 
   // ─── File upload ───
   { name: 'MAX_FILE_SIZE', required: false, default: '5242880' },
