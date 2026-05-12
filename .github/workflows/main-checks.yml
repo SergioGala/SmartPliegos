@@ -1,0 +1,84 @@
+name: Main checks
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:  # Permite disparar manualmente desde GitHub UI
+
+jobs:
+  lint-typecheck-test-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: smartpliegos_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint backend
+        run: npm run lint -w backend
+
+      - name: Lint frontend
+        run: npm run lint -w web
+
+      - name: Build backend
+        run: npm run build -w backend
+        env:
+          NODE_ENV: test
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: smartpliegos_ci
+          JWT_SECRET: ci-jwt-secret-not-for-prod-must-be-32-chars-long-yes
+          RESEND_API_KEY: re_ci_dummy_key
+          REDIS_URL: redis://localhost:6379
+
+      - name: Build frontend
+        run: npm run build -w web
+
+      - name: Test backend
+        run: npm test -w backend
+        env:
+          NODE_ENV: test
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: smartpliegos_ci
+          JWT_SECRET: ci-jwt-secret-not-for-prod-must-be-32-chars-long-yes
+          RESEND_API_KEY: re_ci_dummy_key
+          REDIS_URL: redis://localhost:6379
