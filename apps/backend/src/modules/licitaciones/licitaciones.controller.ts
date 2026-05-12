@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
+ 
 import { Controller, Get, Param, Query, ParseUUIDPipe } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
-  ApiResponse,
   ApiQuery,
   ApiParam,
   ApiOkResponse,

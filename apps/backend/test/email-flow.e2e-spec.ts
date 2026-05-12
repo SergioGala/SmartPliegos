@@ -1,31 +1,27 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from '../../src/app.module';
+import request from 'supertest';
+import type { App } from 'supertest/types';
+import { AppModule } from '../src/app.module';
 
 /**
  * Test e2e del flow de signup + envío de email.
  *
- * Levanta el backend completo (todos los módulos), hace una request HTTP
- * real al endpoint de signup, y verifica que la respuesta es correcta.
- * Como efecto secundario, Resend envía un email REAL a TEST_RECIPIENT_EMAIL.
+ * Levanta el backend completo, hace request HTTP real al endpoint
+ * de signup, y verifica que la respuesta es correcta. Como efecto
+ * secundario, Resend envía un email REAL a TEST_RECIPIENT_EMAIL.
  *
- * Requisitos para ejecutar este test:
- *   - Backend con RESEND_API_KEY válida en .env.
- *   - Variable TEST_RECIPIENT_EMAIL apuntando a un email accesible.
+ * Skipped por defecto: requiere RESEND_API_KEY válida + acceso a inbox.
  *
- * Por defecto está marcado .skip para que NO corra en CI o en npm test
- * normal. CI no tiene credenciales de Resend ni acceso a un inbox.
- *
- * Para ejecutarlo manualmente:
- *   1. Eliminar el .skip temporalmente (cambiar describe.skip por describe).
+ * Para ejecutar manualmente:
+ *   1. Cambiar describe.skip por describe.
  *   2. Asegurar TEST_RECIPIENT_EMAIL en .env.
- *   3. Correr: npm run test:e2e -- --testNamePattern="email-flow"
+ *   3. npm run test:e2e -- --testNamePattern="email-flow"
  *   4. Revisar inbox.
  *   5. Volver a poner .skip.
  */
 describe.skip('Email flow (e2e, requires real Resend)', () => {
-  let app: INestApplication;
+  let app: INestApplication<App>;
   let testRecipient: string;
 
   beforeAll(async () => {
@@ -49,8 +45,6 @@ describe.skip('Email flow (e2e, requires real Resend)', () => {
   });
 
   it('POST /auth/signup creates user and triggers verification email', async () => {
-    // Plus-addressing en Gmail: test+xxx@gmail.com llega al mismo inbox de test@gmail.com.
-    // Esto evita colisiones con usuarios existentes en BD si el test corre varias veces.
     const [localPart, domain] = testRecipient.split('@');
     const uniqueEmail = `${localPart}+sprint11-${Date.now()}@${domain}`;
 
@@ -63,12 +57,15 @@ describe.skip('Email flow (e2e, requires real Resend)', () => {
       })
       .expect(201);
 
-    // El interceptor global envuelve respuestas en { success, data, timestamp, path }
-    expect(response.body).toHaveProperty('success', true);
-    expect(response.body).toHaveProperty('data.message');
-    expect(typeof response.body.data.message).toBe('string');
+    const body = response.body as {
+      success: boolean;
+      data: { message: string };
+    };
 
-    // Verificación humana: revisar la bandeja de entrada de testRecipient.
+    expect(body.success).toBe(true);
+    expect(body.data.message).toBeDefined();
+    expect(typeof body.data.message).toBe('string');
+
     console.log(
       `\n✉️  Email enviado a ${uniqueEmail} (llega al inbox de ${testRecipient}). Comprueba la bandeja de entrada.\n`,
     );

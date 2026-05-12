@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
+import * as crypto from 'crypto';
 import { UserEntity, OrganizationEntity } from '../entities';
 import { Role, Plan } from '../enums';
 import { EmailService } from '../../../infrastructure/email';
@@ -60,9 +61,12 @@ export class UserOrganizationService {
         );
       }
 
-      const organization = await queryRunner.manager.findOne(OrganizationEntity, {
-        where: { id: organizationId },
-      });
+      const organization = await queryRunner.manager.findOne(
+        OrganizationEntity,
+        {
+          where: { id: organizationId },
+        },
+      );
 
       if (!organization) {
         throw new NotFoundException('Organización no encontrada');
@@ -108,7 +112,9 @@ export class UserOrganizationService {
     await queryRunner.startTransaction();
 
     try {
-      const sanitizedEmail = this.sanitizeHelper.sanitizeEmail(googleUserData.email);
+      const sanitizedEmail = this.sanitizeHelper.sanitizeEmail(
+        googleUserData.email,
+      );
 
       const existingUser = await queryRunner.manager.findOne(UserEntity, {
         where: { email: sanitizedEmail },
@@ -120,7 +126,7 @@ export class UserOrganizationService {
         );
       }
 
-      const randomPassword = require('crypto').randomBytes(32).toString('hex');
+      const randomPassword = crypto.randomBytes(32).toString('hex');
       const hashedPassword = await this.authService.hashPassword(randomPassword);
 
       const user = queryRunner.manager.create(UserEntity, {

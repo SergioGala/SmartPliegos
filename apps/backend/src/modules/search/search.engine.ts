@@ -7,22 +7,25 @@ import { BlacklistValidator } from './validators/blacklist.validator';
 import { ScoringValidator } from './validators/scoring.validator';
 import { ScoreCalculator } from './scoring/score-calculator';
 import { ConfidenceEvaluator } from './scoring/confidence-evaluator';
-import { SearchResult, SearchOptions, SearchContext } from './interfaces/search-result.interface';
+import {
+  SearchResult,
+  SearchOptions,
+} from './interfaces/search-result.interface';
 import { SEARCH_CONFIG } from './constants/search-config';
-import { filterStopwords } from './constants/stopwords';
 
-/**
- * Motor de Búsqueda Principal
- * Orquesta todos los engines, validadores y calculadores
- * 
- * Características:
- * - Stemming: reduce palabras a raíz
- * - Fuzzy matching: tolera typos (distancia Levenshtein)
- * - Ranking inteligente: calcula puntuación por relevancia
- * - Validación de contexto: verifica palabras relacionadas
- * - Protección contra falsos positivos: blacklist de typos peligrosos
- * - Evaluación de confianza: 3 niveles HIGH/MEDIUM/LOW
- */
+type Confidence = 'HIGH' | 'MEDIUM' | 'LOW';
+
+interface SearchBatchItem {
+  title: string;
+  description: string;
+}
+
+interface ScoredItem<T extends SearchBatchItem> {
+  item: T;
+  searchScore: number;
+  searchConfidence: Confidence;
+}
+
 @Injectable()
 export class SearchEngineService {
   private readonly logger = new Logger(SearchEngineService.name);
@@ -38,15 +41,6 @@ export class SearchEngineService {
     private readonly confidenceEvaluator: ConfidenceEvaluator,
   ) {}
 
-  /**
-   * Buscar un término único en título y descripción
-   * 
-   * @param searchTerm Término a buscar
-   * @param title Campo de título
-   * @param description Campo de descripción
-   * @param options Opciones de búsqueda (default: todas habilitadas)
-   * @returns SearchResult con coincidencia, score y confianza
-   */
   search(
     searchTerm: string,
     title: string,
@@ -54,7 +48,6 @@ export class SearchEngineService {
     options: SearchOptions = {},
   ): SearchResult {
     try {
-      // Validar entrada
       if (!searchTerm || !title || !description) {
         return this.createEmptyResult('Entrada vacía');
       }
@@ -63,10 +56,8 @@ export class SearchEngineService {
         return this.createEmptyResult('Término muy largo');
       }
 
-      // Aplicar opciones por defecto
       const finalOptions = this.applyDefaultOptions(options);
 
-      // Procesar búsqueda
       const { score, breakdown } = this.calculateScore(
         searchTerm,
         title,
@@ -74,15 +65,12 @@ export class SearchEngineService {
         finalOptions,
       );
 
-      // Validar contexto si se pide
       const hasContext = finalOptions.validateContext
-        ? this.contextValidator.validateContext(
-            title + ' ' + description,
-            [searchTerm],
-          )
+        ? this.contextValidator.validateContext(title + ' ' + description, [
+            searchTerm,
+          ])
         : true;
 
-      // Determinar confianza
       const confidence = this.confidenceEvaluator.evaluateConfidence({
         score,
         hasExactMatch: breakdown?.exactMatch ? breakdown.exactMatch > 0 : false,
@@ -90,12 +78,11 @@ export class SearchEngineService {
         isInBlacklist: false,
       });
 
-      // Validar si es coincidencia suficiente
-      const threshold = finalOptions.scoreThreshold ||
+      const threshold =
+        finalOptions.scoreThreshold ||
         SEARCH_CONFIG.THRESHOLDS.SCORE_MIN_FOR_MATCH;
       const matched = score >= threshold && confidence !== 'LOW';
 
-      // Generar razón detallada
       const reason = this.generateReason(breakdown, score, confidence, matched);
 
       return {
@@ -106,20 +93,13 @@ export class SearchEngineService {
         breakdown,
       };
     } catch (error) {
-      this.logger.error(`Error en búsqueda: ${error.message}`, error.stack);
-      return this.createEmptyResult(`Error: ${error.message}`);
+      const message = error instanceof Error ? error.message : 'unknown';
+      const stack = error instanceof Error ? error.stack : undefined;
+      this.logger.error(`Error en búsqueda: ${message}`, stack);
+      return this.createEmptyResult(`Error: ${message}`);
     }
   }
 
-  /**
-   * Buscar múltiples términos (palabra clave expandida por sinónimos)
-   * 
-   * @param searchTerms Array de términos (ej: ["limpieza", "higiene", "desinfección"])
-   * @param title Campo de título
-   * @param description Campo de descripción
-   * @param options Opciones de búsqueda
-   * @returns SearchResult
-   */
   searchMultiple(
     searchTerms: string[],
     title: string,
@@ -130,7 +110,6 @@ export class SearchEngineService {
       return this.createEmptyResult('Sin términos para buscar');
     }
 
-    // Buscar cada término y tomar el mejor resultado
     const results = searchTerms
       .map((term) => this.search(term, title, description, options))
       .filter((r) => r.matched);
@@ -139,9 +118,8 @@ export class SearchEngineService {
       return this.createEmptyResult('Ningún término coincide');
     }
 
-    // Retornar el mejor resultado
-    const best = results.reduce((best, current) =>
-      current.score > best.score ? current : best,
+    const best = results.reduce((bestSoFar, current) =>
+      current.score > bestSoFar.score ? current : bestSoFar,
     );
 
     return {
@@ -150,30 +128,18 @@ export class SearchEngineService {
     };
   }
 
-  /**
-   * Buscar en texto con expansión por sinónimos
-   * Usado por alerts.service para búsquedas semánticas
-   * 
-   * @param keywords Array de palabras clave
-   * @param title Título donde buscar
-   * @param description Descripción donde buscar
-   * @param contextKeywords Palabras para validación contextual (opcional)
-   * @returns SearchResult
-   */
   searchWithSemantics(
     keywords: string[],
     title: string,
     description: string,
     contextKeywords?: string[],
   ): SearchResult {
-    // Si se proporciona contexto, usarlo
     const options: SearchOptions = {
       validateContext: !!contextKeywords,
       allowFuzzy: true,
       applyStemming: true,
     };
 
-    // Si hay palabras contextuales, validar
     if (contextKeywords && contextKeywords.length > 0) {
       const hasContext = this.contextValidator.validateContext(
         title + ' ' + description,
@@ -188,43 +154,33 @@ export class SearchEngineService {
     return this.searchMultiple(keywords, title, description, options);
   }
 
-  /**
-   * Buscar en lote (para procesar muchas licitaciones)
-   * Retorna solo las que coinciden
-   * 
-   * @param searchTerms Términos a buscar
-   * @param items Array de items {title, description}
-   * @returns Array de items que coinciden con score
-   */
-  searchBatch<
-    T extends { title: string; description: string },
-  >(
+  searchBatch<T extends SearchBatchItem>(
     searchTerms: string[],
     items: T[],
     options: SearchOptions = {},
-  ): Array<T & { searchScore: number; searchConfidence: 'HIGH' | 'MEDIUM' | 'LOW' }> {
-    const results: Array<T & { searchScore: number; searchConfidence: 'HIGH' | 'MEDIUM' | 'LOW' }> = [];
+  ): Array<ScoredItem<T>> {
+    const results: Array<ScoredItem<T>> = [];
 
     for (const item of items) {
-      const result = this.searchMultiple(searchTerms, item.title, item.description, options);
+      const result = this.searchMultiple(
+        searchTerms,
+        item.title,
+        item.description,
+        options,
+      );
 
       if (result.matched) {
         results.push({
-          ...item,
+          item,
           searchScore: result.score,
           searchConfidence: result.confidence,
         });
       }
     }
 
-    // Ordenar por score descendente
     return results.sort((a, b) => b.searchScore - a.searchScore);
   }
 
-  /**
-   * Calcular score interno
-   * @private
-   */
   private calculateScore(
     searchTerm: string,
     title: string,
@@ -234,25 +190,26 @@ export class SearchEngineService {
     score: number;
     breakdown: SearchResult['breakdown'];
   } {
-    const ranking = this.ranking.getScoreBreakdown(searchTerm, title, description);
+    const ranking = this.ranking.getScoreBreakdown(
+      searchTerm,
+      title,
+      description,
+    );
 
-    // Componentes de scoring
     let baseScore = Math.max(ranking.titleScore, ranking.descriptionScore);
     let contextBonus = 0;
     let fuzzyPenalty = 0;
 
-    // Si no hay coincidencia exacta, intentar con stemming y fuzzy
     if (baseScore === 0 && options.applyStemming) {
       const stemScore = this.ranking.scoreMultipleMatches(
         [searchTerm],
         title,
         description,
       );
-      baseScore = stemScore * 0.8; // Reducir confianza del stemming
+      baseScore = stemScore * 0.8;
     }
 
     if (baseScore === 0 && options.allowFuzzy) {
-      // Intentar fuzzy search
       if (
         this.fuzzy.searchInText(
           searchTerm,
@@ -260,11 +217,10 @@ export class SearchEngineService {
           options.fuzzyDistance || SEARCH_CONFIG.FUZZY.DEFAULT_DISTANCE,
         )
       ) {
-        baseScore = 30; // Score bajo para fuzzy
+        baseScore = 30;
       }
     }
 
-    // Aplicar contexto si se pide
     if (options.validateContext && baseScore > 0) {
       const contextMatches = this.contextValidator.countContextMatches(
         title + ' ' + description,
@@ -275,12 +231,10 @@ export class SearchEngineService {
       );
     }
 
-    // Calcular penalización si necesario
     if (ranking.hasFuzzyMatch && !ranking.hasExactMatch) {
       fuzzyPenalty = 10;
     }
 
-    // Score final
     const finalScore = this.scoreCalculator.calculateFinalScore({
       baseScore,
       contextBonus,
@@ -298,23 +252,17 @@ export class SearchEngineService {
         stemming: ranking.hasStemMatch
           ? SEARCH_CONFIG.SCORING.STEMMING_TITLE
           : 0,
-        fuzzy: ranking.hasFuzzyMatch
-          ? SEARCH_CONFIG.SCORING.FUZZY_MATCH
-          : 0,
+        fuzzy: ranking.hasFuzzyMatch ? SEARCH_CONFIG.SCORING.FUZZY_MATCH : 0,
         contextual: contextBonus,
         total: Math.round(finalScore),
       },
     };
   }
 
-  /**
-   * Generar descripción de resultado
-   * @private
-   */
   private generateReason(
     breakdown: SearchResult['breakdown'],
     score: number,
-    confidence: 'HIGH' | 'MEDIUM' | 'LOW',
+    confidence: Confidence,
     matched: boolean,
   ): string {
     if (!matched) {
@@ -342,10 +290,6 @@ export class SearchEngineService {
     );
   }
 
-  /**
-   * Crear resultado vacío
-   * @private
-   */
   private createEmptyResult(reason: string): SearchResult {
     return {
       matched: false,
@@ -362,18 +306,17 @@ export class SearchEngineService {
     };
   }
 
-  /**
-   * Aplicar opciones por defecto
-   * @private
-   */
   private applyDefaultOptions(options: SearchOptions): Required<SearchOptions> {
     return {
       fields: options.fields ?? 'both',
       allowFuzzy: options.allowFuzzy ?? true,
-      fuzzyDistance: options.fuzzyDistance ?? SEARCH_CONFIG.FUZZY.DEFAULT_DISTANCE,
+      fuzzyDistance:
+        options.fuzzyDistance ?? SEARCH_CONFIG.FUZZY.DEFAULT_DISTANCE,
       applyStemming: options.applyStemming ?? true,
       ignoreStopwords: options.ignoreStopwords ?? true,
-      scoreThreshold: options.scoreThreshold ?? SEARCH_CONFIG.THRESHOLDS.SCORE_MIN_FOR_MATCH,
+      scoreThreshold:
+        options.scoreThreshold ??
+        SEARCH_CONFIG.THRESHOLDS.SCORE_MIN_FOR_MATCH,
       validateContext: options.validateContext ?? true,
       useBlacklist: options.useBlacklist ?? true,
     };

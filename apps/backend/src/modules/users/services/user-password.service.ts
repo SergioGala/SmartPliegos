@@ -1,10 +1,7 @@
-import {
-  Injectable,
-  Logger,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as crypto from 'crypto';
 import { UserEntity } from '../entities';
 import { EmailService } from '../../../infrastructure/email';
 import { EmailTemplatesService } from '../../../common/email-templates';
@@ -38,12 +35,17 @@ export class UserPasswordService {
         .getOne();
 
       if (!user) {
-        this.logger.warn(`Password reset request para email no existente: ${sanitizedEmail}`);
-        return { message: 'Si el email existe, recibirás un enlace para cambiar tu contraseña' };
+        this.logger.warn(
+          `Password reset request para email no existente: ${sanitizedEmail}`,
+        );
+        return {
+          message:
+            'Si el email existe, recibirás un enlace para cambiar tu contraseña',
+        };
       }
 
       // Generar token único
-      const token = require('crypto').randomBytes(32).toString('hex');
+      const token = crypto.randomBytes(32).toString('hex');
       const expiresAt = new Date();
       expiresAt.setHours(expiresAt.getHours() + 1);
 
@@ -53,7 +55,8 @@ export class UserPasswordService {
       await this.usersRepository.save(user);
 
       // Enviar email
-      const resetLink = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password/${token}`;
+      const frontendUrl = process.env.FRONTEND_URL ?? 'http://localhost:3000';
+      const resetLink = `${frontendUrl}/reset-password/${token}`;
       const emailHtml = this.emailTemplatesService.getPasswordResetTemplate(
         user.firstName,
         resetLink,
@@ -66,7 +69,10 @@ export class UserPasswordService {
       });
 
       this.logger.log(`Email de cambio de contraseña enviado a: ${user.email}`);
-      return { message: 'Si el email existe, recibirás un enlace para cambiar tu contraseña' };
+      return {
+        message:
+          'Si el email existe, recibirás un enlace para cambiar tu contraseña',
+      };
     } catch (error) {
       this.logger.error(
         `Error al solicitar cambio de password: ${(error as Error).message}`,
@@ -90,12 +96,19 @@ export class UserPasswordService {
         .getOne();
 
       if (!user) {
-        throw new BadRequestException('Token de cambio de contraseña inválido o expirado');
+        throw new BadRequestException(
+          'Token de cambio de contraseña inválido o expirado',
+        );
       }
 
       // Validar que el token no haya expirado
-      if (!user.passwordResetExpiresAt || new Date() > user.passwordResetExpiresAt) {
-        throw new BadRequestException('El token de cambio de contraseña ha expirado');
+      if (
+        !user.passwordResetExpiresAt ||
+        new Date() > user.passwordResetExpiresAt
+      ) {
+        throw new BadRequestException(
+          'El token de cambio de contraseña ha expirado',
+        );
       }
 
       // Hashear nueva contraseña
@@ -108,7 +121,9 @@ export class UserPasswordService {
       await this.usersRepository.save(user);
 
       // Enviar email de confirmación
-      const emailHtml = this.emailTemplatesService.getPasswordChangedTemplate(user.firstName);
+      const emailHtml = this.emailTemplatesService.getPasswordChangedTemplate(
+        user.firstName,
+      );
       await this.emailService.sendEmail({
         to: user.email,
         subject: 'Contraseña actualizada - LicitApp',
@@ -152,7 +167,10 @@ export class UserPasswordService {
       }
 
       // Validar contraseña anterior
-      const isPasswordValid = await this.authService.validatePassword(oldPassword, user.password);
+      const isPasswordValid = await this.authService.validatePassword(
+        oldPassword,
+        user.password,
+      );
       if (!isPasswordValid) {
         throw new BadRequestException('La contraseña actual es incorrecta');
       }
