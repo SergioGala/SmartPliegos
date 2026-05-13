@@ -17,6 +17,8 @@ import { InvitationsModule } from './modules/invitations/invitations.module';
 import { AlertsModule } from './modules/alerts/alerts.module';
 import { SearchModule } from './modules/search/search.module';
 import { OrganosModule } from './modules/organos/organos.module';
+import { RedisModule } from './infrastructure/redis';
+
 
 @Module({
   imports: [
@@ -37,6 +39,7 @@ import { OrganosModule } from './modules/organos/organos.module';
     AlertsModule,
     SearchModule,
     OrganosModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [AppService],

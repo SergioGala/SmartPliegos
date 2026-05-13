@@ -12,6 +12,11 @@ import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { Plan } from '../users/enums';
 import { BruteForceService } from '../../common/services/brute-force.service';
+import { Inject } from '@nestjs/common';
+import { REDIS_CLIENT } from '../../infrastructure/redis';
+import type { RedisClientType } from 'redis';
+import * as crypto from 'crypto';
+
 
 /**
  * Servicio de Autenticación
@@ -25,13 +30,14 @@ export class AuthService {
   private readonly ACCESS_TOKEN_EXPIRY = 60 * 60; // 1 hora en segundos
 
   // Almacenar refresh tokens invalidados (en producción usar Redis)
-  private readonly invalidatedTokens = new Set<string>();
+  // private readonly invalidatedTokens = new Set<string>();
 
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly bruteForceService: BruteForceService,
-  ) {}
+    @Inject(REDIS_CLIENT) private readonly redisClient: RedisClientType,
+  ) { }
 
   /**
    * Login - Autentica usuario y retorna tokens
@@ -100,7 +106,7 @@ export class AuthService {
       const { refresh_token } = refreshTokenDto;
 
       // 1. Validar que el token no esté invalidado
-      if (this.invalidatedTokens.has(refresh_token)) {
+  if (await this.isRefreshTokenBlacklisted(refresh_token)) {
         throw new UnauthorizedException('Refresh token ha sido invalidado');
       }
 
@@ -148,17 +154,25 @@ export class AuthService {
    */
   async logout(refresh_token: string): Promise<{ message: string }> {
     try {
-      // Agregar token a lista de invalidados
-      this.invalidatedTokens.add(refresh_token);
-
-      // En producción, guardar en Redis con expiración automática
+      const tokenHash = this.hashToken(refresh_token);
+      const key = `refresh:blacklist:${tokenHash}`;
+      await this.redisClient.set(key, '1', { EX: this.REFRESH_TOKEN_EXPIRY });
       this.logger.log('Usuario deslogueado exitosamente');
-
       return { message: 'Sesión cerrada exitosamente' };
     } catch (error) {
       this.logger.error(`Error al hacer logout: ${(error as Error).message}`);
       throw error;
     }
+  }
+
+  private async isRefreshTokenBlacklisted(token: string): Promise<boolean> {
+    const key = `refresh:blacklist:${this.hashToken(token)}`;
+    const value = await this.redisClient.get(key);
+    return value !== null;
+  }
+
+  private hashToken(token: string): string {
+    return crypto.createHash('sha256').update(token).digest('hex');
   }
 
   /**
