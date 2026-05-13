@@ -5,12 +5,14 @@
  * @param expiresAt - Fecha de expiración del token
  * @returns HTML del email
  */
+import { config } from '../../../config/env.config'
+
 export function invitationTemplate(
   organizationName: string,
   token: string,
   expiresAt: Date,
 ): string {
-  const acceptUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/invitations/${token}/accept`;
+  const acceptUrl = `${config.frontendUrl}/auth/error?...`;
 
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

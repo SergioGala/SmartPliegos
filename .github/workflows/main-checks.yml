@@ -52,7 +52,7 @@ jobs:
         run: npm run lint -w backend
 
       - name: Lint frontend
-        run: npm run lint -w web
+        run: npm run lint -w frontend
 
       - name: Build backend
         run: npm run build -w backend
@@ -68,7 +68,7 @@ jobs:
           REDIS_URL: redis://localhost:6379
 
       - name: Build frontend
-        run: npm run build -w web
+        run: npm run build -w frontend
 
       - name: Test backend
         run: npm test -w backend

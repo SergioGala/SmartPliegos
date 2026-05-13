@@ -63,7 +63,7 @@ export const ENV_SPEC: EnvVarSpec[] = [
     name: 'JWT_SECRET',
     required: true,
     forbiddenValues: [
-      'REEMPLAZA_ESTO_POR_UN_SECRET_ALEATORIO',
+      'REEMPLAZA_ESTO_CON_UN_SECRET_DE_AL_MENOS_32_CARACTERES_ALEATORIOS',
       'default-secret-change-in-production',
       'secret',
       'changeme',

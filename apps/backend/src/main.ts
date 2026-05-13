@@ -33,7 +33,15 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Aplicar los filtros globales
-  app.useGlobalFilters(new HttpExceptionFilter());
+  // SentryExceptionFilter PRIMERO: captura 5xx y errores no-HTTP antes de responder.
+  // HttpExceptionFilter SEGUNDO: formatea la respuesta HTTP.
+  // NestJS aplica los filtros en orden inverso al registro, así que
+  // el último registrado se ejecuta primero → registramos Sentry antes que Http.
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(
+    new SentryExceptionFilter(httpAdapter),
+    new HttpExceptionFilter(),
+  );
 
   // Aplicar Response Interceptor global
   app.useGlobalInterceptors(new ResponseInterceptor());

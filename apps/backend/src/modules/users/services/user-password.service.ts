@@ -7,6 +7,7 @@ import { EmailService } from '../../../infrastructure/email';
 import { EmailTemplatesService } from '../../../common/email-templates';
 import { UserQueryHelper, UserSanitizeHelper } from '../helpers';
 import { UserAuthService } from './user-auth.service';
+import { config } from '../../../config/env.config';
 
 @Injectable()
 export class UserPasswordService {
@@ -55,7 +56,7 @@ export class UserPasswordService {
       await this.usersRepository.save(user);
 
       // Enviar email
-      const frontendUrl = process.env.FRONTEND_URL ?? 'http://localhost:3000';
+      const frontendUrl = config.frontendUrl;
       const resetLink = `${frontendUrl}/reset-password/${token}`;
       const emailHtml = this.emailTemplatesService.getPasswordResetTemplate(
         user.firstName,

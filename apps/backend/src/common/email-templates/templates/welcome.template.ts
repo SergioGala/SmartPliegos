@@ -3,6 +3,8 @@
  * @param organizationName - Nombre de la organización
  * @returns HTML del email
  */
+import { config } from '../../../config/env.config'
+
 export function welcomeTemplate(organizationName: string): string {
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -25,7 +27,7 @@ export function welcomeTemplate(organizationName: string): string {
       </ul>
       
       <div style="text-align: center; margin: 30px 0;">
-        <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/login" style="background-color: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+        <a href="${config.frontendUrl}/auth/error?.../login" style="background-color: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
           Acceder a LicitApp
         </a>
       </div>
