@@ -1,46 +1,31 @@
-import { Injectable, BadRequestException, Logger, UnauthorizedException, NotFoundException } from '@nestjs/common';
+import { Injectable, BadRequestException, Logger, UnauthorizedException, NotFoundException, Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { Plan } from '../users/enums';
-import { BruteForceService } from '../../common/services/brute-force.service';
-import { Inject } from '@nestjs/common';
-import { REDIS_CLIENT } from '../../infrastructure/redis';
-import type { RedisClientType } from 'redis';
-import * as crypto from 'crypto';
-import type { JwtTokenPayload, AuthTokensResponse, AuthUserResponse } from './auth.types';
 import { SignupDto } from './dto/signup.dto';
 import { GoogleOAuthDto } from './dto/google-oauth.dto';
+import { Plan } from '../users/enums';
+import { BruteForceService } from '../../common/services/brute-force.service';
+import { REDIS_CLIENT } from '../../infrastructure/redis';
+import type { RedisClientType } from 'redis';
+import type { UserEntity } from '../users/entities';
+import type { JwtTokenPayload, AuthTokensResponse, AuthUserResponse } from './auth.types';
+import * as crypto from 'crypto';
 
-
-/**
- * Servicio de Autenticación
- * Maneja login, refresh token, logout, obtener usuario actual
- * Solo ORQUESTA - la lógica de usuarios está centralizada en UsersService
- */
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
-  private readonly REFRESH_TOKEN_EXPIRY = 7 * 24 * 60 * 60; // 7 días en segundos
-  private readonly ACCESS_TOKEN_EXPIRY = 60 * 60; // 1 hora en segundos
-
-  // Almacenar refresh tokens invalidados (en producción usar Redis)
-  // private readonly invalidatedTokens = new Set<string>();
+  private readonly REFRESH_TOKEN_EXPIRY = 7 * 24 * 60 * 60;
+  private readonly ACCESS_TOKEN_EXPIRY = 60 * 60;
 
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly bruteForceService: BruteForceService,
     @Inject(REDIS_CLIENT) private readonly redisClient: RedisClientType,
-  ) { }
+  ) {}
 
-  /**
-   * Login - Autentica usuario y retorna tokens
-   * @param loginDto - Email y password
-   * @param clientIp - IP del cliente para brute force tracking
-   * @returns Access token, refresh token y datos del usuario
-   */
   async login(
     loginDto: LoginDto,
     clientIp: string = 'unknown',
@@ -49,22 +34,18 @@ export class AuthService {
       const { email, password } = loginDto;
       const sanitizedEmail = email.toLowerCase().trim();
 
-      // 1. Buscar usuario por email (con password)
       const user = await this.usersService.findByEmailWithPassword(sanitizedEmail);
 
       if (!user) {
-        // Registrar intento fallido
         await this.bruteForceService.recordFailedAttempt(clientIp);
         throw new UnauthorizedException('Email o contraseña incorrectos');
       }
 
-      // 2. Validar que el usuario esté activo
       if (!user.isActive) {
         await this.bruteForceService.recordFailedAttempt(clientIp);
         throw new UnauthorizedException('La cuenta ha sido desactivada');
       }
 
-      // 3. Validar contraseña
       const isPasswordValid = await this.usersService.validatePassword(password, user.password);
 
       if (!isPasswordValid) {
@@ -73,10 +54,8 @@ export class AuthService {
         throw new UnauthorizedException('Email o contraseña incorrectos');
       }
 
-      // 4. Login exitoso: resetear intentos
       await this.bruteForceService.resetAttempts(clientIp);
-
-      this.logger.log(`✅ Login exitoso para: ${user.email} desde IP: ${clientIp}`);
+      this.logger.log(`Login exitoso para: ${user.email} desde IP: ${clientIp}`);
 
       return this.generateTokensResponse(user);
     } catch (error) {
@@ -85,65 +64,47 @@ export class AuthService {
     }
   }
 
-  /**
-   * Refresh Token - Genera nuevo access token
-   * @param refreshTokenDto - Token de refresco
-   * @returns Nuevo access token y refresh token
-   */
-  async refreshToken(refreshTokenDto: RefreshTokenDto): Promise<{
-    access_token: string;
-    refresh_token: string;
-  }> {
+  async refreshToken(refreshTokenDto: RefreshTokenDto): Promise<AuthTokensResponse> {
     try {
       const { refresh_token } = refreshTokenDto;
 
-      // 1. Validar que el token no esté invalidado
-  if (await this.isRefreshTokenBlacklisted(refresh_token)) {
+      if (await this.isRefreshTokenBlacklisted(refresh_token)) {
         throw new UnauthorizedException('Refresh token ha sido invalidado');
       }
 
-      // 2. Verificar y decodificar el refresh token
-      let payload;
+      // jwtService.verify() devuelve `any` — cast seguro vía unknown
+      let payload: JwtTokenPayload;
       try {
-        payload = this.jwtService.verify(refresh_token);
-      } catch (error) {
+        payload = this.jwtService.verify(refresh_token) as unknown as JwtTokenPayload;
+      } catch {
         throw new UnauthorizedException('Refresh token inválido o expirado');
       }
 
-      // 3. Generar nuevo access token
-      const newPayload = {
+      const newPayload: JwtTokenPayload = {
         sub: payload.sub,
         email: payload.email,
         role: payload.role,
         isActive: payload.isActive,
+        organizationId: payload.organizationId,
       };
 
       const access_token = this.jwtService.sign(newPayload, {
         expiresIn: `${this.ACCESS_TOKEN_EXPIRY}s`,
       });
 
-      // 4. Generar nuevo refresh token (rotar)
       const new_refresh_token = this.jwtService.sign(newPayload, {
         expiresIn: `${this.REFRESH_TOKEN_EXPIRY}s`,
       });
 
       this.logger.log(`Token refrescado para usuario: ${payload.email}`);
 
-      return {
-        access_token,
-        refresh_token: new_refresh_token,
-      };
+      return { access_token, refresh_token: new_refresh_token };
     } catch (error) {
       this.logger.error(`Error al refrescar token: ${(error as Error).message}`);
       throw error;
     }
   }
 
-  /**
-   * Logout - Invalida el refresh token
-   * @param refresh_token - Token a invalidar
-   * @returns Mensaje de éxito
-   */
   async logout(refresh_token: string): Promise<{ message: string }> {
     try {
       const tokenHash = this.hashToken(refresh_token);
@@ -157,22 +118,7 @@ export class AuthService {
     }
   }
 
-  private async isRefreshTokenBlacklisted(token: string): Promise<boolean> {
-    const key = `refresh:blacklist:${this.hashToken(token)}`;
-    const value = await this.redisClient.get(key);
-    return value !== null;
-  }
-
-  private hashToken(token: string): string {
-    return crypto.createHash('sha256').update(token).digest('hex');
-  }
-
-  /**
-   * Get Current User - Obtiene datos del usuario logueado
-   * @param userId - ID del usuario extraído del JWT
-   * @returns Datos del usuario
-   */
-  async getCurrentUser(userId: string): Promise<Partial<import('../users/entities').UserEntity>> {
+  async getCurrentUser(userId: string): Promise<Partial<UserEntity>> {
     try {
       const user = await this.usersService.findOne(userId);
 
@@ -191,17 +137,13 @@ export class AuthService {
     }
   }
 
-  /**
-   * Signup - Registra nuevo usuario (2-step: primero email, luego contraseña)
-   * @param signupDto - Email, firstName, lastName, phone?, timezone?
-   * @param clientIp - IP del cliente para brute force tracking
-   * @returns Mensaje confirmando que se envió el email de verificación
-   */
-  async signup(signupDto: SignupDto, clientIp: string = 'unknown'): Promise<{ message: string }> {
+  async signup(
+    signupDto: SignupDto,
+    clientIp: string = 'unknown',
+  ): Promise<{ message: string }> {
     try {
       const { email, firstName, lastName, phone, timezone } = signupDto;
 
-      // 1. Crear usuario incompleto (sin contraseña, inactivo)
       const newUser = await this.usersService.createIncompleteUser({
         email,
         firstName,
@@ -210,35 +152,25 @@ export class AuthService {
         timezone,
       });
 
-      // 2. Enviar email de verificación (delegado a UsersService)
       try {
         await this.usersService.sendSignupVerificationEmail(newUser);
       } catch (emailError) {
         this.logger.error(
-          `⚠️  FALLO AL ENVIAR EMAIL a ${newUser.email}: ${(emailError as Error).message}`,
+          `FALLO AL ENVIAR EMAIL a ${newUser.email}: ${(emailError as Error).message}`,
           (emailError as Error).stack,
         );
-        // No lanzar error, el usuario fue creado, solo falló el email
       }
 
       return {
         message: `Se ha enviado un email a ${email} con las instrucciones para completar tu registro. El enlace es válido por 24 horas.`,
       };
     } catch (error) {
-      // Registrar intento fallido en signup
       await this.bruteForceService.recordFailedAttempt(clientIp);
       this.logger.error(`Error en signup desde IP ${clientIp}: ${(error as Error).message}`);
       throw error;
     }
   }
 
-  /**
-   * Complete Signup - Completa el 2-step signup con contraseña
-   * @param token - Token enviado por email
-   * @param completeSignupDto - password y passwordConfirm
-   * @param clientIp - IP del cliente para brute force tracking
-   * @returns Access token, refresh token y datos del usuario
-   */
   async completeSignup(
     token: string,
     completeSignupDto: { password: string; passwordConfirm: string },
@@ -247,41 +179,28 @@ export class AuthService {
     try {
       const { password, passwordConfirm } = completeSignupDto;
 
-      // 1. Completar signup con UsersService
       const user = await this.usersService.completeSignupWithPassword(
         token,
         password,
         passwordConfirm,
       );
 
-      // 2. Signup exitoso: resetear intentos
       await this.bruteForceService.resetAttempts(clientIp);
-
-      this.logger.log(`✅ Signup completado y usuario logueado: ${user.email} desde IP: ${clientIp}`);
+      this.logger.log(`Signup completado: ${user.email} desde IP: ${clientIp}`);
 
       return this.generateTokensResponse(user);
     } catch (error) {
-      // Registrar intento fallido
       await this.bruteForceService.recordFailedAttempt(clientIp);
       this.logger.error(`Error al completar signup desde IP ${clientIp}: ${(error as Error).message}`);
       throw error;
     }
   }
 
-  /**
-   * Validate Google OAuth User - Valida y autentica usuario de Google
-   * Si no existe → Crea nuevo usuario con google_id
-   * Si existe con google_id → Login automático
-   * Si existe con email pero sin google_id → Error (solo una cuenta por persona)
-   * @param googleOAuthDto - Datos de Google (id, email, firstName, lastName)
-   * @returns Access token, refresh token y datos del usuario
-   */
   async validateGoogleUser(googleOAuthDto: GoogleOAuthDto): Promise<AuthUserResponse> {
     try {
       const { google_id, email, firstName, lastName } = googleOAuthDto;
       const sanitizedEmail = email.toLowerCase().trim();
 
-      // 1. Buscar usuario por google_id
       const user = await this.usersService.findByGoogleId(google_id);
 
       if (user) {
@@ -289,24 +208,21 @@ export class AuthService {
         return this.generateTokensResponse(user);
       }
 
-      // 2. Si no existe por google_id, buscar por email
       const existingUserByEmail = await this.usersService.findByEmail(sanitizedEmail);
 
       if (existingUserByEmail && !existingUserByEmail.google_id) {
-        // Email existe pero sin google_id → Error (solo una cuenta por persona)
         throw new BadRequestException(
-          'Esta cuenta ya existe. Por favor, inicia sesión con tu email y contraseña. No puedes vincular múltiples métodos de autenticación a la misma cuenta.',
+          'Esta cuenta ya existe. Por favor, inicia sesión con tu email y contraseña.',
         );
       }
 
-      // 3. Si no existe → Crear nuevo usuario con google_id
       const newUser = await this.usersService.createUserWithGoogle({
         google_id,
         email: sanitizedEmail,
         firstName,
         lastName,
-        role: undefined, // Será PUBLIC_USER por defecto
-        userPlan: Plan.FREE, // Plan gratuito por defecto
+        role: undefined,
+        userPlan: Plan.FREE,
       });
 
       this.logger.log(`Nuevo usuario creado vía Google: ${newUser.email}`);
@@ -318,34 +234,36 @@ export class AuthService {
     }
   }
 
-  /**
-   * Helper - Genera tokens JWT y retorna respuesta
-   * @param user - Usuario autenticado
-   * @returns Access token, refresh token y datos del usuario
-   */
-  private generateTokensResponse(user: import('../users/entities').UserEntity): AuthUserResponse {
-  const payload: JwtTokenPayload = {
-    sub: user.id,
-    email: user.email,
-    role: user.role,
-    isActive: user.isActive,
-    organizationId: user.organizationId ?? null,
-  };
+  private generateTokensResponse(user: UserEntity): AuthUserResponse {
+    const payload: JwtTokenPayload = {
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+      isActive: user.isActive,
+      organizationId: user.organizationId ?? null,
+    };
 
-  const access_token = this.jwtService.sign(payload, {
-    expiresIn: `${this.ACCESS_TOKEN_EXPIRY}s`,
-  });
+    const access_token = this.jwtService.sign(payload, {
+      expiresIn: `${this.ACCESS_TOKEN_EXPIRY}s`,
+    });
 
-  const refresh_token = this.jwtService.sign(payload, {
-    expiresIn: `${this.REFRESH_TOKEN_EXPIRY}s`,
-  });
+    const refresh_token = this.jwtService.sign(payload, {
+      expiresIn: `${this.REFRESH_TOKEN_EXPIRY}s`,
+    });
 
-  const { password: _pwd, ...userWithoutPassword } = user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _pwd, ...userWithoutPassword } = user;
 
-  return {
-    access_token,
-    refresh_token,
-    user: userWithoutPassword,
-  };
-}
+    return { access_token, refresh_token, user: userWithoutPassword };
+  }
+
+  private async isRefreshTokenBlacklisted(token: string): Promise<boolean> {
+    const key = `refresh:blacklist:${this.hashToken(token)}`;
+    const value = await this.redisClient.get(key);
+    return value !== null;
+  }
+
+  private hashToken(token: string): string {
+    return crypto.createHash('sha256').update(token).digest('hex');
+  }
 }

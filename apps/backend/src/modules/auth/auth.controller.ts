@@ -32,6 +32,7 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { JwtAuthGuard } from '../../common/guards';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { BruteForceCooldown, RateLimitStrict, SecureAuthEndpoint } from '../../common/decorators';
+import { config } from '../../config/env.config';
 
 @ApiTags('Authentication')
 @ApiExtraModels(LoginDto, SignupDto, CompleteSignupDto, RefreshTokenDto)
@@ -421,10 +422,10 @@ export class AuthController {
     try {
       const googleProfile = req.user;
       const result = await this.authService.validateGoogleUser(googleProfile);
-      const frontendRedirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback?access_token=${result.access_token}&refresh_token=${result.refresh_token}`;
+      const frontendRedirectUrl = `${config.frontendUrl}/auth/callback?...`;
       res.redirect(frontendRedirectUrl);
     } catch (error) {
-      const frontendErrorUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/error?message=${encodeURIComponent((error as Error).message)}`;
+      const frontendErrorUrl = `${config.frontendUrl}/auth/error?...`;
       res.redirect(frontendErrorUrl);
     }
   }

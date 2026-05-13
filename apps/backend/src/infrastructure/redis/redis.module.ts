@@ -16,7 +16,7 @@ import { REDIS_CLIENT } from './redis.tokens';
 
         const client = createClient({ url }) as RedisClientType;
 
-        client.on('error', (err) => logger.error(`Redis error: ${err.message}`));
+        client.on('error', (err: Error) => logger.error(`Redis error: ${err.message}`));
         client.on('connect', () => logger.log(`Connected to Redis: ${url}`));
         client.on('disconnect', () => logger.warn('Disconnected from Redis'));
 

@@ -3,6 +3,8 @@
  * @param firstName - Nombre del usuario
  * @returns HTML del email
  */
+import { config } from '../../../config/env.config'
+
 export function passwordChangedTemplate(firstName: string): string {
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -19,7 +21,7 @@ export function passwordChangedTemplate(firstName: string): string {
       <p style="margin-top: 30px;">Ahora puedes acceder a LicitApp con tu nueva contraseña.</p>
       
       <div style="text-align: center; margin: 30px 0;">
-        <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}" style="background-color: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+        <a href="${config.frontendUrl}/auth/error?..." style="background-color: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
           Volver a LicitApp
         </a>
       </div>

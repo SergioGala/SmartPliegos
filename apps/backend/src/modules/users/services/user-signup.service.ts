@@ -13,6 +13,7 @@ import { UserSanitizeHelper } from '../helpers';
 import { UserAuthService } from './user-auth.service';
 import { EmailService } from '../../../infrastructure/email';
 import { EmailTemplatesService } from '../../../common/email-templates';
+import { config } from '../../../config/env.config';
 
 @Injectable()
 export class UserSignupService {
@@ -154,7 +155,7 @@ export class UserSignupService {
    * Enviar email de verificación de signup
    */
   async sendVerificationEmail(user: UserEntity): Promise<void> {
-    const verificationLink = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/complete-signup/${user.signupToken}`;
+    const verificationLink = `${config.frontendUrl}/complete-signup/${user.signupToken}`;
 
     const emailHtml = this.emailTemplatesService.getSignupVerificationTemplate(
       user.firstName,

@@ -32,8 +32,14 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Aplicar los filtros globales
-  app.useGlobalFilters(new HttpExceptionFilter());
+ const httpAdapterHost = app.get(HttpAdapterHost);
+  
+   // Sentry primero (captura 5xx), Http después (formatea respuesta)
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(
+    new SentryExceptionFilter(httpAdapter),
+    new HttpExceptionFilter(),
+  );
 
   // Aplicar Response Interceptor global
   app.useGlobalInterceptors(new ResponseInterceptor());

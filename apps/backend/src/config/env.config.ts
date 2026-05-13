@@ -51,6 +51,9 @@ export const config = {
   // CORS
   corsOrigin: process.env.CORS_ORIGIN ?? 'http://localhost:5173',
 
+  // Frontend
+  frontendUrl: process.env.FRONTEND_URL ?? 'http://localhost:5173',
+
   // Resend
   resend: {
     apiKey: process.env.RESEND_API_KEY!,
