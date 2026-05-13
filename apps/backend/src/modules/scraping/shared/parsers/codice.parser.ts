@@ -138,7 +138,7 @@ export class CodiceParser {
         organoExternalId: null,
         organoNombre: null,
         organoTipo: null,
-      } as ParsedLicitacion;
+      };
     }
 
     // Extraer datos geográficos (combina 3 fuentes en cascada)
@@ -185,7 +185,7 @@ export class CodiceParser {
       organoExternalId: this.extractOrganoId(cf),
       organoNombre: organoName,
       organoTipo: this.extractOrganoType(cf),
-    } as ParsedLicitacion;
+    };
   }
 
   // ═══════════════════════════════════════════

@@ -7,6 +7,13 @@ import {
 } from '../guards/resource/resource-exists.guard';
 
 /**
+ * Constructor de una entity TypeORM.
+ * Cualquier clase tiene `name`, así que con este tipo TypeScript
+ * sabe que `entity.name` es siempre string.
+ */
+type EntityConstructor = { new (...args: unknown[]): object; name: string };
+
+/**
  * Decorador compuesto para validar existencia de recursos en BD antes
  * de ejecutar el handler.
  *
@@ -17,21 +24,23 @@ import {
  * 4. Documentación Swagger del 404.
  *
  * Si el recurso no existe, el guard devuelve 404 antes de llegar al
- * controller. Esto es fail-fast: sin findOne tres veces seguidas en
- * el service.
+ * controller.
  *
  * @example
  *   @Get(':id')
  *   @ValidateResourceExists(LicitacionEntity, 'id')
  *   async getOne(@Param('id') id: string) { }
  */
-export const ValidateResourceExists = (entity: any, paramName: string) =>
+export const ValidateResourceExists = (
+  entity: EntityConstructor,
+  paramName: string,
+) =>
   applyDecorators(
     SetMetadata(RESOURCE_EXISTS_KEY, paramName),
     SetMetadata(RESOURCE_ENTITY_KEY, entity),
     UseGuards(ResourceExistsGuard),
     ApiResponse({
       status: 404,
-      description: `${entity?.name || 'Resource'} no encontrado`,
+      description: `${entity.name} no encontrado`,
     }),
   );

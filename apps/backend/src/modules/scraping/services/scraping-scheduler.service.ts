@@ -18,11 +18,7 @@ export class ScrapingScheduler {
     this.isRunning = true;
     this.logger.log('[Cron] Scraping PLACE...');
     try {
-      const r = (await this.placeScraper.scrapeCurrentFeed(5)) as {
-        newItems: number;
-        updatedItems: number;
-        errors: number;
-      };
+      const r = (await this.placeScraper.scrapeCurrentFeed(5));
       this.logger.log(
         `[Cron] PLACE: ${r.newItems} new, ${r.updatedItems} updated`,
       );

@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+ 
+ 
+ 
 import { Injectable } from '@nestjs/common';
 import { Plan } from '../../../enums';
 import { PLAN_LIMITS } from './limits.constants';

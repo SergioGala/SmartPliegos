@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   Injectable,
   CanActivate,
@@ -7,63 +5,76 @@ import {
   NotFoundException,
   Logger,
   BadRequestException,
-  Inject,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Repository, DataSource } from 'typeorm';
+import {
+  Repository,
+  DataSource,
+  EntityTarget,
+  ObjectLiteral,
+} from 'typeorm';
+import type { Request } from 'express';
 
 export const RESOURCE_EXISTS_KEY = 'resource_exists';
 export const RESOURCE_ENTITY_KEY = 'resource_entity';
 
 /**
- * Guard para validar que un recurso existe en BD antes de operaciones
+ * Tipo para clases Entity de TypeORM.
+ * Es un constructor que produce un ObjectLiteral (cualquier entity).
+ */
+type EntityClass<T extends ObjectLiteral = ObjectLiteral> = EntityTarget<T> & {
+  name: string;
+};
+
+/**
+ * Request con la propiedad custom existingResource que este guard
+ * inyecta para uso posterior en handlers o decoradores.
+ */
+interface RequestWithResource extends Request {
+  existingResource?: ObjectLiteral;
+}
+
+/**
+ * Guard que valida que un recurso existe en BD antes de operaciones.
  *
- * **Uso:**
- * @Get(':id')
- * @ValidateResourceExists(LicitacionEntity, 'id')  // entity, paramName
- * @UseGuards(ResourceExistsGuard)
- * async getOne(@Param('id') id: string) { ... }
+ * Uso:
+ *   @Get(':id')
+ *   @ValidateResourceExists(LicitacionEntity, 'id')
+ *   async getOne(@Param('id') id: string) { ... }
  *
- * **Ventajas:**
- * - Valida existencia temprana (fail-fast)
- * - Evita queries a BD en datos inexistentes
- * - Centraliza lógica de "404 temprano"
- * - Permite decoradores composables
- *
- * **Implementación:**
- * 1. Obtiene metadata: qué entity y qué parámetro validar
- * 2. Extrae el repositorio de la entity
- * 3. Consulta: SELECT 1 FROM entity WHERE id = ?
- * 4. Si no existe: lanza NotFoundException (404)
- * 5. Continúa si existe (guard idempotente sin metadata)
+ * Sin metadata (paramName o entity ausentes): pasa transparentemente.
  */
 @Injectable()
 export class ResourceExistsGuard implements CanActivate {
   private readonly logger = new Logger(ResourceExistsGuard.name);
 
   constructor(
-    private reflector: Reflector,
-    private dataSource: DataSource,
+    private readonly reflector: Reflector,
+    private readonly dataSource: DataSource,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    // Obtener metadata del decorador
-    const paramName = this.reflector.get<string>(
+    const paramName = this.reflector.get<string | undefined>(
       RESOURCE_EXISTS_KEY,
       context.getHandler(),
     );
-    const entity: any = this.reflector.get<any>(
+    const entity = this.reflector.get<EntityClass | undefined>(
       RESOURCE_ENTITY_KEY,
       context.getHandler(),
     );
 
-    // Si no hay metadata, permitir (guard opcional)
+    // Sin metadata, el guard pasa (es opcional)
     if (!paramName || !entity) {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
-    const resourceId = request.params[paramName];
+    const request = context.switchToHttp().getRequest<RequestWithResource>();
+
+    // request.params[x] puede ser string | string[]. Normalizamos a string.
+    const rawResourceId = request.params[paramName];
+    const resourceId = Array.isArray(rawResourceId)
+      ? rawResourceId[0]
+      : rawResourceId;
 
     if (!resourceId) {
       throw new BadRequestException(
@@ -71,34 +82,27 @@ export class ResourceExistsGuard implements CanActivate {
       );
     }
 
-    // Obtener repositorio de la entity usando DataSource
-    let repository: Repository<any>;
+    const entityName = entity.name || 'Resource';
+
+    // Obtener repositorio de la entity
+    let repository: Repository<ObjectLiteral>;
     try {
-      repository = this.dataSource.getRepository(entity);
+      repository = this.dataSource.getRepository<ObjectLiteral>(entity);
     } catch (error) {
-      const entityName = (entity?.name as string) || 'Unknown';
+      const message = error instanceof Error ? error.message : 'unknown';
       this.logger.warn(
-        `ResourceExistsGuard: No se pudo obtener repositorio para ${entityName}: ${(error as Error).message}`,
+        `ResourceExistsGuard: No se pudo obtener repositorio para ${entityName}: ${message}`,
       );
       throw new BadRequestException('Configuración de repositorio inválida');
     }
 
-    if (!repository) {
-      const entityName = (entity?.name as string) || 'Unknown';
-      this.logger.warn(
-        `ResourceExistsGuard: Repositorio nulo para ${entityName}`,
-      );
-      throw new BadRequestException('Configuración de repositorio inválida');
-    }
-
-    // Validar existencia: SELECT 1 FROM entity WHERE id = ?
+    // SELECT id FROM entity WHERE id = ?
     const exists = await repository.findOne({
       where: { id: resourceId },
-      select: ['id'], // Solo traer el ID para minimizar datos
+      select: ['id'],
     });
 
     if (!exists) {
-      const entityName = (entity?.name as string) || 'Resource';
       this.logger.debug(
         `ResourceExistsGuard: Recurso ${entityName} con id ${resourceId} no encontrado`,
       );
@@ -107,7 +111,7 @@ export class ResourceExistsGuard implements CanActivate {
       );
     }
 
-    // Guardar en request para acceso posterior en decoradores
+    // Guardar para reuso en handlers posteriores
     request.existingResource = exists;
 
     return true;

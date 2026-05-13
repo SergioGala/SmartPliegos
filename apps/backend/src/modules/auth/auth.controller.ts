@@ -21,7 +21,6 @@ import {
   ApiResponse,
   ApiBody,
   ApiParam,
-  ApiBearerAuth,
   ApiExtraModels,
   ApiHeader,
 } from '@nestjs/swagger';

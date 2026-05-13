@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+ 
 import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -393,25 +393,16 @@ export class AlertsService {
    */
   private async queryFullTextSearch(
     licitacionId: string,
-    keywords: string,
+    query: string,
   ): Promise<boolean> {
     try {
-      // Normalizar keywords: reemplazar espacios con & (AND)
-      const query = keywords
-        .toLowerCase()
-        .replace(/\s+and\s+/gi, ' & ')
-        .replace(/\s+or\s+/gi, ' | ')
-        .replace(/\s+not\s+/gi, ' & !')
-        .replace(/\s+/g, ' & '); // espacios por defecto = AND
-
-      const result = await this.alertRepo.query(
+      const result = await this.alertRepo.query<Array<{ '?column?': number }>>(
         `SELECT 1 FROM licitaciones 
          WHERE id = $1 
          AND search_vector @@ to_tsquery('spanish', $2)
          LIMIT 1`,
         [licitacionId, query],
       );
-
       return result.length > 0;
     } catch (error) {
       // Si falla full-text search, fallback a búsqueda simple

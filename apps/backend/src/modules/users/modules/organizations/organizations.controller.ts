@@ -17,14 +17,12 @@ import {
 import {
   ApiTags,
   ApiOperation,
-  ApiResponse,
   ApiParam,
   ApiBody,
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiForbiddenResponse,
-  ApiUnauthorizedResponse,
   ApiNotFoundResponse,
   ApiConflictResponse,
 } from '@nestjs/swagger';
@@ -35,7 +33,7 @@ import { OrganizationsService } from './organizations.service';
 import { UsersService } from '../../users.service';
 import { CreateOrganizationDto } from './dto';
 import { RoleGuard, JwtAuthGuard, OwnershipGuard } from '../../../../common/guards';
-import { RequireRoles, SuperAdminOnly, SecureOwnershipEndpoint, SecureAuthEndpoint, ValidateResourceExists, ValidateOwnership } from '../../../../common/decorators';
+import { RequireRoles,ValidateResourceExists, ValidateOwnership } from '../../../../common/decorators';
 import { Role } from '../../enums';
 import { OrganizationEntity, UserEntity } from '../../entities';
 
@@ -289,7 +287,7 @@ export class OrganizationsController {
     
     const organization = await this.organizationsService.updateOrganization(
       id,
-      updateData as any,
+      updateData,
     );
 
     return {

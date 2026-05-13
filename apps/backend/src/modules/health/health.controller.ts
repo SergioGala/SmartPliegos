@@ -2,8 +2,11 @@ import { Controller, Get } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
 /**
- * Health check controller
- * Proporciona endpoints para verificar el estado de la aplicación
+ * Health check controller (versión simple — sin Terminus por ahora).
+ *
+ * Cuando se cierre el Sprint 1.5 (RedisModule), este controller se
+ * mejora con TerminusModule para chequear BD y Redis. Por ahora,
+ * solo confirma que el proceso Node está vivo.
  */
 @ApiTags('Health')
 @Controller('health')

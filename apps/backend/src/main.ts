@@ -1,3 +1,20 @@
+import * as Sentry from '@sentry/node';
+import { nodeProfilingIntegration } from '@sentry/profiling-node';
+
+// Sentry debe inicializarse ANTES que cualquier otro framework
+// para poder capturar errores tempranos.
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  environment: process.env.NODE_ENV ?? 'development',
+  enabled: !!process.env.SENTRY_DSN, // Solo activo si hay DSN configurada
+  integrations: [nodeProfilingIntegration()],
+  // Sample rate: porcentaje de transacciones a registrar.
+  // En dev: 1 (todas). En prod: 0.1 (10%) para no exceder cuota gratuita.
+  tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
+  profilesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
+});
+
+
 import 'reflect-metadata';
 
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -8,6 +25,8 @@ import { AppModule } from './app.module';
 import { morganMiddleware } from './config/morgan.config';
 import { config } from './config/env.config';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { SentryExceptionFilter } from './common/filters/sentry-exception.filter';
+import { HttpAdapterHost } from '@nestjs/core';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 async function bootstrap() {

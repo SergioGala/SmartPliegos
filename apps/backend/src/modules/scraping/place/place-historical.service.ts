@@ -42,10 +42,7 @@ export class PlaceHistoricalService {
       const response = await this.http.axiosRef.get<Buffer>(url, {
         responseType: 'arraybuffer',
         timeout: 180000,
-        httpsAgent: new https.Agent({
-          rejectUnauthorized: false,
-        }),
-      });
+        httpsAgent: new https.Agent(),  });
 
       const buffer = Buffer.isBuffer(response.data)
         ? response.data

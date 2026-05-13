@@ -6,7 +6,6 @@ import {
   Body,
   Param,
   UseGuards,
-  Request,
   HttpStatus,
   HttpCode,
 } from '@nestjs/common';
@@ -30,6 +29,7 @@ import { RoleGuard, JwtAuthGuard } from '../../common/guards';
 import { RequireRoles, ValidateResourceExists } from '../../common/decorators';
 import { Role } from '../users/enums';
 import { InvitationEntity } from './entities/invitation.entity';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { OrganizationEntity } from '../users/entities/organization.entity';
 
 @ApiTags('📧 Invitations')
@@ -76,13 +76,12 @@ export class InvitationsController {
       },
     },
   })
-  @ApiForbiddenResponse({ description: 'Solo ORG_OWNER puede enviar invitaciones' })
+    @ApiForbiddenResponse({ description: 'Solo ORG_OWNER puede enviar invitaciones' })
   @ApiConflictResponse({ description: 'El usuario ya es miembro de la organización' })
   async sendInvitation(
     @Body() createInvitationDto: CreateInvitationDto,
-    @Request() req: any,
+    @CurrentUser() userId: string,
   ) {
-    const userId = req.user.id;
     return this.invitationsService.sendInvitation(
       createInvitationDto,
       userId,
