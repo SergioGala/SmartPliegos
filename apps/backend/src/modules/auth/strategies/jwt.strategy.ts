@@ -1,11 +1,8 @@
- 
-/* eslint-disable @typescript-eslint/require-await */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
+import type { JwtTokenPayload } from '../auth.types';
 
 /**
  * JWT Strategy para validar tokens
@@ -32,7 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * @param payload - Payload decodificado del JWT
    * @returns Datos del usuario
    */
-  async validate(payload: any) {
+  validate(payload: JwtTokenPayload) {
     return {
       id: payload.sub,
       email: payload.email,

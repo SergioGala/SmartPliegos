@@ -1,10 +1,3 @@
-/* eslint-disable prefer-const */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/require-await */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable, BadRequestException, Logger, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
@@ -16,6 +9,9 @@ import { Inject } from '@nestjs/common';
 import { REDIS_CLIENT } from '../../infrastructure/redis';
 import type { RedisClientType } from 'redis';
 import * as crypto from 'crypto';
+import type { JwtTokenPayload, AuthTokensResponse, AuthUserResponse } from './auth.types';
+import { SignupDto } from './dto/signup.dto';
+import { GoogleOAuthDto } from './dto/google-oauth.dto';
 
 
 /**
@@ -48,11 +44,7 @@ export class AuthService {
   async login(
     loginDto: LoginDto,
     clientIp: string = 'unknown',
-  ): Promise<{
-    access_token: string;
-    refresh_token: string;
-    user: any;
-  }> {
+  ): Promise<AuthUserResponse> {
     try {
       const { email, password } = loginDto;
       const sanitizedEmail = email.toLowerCase().trim();
@@ -180,7 +172,7 @@ export class AuthService {
    * @param userId - ID del usuario extraído del JWT
    * @returns Datos del usuario
    */
-  async getCurrentUser(userId: string): Promise<any> {
+  async getCurrentUser(userId: string): Promise<Partial<import('../users/entities').UserEntity>> {
     try {
       const user = await this.usersService.findOne(userId);
 
@@ -205,10 +197,7 @@ export class AuthService {
    * @param clientIp - IP del cliente para brute force tracking
    * @returns Mensaje confirmando que se envió el email de verificación
    */
-  async signup(
-    signupDto: any,
-    clientIp: string = 'unknown',
-  ): Promise<{ message: string }> {
+  async signup(signupDto: SignupDto, clientIp: string = 'unknown'): Promise<{ message: string }> {
     try {
       const { email, firstName, lastName, phone, timezone } = signupDto;
 
@@ -254,11 +243,7 @@ export class AuthService {
     token: string,
     completeSignupDto: { password: string; passwordConfirm: string },
     clientIp: string = 'unknown',
-  ): Promise<{
-    access_token: string;
-    refresh_token: string;
-    user: any;
-  }> {
+  ): Promise<AuthUserResponse> {
     try {
       const { password, passwordConfirm } = completeSignupDto;
 
@@ -291,17 +276,13 @@ export class AuthService {
    * @param googleOAuthDto - Datos de Google (id, email, firstName, lastName)
    * @returns Access token, refresh token y datos del usuario
    */
-  async validateGoogleUser(googleOAuthDto: any): Promise<{
-    access_token: string;
-    refresh_token: string;
-    user: any;
-  }> {
+  async validateGoogleUser(googleOAuthDto: GoogleOAuthDto): Promise<AuthUserResponse> {
     try {
       const { google_id, email, firstName, lastName } = googleOAuthDto;
       const sanitizedEmail = email.toLowerCase().trim();
 
       // 1. Buscar usuario por google_id
-      let user = await this.usersService.findByGoogleId(google_id);
+      const user = await this.usersService.findByGoogleId(google_id);
 
       if (user) {
         this.logger.log(`Login Google exitoso para: ${user.email}`);
@@ -342,34 +323,29 @@ export class AuthService {
    * @param user - Usuario autenticado
    * @returns Access token, refresh token y datos del usuario
    */
-  private generateTokensResponse(user: any): {
-    access_token: string;
-    refresh_token: string;
-    user: any;
-  } {
-    const payload = {
-      sub: user.id,
-      email: user.email,
-      role: user.role,
-      isActive: user.isActive,
-      organizationId: user.organizationId ?? null,
-    };
+  private generateTokensResponse(user: import('../users/entities').UserEntity): AuthUserResponse {
+  const payload: JwtTokenPayload = {
+    sub: user.id,
+    email: user.email,
+    role: user.role,
+    isActive: user.isActive,
+    organizationId: user.organizationId ?? null,
+  };
 
-    const access_token = this.jwtService.sign(payload, {
-      expiresIn: `${this.ACCESS_TOKEN_EXPIRY}s`,
-    });
+  const access_token = this.jwtService.sign(payload, {
+    expiresIn: `${this.ACCESS_TOKEN_EXPIRY}s`,
+  });
 
-    const refresh_token = this.jwtService.sign(payload, {
-      expiresIn: `${this.REFRESH_TOKEN_EXPIRY}s`,
-    });
+  const refresh_token = this.jwtService.sign(payload, {
+    expiresIn: `${this.REFRESH_TOKEN_EXPIRY}s`,
+  });
 
-    // Retornar usuario sin contraseña
-    const { password: pwd, ...userWithoutPassword } = user;
+  const { password: _pwd, ...userWithoutPassword } = user;
 
-    return {
-      access_token,
-      refresh_token,
-      user: userWithoutPassword,
-    };
-  }
+  return {
+    access_token,
+    refresh_token,
+    user: userWithoutPassword,
+  };
+}
 }

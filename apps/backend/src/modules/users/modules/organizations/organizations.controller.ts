@@ -100,7 +100,7 @@ export class OrganizationsController {
     @Req() req: any,
   ) {
     const userId = req.user?.id;
-    const userEmail = req.user?.email;
+    const _userEmail = req.user?.email;
     
     if (!userId) {
       throw new Error('Usuario no autenticado');
@@ -111,7 +111,6 @@ export class OrganizationsController {
     const organization = await this.organizationsService.createOrganization(
       userId,
       createOrgDto,
-      this.usersService,
     );
 
     // Query directo al repositorio para obtener usuario actualizado con nuevo rol
