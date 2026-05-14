@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './dropdown-menu'
-import { useTheme } from '@/providers/theme-provider'
+import { useTheme } from '@/providers/use-theme'
 import { cn } from '@/lib/utils'
 
 interface ThemeToggleProps {

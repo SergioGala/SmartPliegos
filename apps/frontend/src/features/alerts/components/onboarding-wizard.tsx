@@ -52,7 +52,7 @@ export function OnboardingWizard() {
       markCompleted();
       toast.success(t('onboarding.success.title'));
       setOpen(false);
-    } catch (error) {
+    } catch {
       toast.error(t('form.errors.createFailed'));
     } finally {
       setIsSubmitting(false);

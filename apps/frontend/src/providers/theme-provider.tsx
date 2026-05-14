@@ -1,6 +1,5 @@
-import { createContext, useContext, useEffect, useState } from 'react'
-
-type Theme = 'dark' | 'light' | 'system'
+import { useEffect, useState } from 'react'
+import { ThemeProviderContext, type Theme } from './use-theme'
 
 interface ThemeProviderProps {
   children: React.ReactNode
@@ -8,19 +7,17 @@ interface ThemeProviderProps {
   storageKey?: string
 }
 
-interface ThemeProviderState {
-  theme: Theme
-  resolvedTheme: 'dark' | 'light'
-  setTheme: (theme: Theme) => void
+/**
+ * Calcula el tema efectivo a aplicar al DOM.
+ * Si theme es 'system', resuelve a 'dark'|'light' según preferencia OS.
+ */
+function resolveTheme(theme: Theme): 'dark' | 'light' {
+  if (theme !== 'system') return theme
+  if (typeof window === 'undefined') return 'dark'
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
+    ? 'dark'
+    : 'light'
 }
-
-const initialState: ThemeProviderState = {
-  theme: 'system',
-  resolvedTheme: 'dark',
-  setTheme: () => null,
-}
-
-const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
 export function ThemeProvider({
   children,
@@ -32,8 +29,10 @@ export function ThemeProvider({
     return (localStorage.getItem(storageKey) as Theme) || defaultTheme
   })
 
-  const [resolvedTheme, setResolvedTheme] = useState<'dark' | 'light'>('dark')
+  // resolvedTheme derivado durante el render, sin useEffect
+  const resolvedTheme = resolveTheme(theme)
 
+  // useEffect solo para SINCRONIZAR DOM (efecto externo), no para setState
   useEffect(() => {
     const root = window.document.documentElement
 
@@ -42,22 +41,10 @@ export function ThemeProvider({
     const timeout = setTimeout(() => root.classList.remove('transitioning'), 300)
 
     root.classList.remove('light', 'dark')
-
-    let effectiveTheme: 'dark' | 'light'
-
-    if (theme === 'system') {
-      effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'
-    } else {
-      effectiveTheme = theme
-    }
-
-    root.classList.add(effectiveTheme)
-    setResolvedTheme(effectiveTheme)
+    root.classList.add(resolvedTheme)
 
     return () => clearTimeout(timeout)
-  }, [theme])
+  }, [resolvedTheme])
 
   // Listen to system theme changes when in 'system' mode
   useEffect(() => {
@@ -65,14 +52,9 @@ export function ThemeProvider({
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
     const handleChange = () => {
-      const root = window.document.documentElement
-      root.classList.add('transitioning')
-      setTimeout(() => root.classList.remove('transitioning'), 300)
-
-      root.classList.remove('light', 'dark')
-      const newTheme = mediaQuery.matches ? 'dark' : 'light'
-      root.classList.add(newTheme)
-      setResolvedTheme(newTheme)
+      // Forzar re-render cambiando theme al mismo valor 'system'
+      // (el resolvedTheme se recalculará en el render)
+      setThemeState('system')
     }
 
     mediaQuery.addEventListener('change', handleChange)
@@ -89,12 +71,4 @@ export function ThemeProvider({
       {children}
     </ThemeProviderContext.Provider>
   )
-}
-
-export function useTheme() {
-  const context = useContext(ThemeProviderContext)
-  if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider')
-  }
-  return context
 }

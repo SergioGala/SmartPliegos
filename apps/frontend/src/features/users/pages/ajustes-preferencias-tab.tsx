@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import { Flag } from '@/components/language-switcher';
 import { Check, AlertCircle } from 'lucide-react';
 import { useLanguage } from '@/i18n/use-language';
-import { useTheme } from '@/providers/theme-provider';
+import { useTheme } from '@/providers/use-theme';
 import { cn } from '@/lib/utils';
 
 export function AjustesPreferenciasTab() {

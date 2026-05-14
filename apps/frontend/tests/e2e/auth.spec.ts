@@ -34,7 +34,7 @@ test.describe('Auth flow', () => {
     await expect(page).not.toHaveURL(/\/login/);
   });
 
-  test('logout vuelve a /login', async ({ page, context }) => {
+  test('logout vuelve a /login', async ({ page }) => {
     const TEST_EMAIL = process.env.TEST_USER_EMAIL || 'test@licitapp.com';
     const TEST_PASSWORD = process.env.TEST_USER_PASSWORD || 'Test1234!';
 
