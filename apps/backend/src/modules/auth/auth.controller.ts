@@ -135,17 +135,17 @@ export class AuthController {
     required: false,
     description: 'Requests restantes',
   })
-  async login(
-    @Body() loginDto: LoginDto,
-    @Request() request: any,
-  ): Promise<{
-    access_token: string;
-    refresh_token: string;
-    user: any;
-  }> {
-    const clientIp = this.getClientIp(request as ExpressRequest);
-    return this.authService.login(loginDto, clientIp);
-  }
+ async login(
+  @Body() loginDto: LoginDto,
+  @Request() request: ExpressRequest,
+): Promise<{
+  access_token: string;
+  refresh_token: string;
+  user: any;
+}> {
+  const clientIp = this.getClientIp(request);
+  return this.authService.login(loginDto, clientIp);
+}
 
   /**
    * Refresh Token - Genera nuevo access token
@@ -303,13 +303,13 @@ export class AuthController {
     status: 429,
     description: 'Rate limit excedido',
   })
-  async signup(
-    @Body() signupDto: SignupDto,
-    @Request() request: any,
-  ): Promise<{ message: string }> {
-    const clientIp = this.getClientIp(request as ExpressRequest)
-    return this.authService.signup(signupDto, clientIp);
-  }
+async signup(
+  @Body() signupDto: SignupDto,
+  @Request() request: ExpressRequest,  
+): Promise<{ message: string }> {
+  const clientIp = this.getClientIp(request);   
+  return this.authService.signup(signupDto, clientIp);
+}
 
   /**
    * Complete Signup (Step 2) - Completa el registro con contraseña
@@ -372,18 +372,18 @@ export class AuthController {
     status: 429,
     description: 'Rate limit excedido',
   })
-  async completeSignup(
-    @Param('token') token: string,
-    @Body() completeSignupDto: CompleteSignupDto,
-    @Request() request: any,
-  ): Promise<{
-    access_token: string;
-    refresh_token: string;
-    user: any;
-  }> {
-    const clientIp = this.getClientIp(request as ExpressRequest);
-    return this.authService.completeSignup(token, completeSignupDto, clientIp);
-  }
+ async completeSignup(
+  @Param('token') token: string,
+  @Body() completeSignupDto: CompleteSignupDto,
+  @Request() request: ExpressRequest,
+): Promise<{
+  access_token: string;
+  refresh_token: string;
+  user: any;
+}> {
+  const clientIp = this.getClientIp(request);
+  return this.authService.completeSignup(token, completeSignupDto, clientIp);
+}
 
   /**
    * Google OAuth - Inicia el flujo de autenticación con Google

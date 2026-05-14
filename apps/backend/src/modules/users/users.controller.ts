@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+ 
+ 
 import {
   Controller,
   Get,
@@ -11,6 +11,7 @@ import {
   HttpCode,
   HttpStatus,
   Request,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -34,9 +35,20 @@ import {
   SecureOwnershipEndpoint,
   RequireRoles,
   ValidateResourceExists,
+  CurrentUser,
 } from '../../common/decorators';
+import type { Request as ExpressRequest } from 'express';
 
 
+interface JwtAuthenticatedRequest extends ExpressRequest {
+  user: {
+    id: string;
+    email: string;
+    role: string;
+    isActive: boolean;
+    organizationId: string | null;
+  };
+}
 @ApiTags('👥 Users')
 @Controller('users')
 export class UsersController {
@@ -188,13 +200,15 @@ export class UsersController {
   })
   @ApiResponse({ status: 204, description: 'Usuario desactivado exitosamente' })
   @ApiNotFoundResponse({ description: 'Usuario no encontrado' })
-  async deactivate(
-    @Param('userId') userId: string,
-    @Request() req: any,
-  ): Promise<void> {
-    return this.usersService.deactivate(userId, req.user.organizationId);
+ async deactivate(
+  @Param('userId') userId: string,
+  @Request() req: JwtAuthenticatedRequest,
+): Promise<void> {
+  if (!req.user.organizationId) {
+    throw new BadRequestException('Usuario no asociado a organización');
   }
-
+  return this.usersService.deactivate(userId, req.user.organizationId);
+}
   /**
    * Reactivar un usuario
    */
@@ -214,11 +228,14 @@ export class UsersController {
   })
   @ApiNotFoundResponse({ description: 'Usuario no encontrado' })
   async activate(
-    @Param('userId') userId: string,
-    @Request() req: any,
-  ): Promise<Partial<UserEntity>> {
-    return this.usersService.activate(userId, req.user.organizationId);
+  @Param('userId') userId: string,
+  @Request() req: JwtAuthenticatedRequest,
+): Promise<Partial<UserEntity>> {
+  if (!req.user.organizationId) {
+    throw new BadRequestException('Usuario no asociado a organización');
   }
+  return this.usersService.activate(userId, req.user.organizationId);
+}
 
   /**
    * Eliminar un usuario
@@ -346,16 +363,16 @@ export class UsersController {
     },
   })
   @ApiUnauthorizedResponse({ description: 'Contraseña anterior incorrecta' })
-  async changePassword(
-    @Body() changePasswordDto: ChangePasswordDto,
-    @Request() req: any,
-  ): Promise<{ message: string }> {
-    return this.usersService.changePassword(
-      req.user.sub,
-      changePasswordDto.oldPassword,
-      changePasswordDto.newPassword,
-      changePasswordDto.newPasswordConfirm,
-    );
-  }
+async changePassword(
+  @Body() changePasswordDto: ChangePasswordDto,
+  @CurrentUser() userId: string,
+): Promise<{ message: string }> {
+  return this.usersService.changePassword(
+    userId,
+    changePasswordDto.oldPassword,
+    changePasswordDto.newPassword,
+    changePasswordDto.newPasswordConfirm,
+  );
+}
 }
 

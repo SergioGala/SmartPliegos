@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import {
   Controller,
   Post,
@@ -12,7 +10,6 @@ import {
   HttpCode,
   HttpStatus,
   Logger,
-  Req,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -33,7 +30,7 @@ import { OrganizationsService } from './organizations.service';
 import { UsersService } from '../../users.service';
 import { CreateOrganizationDto } from './dto';
 import { RoleGuard, JwtAuthGuard, OwnershipGuard } from '../../../../common/guards';
-import { RequireRoles,ValidateResourceExists, ValidateOwnership } from '../../../../common/decorators';
+import { RequireRoles,ValidateResourceExists, ValidateOwnership, CurrentUser  } from '../../../../common/decorators';
 import { Role } from '../../enums';
 import { OrganizationEntity, UserEntity } from '../../entities';
 
@@ -96,22 +93,15 @@ export class OrganizationsController {
   @ApiForbiddenResponse({ description: 'Solo usuarios PUBLIC_USER pueden crear organizaciones' })
   @ApiConflictResponse({ description: 'La organización ya existe' })
   async createOrganization(
-    @Body() createOrgDto: CreateOrganizationDto,
-    @Req() req: any,
-  ) {
-    const userId = req.user?.id;
-    const _userEmail = req.user?.email;
-    
-    if (!userId) {
-      throw new Error('Usuario no autenticado');
-    }
-
-    this.logger.log(`Usuario ${userId} creando nueva organización: ${createOrgDto.name}`);
-    
-    const organization = await this.organizationsService.createOrganization(
-      userId,
-      createOrgDto,
-    );
+  @Body() createOrgDto: CreateOrganizationDto,
+  @CurrentUser() userId: string,
+) {
+  this.logger.log(`Usuario ${userId} creando nueva organización: ${createOrgDto.name}`);
+  
+  const organization = await this.organizationsService.createOrganization(
+    userId,
+    createOrgDto,
+  );
 
     // Query directo al repositorio para obtener usuario actualizado con nuevo rol
     const updatedUser = await this.usersRepository.findOne({
@@ -276,18 +266,16 @@ export class OrganizationsController {
   @ApiForbiddenResponse({ description: 'Solo ORG_OWNER o SUPER_ADMIN pueden actualizar' })
   @ApiNotFoundResponse({ description: 'Organización no encontrada' })
   async updateOrganization(
-    @Param('id') id: string,
-    @Body() updateData: Partial<CreateOrganizationDto>,
-    @Req() req: any,
-  ) {
-    const userId = req.user?.id;
-    
-    this.logger.log(`Usuario ${userId} actualizando organización: ${id}`);
-    
-    const organization = await this.organizationsService.updateOrganization(
-      id,
-      updateData,
-    );
+  @Param('id') id: string,
+  @Body() updateData: Partial<CreateOrganizationDto>,
+  @CurrentUser() userId: string,
+) {
+  this.logger.log(`Usuario ${userId} actualizando organización: ${id}`);
+  
+  const organization = await this.organizationsService.updateOrganization(
+    id,
+    updateData,
+  );
 
     return {
       statusCode: HttpStatus.OK,
