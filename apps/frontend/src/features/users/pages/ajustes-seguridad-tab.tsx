@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -22,7 +22,7 @@ export function AjustesSeguridadTab() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     reset,
     formState: { errors },
   } = useForm<ChangePasswordFormData>({
@@ -30,7 +30,7 @@ export function AjustesSeguridadTab() {
     mode: 'onChange',
   });
 
-  const newPasswordValue = watch('newPassword') || '';
+  const newPasswordValue = useWatch({ control, name: 'newPassword' }) ?? '';
 
   const onSubmit = async (data: ChangePasswordFormData) => {
     setIsSubmitting(true);

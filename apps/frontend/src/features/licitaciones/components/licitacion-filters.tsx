@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MultiSelectPopover } from './multi-select-popover';
 import { FilterBadges, type ActiveFilter } from './filter-badges';
@@ -6,23 +6,21 @@ import { OrganoPickerPopover } from './organo-picker-popover';
 import type { OrganoSearchResult } from '../api/organos.api';
 import type { SearchParams, FilterOptions } from '../types';
 import { cn } from '@/lib/utils';
- 
+
 interface LicitacionFiltersProps {
   filters: SearchParams;
   options: FilterOptions | undefined;
   onChange: (filters: SearchParams) => void;
   className?: string;
 }
- 
 
- 
 function prettify(value: string): string {
   return value
     .replace(/_/g, ' ')
     .toLowerCase()
     .replace(/^\w/, (c) => c.toUpperCase());
 }
- 
+
 export function LicitacionFilters({
   filters,
   options,
@@ -31,37 +29,47 @@ export function LicitacionFilters({
 }: LicitacionFiltersProps) {
   const { t } = useTranslation('search');
 
-  // Mapa local: group → label traducido (antes era LABEL_MAP estático)
-  const labelMap: Record<string, string> = {
-    estado: t('filters.groups.estado'),
-    tipoContrato: t('filters.groups.tipoContrato'),
-    procedimiento: t('filters.groups.procedimiento'),
-    tramitacion: t('filters.groups.tramitacion'),
-    ccaa: t('filters.groups.ccaa'),
-    provincia: t('filters.groups.provincia'),
-    organoId: t('filters.groups.organo'),
-  };
+  // Mapa local: group → label traducido. Estable mientras t no cambie.
+  const labelMap = useMemo<Record<string, string>>(
+    () => ({
+      estado: t('filters.groups.estado'),
+      tipoContrato: t('filters.groups.tipoContrato'),
+      procedimiento: t('filters.groups.procedimiento'),
+      tramitacion: t('filters.groups.tramitacion'),
+      ccaa: t('filters.groups.ccaa'),
+      provincia: t('filters.groups.provincia'),
+      organoId: t('filters.groups.organo'),
+    }),
+    [t],
+  );
 
-  // Traduce un enum value con fallback a prettify si la clave no existe
-  const tEnum = (namespace: string, key: string) =>
-    t(`${namespace}.${key}`, { defaultValue: prettify(key) });
+  // Traduce un enum value con fallback a prettify si la clave no existe.
+  // Estable mientras t no cambie.
+  const tEnum = useCallback(
+    (namespace: string, key: string) =>
+      t(`${namespace}.${key}`, { defaultValue: prettify(key) }),
+    [t],
+  );
 
-  const popoverPlaceholders = {
-    placeholder: t('filters.allPlaceholder'),
-    searchPlaceholder: t('filters.searchPlaceholder'),
-  };
+  const popoverPlaceholders = useMemo(
+    () => ({
+      placeholder: t('filters.allPlaceholder'),
+      searchPlaceholder: t('filters.searchPlaceholder'),
+    }),
+    [t],
+  );
 
   // Guardamos la metadata del órgano seleccionado (para badges/trigger)
   const [selectedOrgano, setSelectedOrgano] =
     useState<OrganoSearchResult | null>(null);
- 
+
   const setGroup = (key: keyof SearchParams) => (values: string[]) => {
     onChange({ ...filters, [key]: values.length > 0 ? values : undefined });
   };
- 
+
   // Backend acepta organoId como UNA sola UUID
   const organoIds = filters.organoId ? [filters.organoId] : [];
- 
+
   function setOrganos(ids: string[], organos: OrganoSearchResult[]) {
     // Selección única: tomamos solo el último
     const id = ids.length > 0 ? ids[ids.length - 1] : undefined;
@@ -69,7 +77,7 @@ export function LicitacionFilters({
     setSelectedOrgano(org);
     onChange({ ...filters, organoId: id });
   }
- 
+
   const activeBadges = useMemo<ActiveFilter[]>(() => {
     const badges: ActiveFilter[] = [];
     (
@@ -78,7 +86,7 @@ export function LicitacionFilters({
       const values = filters[group];
       if (!values || !Array.isArray(values)) return;
       values.forEach((value) => {
-         badges.push({
+        badges.push({
           group,
           groupLabel: labelMap[group],
           value,
@@ -86,8 +94,8 @@ export function LicitacionFilters({
         });
       });
     });
- 
-     if (filters.organoId) {
+
+    if (filters.organoId) {
       badges.push({
         group: 'organoId',
         groupLabel: labelMap.organoId,
@@ -95,10 +103,10 @@ export function LicitacionFilters({
         label: selectedOrgano?.nombre ?? labelMap.organoId,
       });
     }
- 
+
     return badges;
-  }, [filters, selectedOrgano]);
- 
+  }, [filters, selectedOrgano, labelMap, tEnum]);
+
   function removeBadge(group: string, value: string) {
     if (group === 'organoId') {
       setSelectedOrgano(null);
@@ -110,7 +118,7 @@ export function LicitacionFilters({
     const next = current.filter((v) => v !== value);
     onChange({ ...filters, [group]: next.length > 0 ? next : undefined });
   }
- 
+
   function clearAll() {
     setSelectedOrgano(null);
     onChange({
@@ -124,7 +132,7 @@ export function LicitacionFilters({
       organoId: undefined,
     });
   }
- 
+
   const estadoOpts = useMemo(
     () =>
       (options?.estados ?? []).map((e) => ({
@@ -132,7 +140,7 @@ export function LicitacionFilters({
         label: tEnum('estado', e.value),
         count: e.count,
       })),
-    [options?.estados, t],
+    [options?.estados, tEnum],
   );
   const tipoOpts = useMemo(
     () =>
@@ -141,7 +149,7 @@ export function LicitacionFilters({
         label: tEnum('tipoContrato', e.value),
         count: e.count,
       })),
-    [options?.tipos, t],
+    [options?.tipos, tEnum],
   );
   const procedimientoOpts = useMemo(
     () =>
@@ -150,16 +158,16 @@ export function LicitacionFilters({
         label: tEnum('procedimiento', e.value),
         count: e.count,
       })),
-    [options?.procedimientos, t],
+    [options?.procedimientos, tEnum],
   );
- const tramitacionOpts = useMemo(
+  const tramitacionOpts = useMemo(
     () =>
       (options?.tramitaciones ?? []).map((e) => ({
         value: e.value,
         label: tEnum('tramitacion', e.value),
         count: e.count,
       })),
-    [options?.tramitaciones, t],
+    [options?.tramitaciones, tEnum],
   );
   const ccaaOpts = useMemo(
     () =>
@@ -179,11 +187,11 @@ export function LicitacionFilters({
       })),
     [options?.provincias],
   );
- 
+
   return (
     <div className={cn('space-y-3', className)}>
       <div className="flex flex-wrap items-center gap-2">
-       <MultiSelectPopover
+        <MultiSelectPopover
           label={labelMap.estado}
           {...popoverPlaceholders}
           options={estadoOpts}
@@ -235,7 +243,7 @@ export function LicitacionFilters({
           provinciaContext={filters.provincia}
         />
       </div>
- 
+
       <FilterBadges
         filters={activeBadges}
         onRemove={removeBadge}
@@ -244,4 +252,3 @@ export function LicitacionFilters({
     </div>
   );
 }
- 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -27,14 +27,14 @@ export function CompleteSignupPage() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors },
   } = useForm<CompleteSignupFormData>({
     resolver: zodResolver(completeSignupSchema),
     mode: 'onChange',
   });
 
-  const passwordValue = watch('password') || '';
+  const passwordValue = useWatch({ control, name: 'password' }) ?? '';
 
   const onSubmit = async (data: CompleteSignupFormData) => {
     if (!token) {

@@ -32,14 +32,7 @@ export function AjustesPerfilTab() {
   const setUser = useAuthStore((s) => s.setUser);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  if (!user) {
-    return (
-      <div className="text-sm text-muted-foreground">
-        {t('common:status.loading')}
-      </div>
-    );
-  }
-
+  // Hook SIEMPRE se llama, con valores derivados de user (que puede ser null)
   const {
     register,
     handleSubmit,
@@ -48,13 +41,22 @@ export function AjustesPerfilTab() {
   } = useForm<UpdateProfileFormData>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      phone: user.phone || '',
+      firstName: user?.firstName ?? '',
+      lastName: user?.lastName ?? '',
+      phone: user?.phone ?? '',
       timezone:
-        user.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+        user?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone,
     },
   });
+
+  // Loading state DESPUÉS de todos los hooks
+  if (!user) {
+    return (
+      <div className="text-sm text-muted-foreground">
+        {t('common:status.loading')}
+      </div>
+    );
+  }
 
   const onSubmit = async (data: UpdateProfileFormData) => {
     setIsSubmitting(true);

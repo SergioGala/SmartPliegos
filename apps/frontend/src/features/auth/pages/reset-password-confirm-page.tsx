@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -35,14 +35,14 @@ export function ResetPasswordConfirmPage() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors },
   } = useForm<ConfirmResetFormData>({
     resolver: zodResolver(confirmResetSchema),
     mode: 'onChange',
   });
 
-  const passwordValue = watch('newPassword') || '';
+  const passwordValue = useWatch({ control, name: 'newPassword' }) ?? '';
 
   const onSubmit = async (data: ConfirmResetFormData) => {
     if (!token) return;

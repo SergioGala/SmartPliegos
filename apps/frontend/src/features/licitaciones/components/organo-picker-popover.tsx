@@ -29,19 +29,25 @@ export function OrganoPickerPopover({
   const [buffer, setBuffer] = useState<string[]>(selectedIds);
   const [bufferOrganos, setBufferOrganos] =
     useState<OrganoSearchResult[]>(selectedOrganos);
+  // Trackeamos prev para detectar cambios externos durante el render
+  const [prevSelectedKey, setPrevSelectedKey] = useState<string>(
+    selectedIds.join(','),
+  );
 
   const containerRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
+  // Sync buffer si selectedIds cambia desde fuera, derivado durante render
+  const currentSelectedKey = selectedIds.join(',');
+  if (currentSelectedKey !== prevSelectedKey) {
     setBuffer(selectedIds);
     setBufferOrganos(selectedOrganos);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedIds.join(',')]);
+    setPrevSelectedKey(currentSelectedKey);
+  }
 
   useEffect(() => {
-    const t = setTimeout(() => setDebouncedQuery(query.trim()), 250);
-    return () => clearTimeout(t);
+    const tid = setTimeout(() => setDebouncedQuery(query.trim()), 250);
+    return () => clearTimeout(tid);
   }, [query]);
 
   const { data: results = [], isFetching } = useQuery({
@@ -162,7 +168,7 @@ export function OrganoPickerPopover({
             {selectedIds.length}
           </span>
         ) : (
-             <span className="text-muted-foreground">{t('filters.organoPicker.allPlaceholder')}</span>
+          <span className="text-muted-foreground">{t('filters.organoPicker.allPlaceholder')}</span>
         )}
         <ChevronDown
           className={cn(
@@ -205,7 +211,7 @@ export function OrganoPickerPopover({
 
           {(ccaaContext?.length || provinciaContext?.length) && (
             <div className="border-b border-border bg-muted/30 px-3 py-1.5">
-                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
                 {t('filters.organoPicker.filteringIn')}{' '}
                 <span className="font-semibold text-foreground">
                   {[...(provinciaContext ?? []), ...(ccaaContext ?? [])].join(', ')}
@@ -217,7 +223,7 @@ export function OrganoPickerPopover({
           <div className="max-h-[340px] overflow-y-auto py-1">
             {merged.length === 0 ? (
               <div className="px-3 py-6 text-center text-sm text-muted-foreground">
-               {debouncedQuery
+                {debouncedQuery
                   ? t('filters.organoPicker.noMatch')
                   : t('filters.organoPicker.typeToSearch')}
               </div>
@@ -257,7 +263,6 @@ export function OrganoPickerPopover({
                         </span>
                       )}
                     </span>
-                    {/* Solo muestra el count si hay datos reales */}
                     {org.totalLicitaciones > 0 && (
                       <span className="shrink-0 text-[11px] tabular-nums text-muted-foreground">
                         {org.totalLicitaciones.toLocaleString('es-ES')}
@@ -294,7 +299,7 @@ export function OrganoPickerPopover({
                   : 'bg-muted text-muted-foreground',
               )}
             >
-               {t('filters.applyButton')} {buffer.length > 0 && `(${buffer.length})`}
+              {t('filters.applyButton')} {buffer.length > 0 && `(${buffer.length})`}
             </button>
           </div>
         </div>

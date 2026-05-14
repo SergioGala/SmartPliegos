@@ -30,17 +30,20 @@ export function MultiSelectPopover({
   searchThreshold = 8,
   className,
 }: MultiSelectPopoverProps) {
-   const { t } = useTranslation('search');
+  const { t } = useTranslation('search');
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [buffer, setBuffer] = useState<string[]>(selected);
+  // Trackeamos el último valor de `selected` para detectar cambios externos durante el render
+  const [prevSelected, setPrevSelected] = useState<string[]>(selected);
   const containerRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
-  // Sync buffer si cambia `selected` desde fuera (ej: limpiar todo)
-  useEffect(() => {
+  // Sync buffer si `selected` cambia desde fuera, derivado durante render (no useEffect)
+  if (selected !== prevSelected) {
     setBuffer(selected);
-  }, [selected]);
+    setPrevSelected(selected);
+  }
 
   // Click fuera cierra sin aplicar
   useEffect(() => {
@@ -239,7 +242,7 @@ export function MultiSelectPopover({
                   : 'bg-muted text-muted-foreground',
               )}
             >
-             {t('filters.applyButton')} {buffer.length > 0 && `(${buffer.length})`}
+              {t('filters.applyButton')} {buffer.length > 0 && `(${buffer.length})`}
             </button>
           </div>
         </div>
