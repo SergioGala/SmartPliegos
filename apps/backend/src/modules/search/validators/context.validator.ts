@@ -123,7 +123,7 @@ export class ContextValidator {
    * @param term Término de búsqueda
    * @returns Array de palabras contextuales sugeridas
    */
-  generateContextKeywords(term: string): string[] {
+  generateContextKeywords(_term: string): string[] {
     // Aquí iría integración con SEMANTIC_KEYWORDS
     // Por ahora retorna vacío
     return [];

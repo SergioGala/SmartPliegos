@@ -32,7 +32,6 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
- const httpAdapterHost = app.get(HttpAdapterHost);
   
    // Sentry primero (captura 5xx), Http después (formatea respuesta)
   const { httpAdapter } = app.get(HttpAdapterHost);

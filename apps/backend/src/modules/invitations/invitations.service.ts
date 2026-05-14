@@ -3,7 +3,6 @@ import {
   BadRequestException,
   ConflictException,
   NotFoundException,
-  Inject,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
@@ -166,7 +165,7 @@ export class InvitationsService {
         isActive: true,
       });
 
-      const savedUser = await queryRunner.manager.save(UserEntity, newUser);
+      const _savedUser = await queryRunner.manager.save(UserEntity, newUser);
 
       // 6. Actualizar invitación a ACCEPTED
       invitation.status = InvitationStatus.ACCEPTED;

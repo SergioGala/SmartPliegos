@@ -2,25 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { Licitacion } from '../../scraping/shared/entities/licitacion.entity';
 import { ILicitacionFormatter } from '../interfaces/licitacion-formatter.interface';
 
-/**
- * Tipo de retorno para listado simplificado.
- */
-interface LicitacionListItem {
-  id: string;
-  title: string;
-  estado: unknown;
-  tipoContrato: unknown;
-  procedimiento: unknown;
-  presupuestoBase: number | null;
-  presupuestoConIva: number | null;
-  cpvCodes: unknown;
-  ccaa: unknown;
-  provincia: unknown;
-  fechaPublicacion: unknown;
-  fechaPresentacion: unknown;
-  organo: { id: string; nombre: string } | null;
-  tieneLotes: unknown;
-}
 
 export interface LicitacionListItemDto {
   id: string;

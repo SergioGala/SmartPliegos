@@ -21,7 +21,7 @@ export class BlacklistValidator {
   validateFuzzyMatch(
     originalTerm: string,
     fuzzyMatch: string,
-    score: number,
+    _score: number,
   ): { valid: boolean; reason?: string } {
     if (!SEARCH_CONFIG.BLACKLIST.ENABLED) {
       return { valid: true };

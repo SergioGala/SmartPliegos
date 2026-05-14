@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+ 
 import { Injectable, Logger } from '@nestjs/common';
 import { XMLParser } from 'fast-xml-parser';
 import {
@@ -479,8 +480,11 @@ export class CodiceParser {
    *   2. Match con namespace: 'cac:Party' → local name es 'Party' → match
    *   3. No matchea si el local name es distinto (ej. 'ContractingPartyTypeCode')
    */
+
+   
   private getLocal(obj: any, localName: string): any {
     if (!obj || typeof obj !== 'object') return null;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- parser CODICE acepta cualquier shape de XML
     for (const k of Object.keys(obj)) {
       if (this.localNameOf(k) === localName) return obj[k];
     }

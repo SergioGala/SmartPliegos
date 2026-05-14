@@ -218,7 +218,7 @@ export function expandSearchTerms(keyword: string): string[] {
   const normalized = keyword.toLowerCase().trim();
 
   // Buscar en el diccionario
-  for (const [key, synonyms] of Object.entries(SEMANTIC_KEYWORDS)) {
+  for (const [_key, synonyms] of Object.entries(SEMANTIC_KEYWORDS)) {
     // Si la palabra clave está en los sinónimos de este grupo
     if (synonyms.some((s) => normalized.includes(s) || s.includes(normalized))) {
       return synonyms;

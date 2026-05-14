@@ -1,8 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 import {
   Controller,
   Post,
@@ -25,15 +21,41 @@ import {
   ApiHeader,
 } from '@nestjs/swagger';
 import type { Response } from 'express';
+import type { Request as ExpressRequest } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto, SignupDto } from './dto';
 import { CompleteSignupDto } from './dto/complete-signup.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { JwtAuthGuard } from '../../common/guards';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { BruteForceCooldown, RateLimitStrict, SecureAuthEndpoint } from '../../common/decorators';
-import { config } from '../../config/env.config';
 
+
+/**
+ * Request tras pasar por JwtAuthGuard.
+ * El guard puebla request.user con el payload del JWT.
+ */
+interface JwtAuthenticatedRequest extends ExpressRequest {
+  user: {
+    id: string;
+    email: string;
+    role: string;
+    isActive?: boolean;
+  };
+}
+
+/**
+ * Request tras pasar por GoogleAuthGuard (Passport OAuth).
+ * Passport puebla request.user con el perfil de Google,
+ * tal como lo devuelve GoogleStrategy.validate().
+ */
+interface GoogleAuthenticatedRequest extends ExpressRequest {
+  user: {
+    google_id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+  };
+}
 @ApiTags('Authentication')
 @ApiExtraModels(LoginDto, SignupDto, CompleteSignupDto, RefreshTokenDto)
 @Controller('auth')
@@ -121,7 +143,7 @@ export class AuthController {
     refresh_token: string;
     user: any;
   }> {
-    const clientIp = this.getClientIp(request);
+    const clientIp = this.getClientIp(request as ExpressRequest);
     return this.authService.login(loginDto, clientIp);
   }
 
@@ -230,9 +252,9 @@ export class AuthController {
     status: 401,
     description: 'Token inválido o expirado',
   })
-  async me(@Request() request: any): Promise<any> {
-    return this.authService.getCurrentUser(request.user.id);
-  }
+  async me(@Request() request: JwtAuthenticatedRequest) {
+  return this.authService.getCurrentUser(request.user.id);
+}
 
   /**
    * Signup (Step 1) - Registra nuevo usuario
@@ -285,7 +307,7 @@ export class AuthController {
     @Body() signupDto: SignupDto,
     @Request() request: any,
   ): Promise<{ message: string }> {
-    const clientIp = this.getClientIp(request);
+    const clientIp = this.getClientIp(request as ExpressRequest)
     return this.authService.signup(signupDto, clientIp);
   }
 
@@ -359,7 +381,7 @@ export class AuthController {
     refresh_token: string;
     user: any;
   }> {
-    const clientIp = this.getClientIp(request);
+    const clientIp = this.getClientIp(request as ExpressRequest);
     return this.authService.completeSignup(token, completeSignupDto, clientIp);
   }
 
@@ -418,26 +440,33 @@ export class AuthController {
     status: 400,
     description: 'Email ya registrado sin Google o error de autenticación',
   })
-  async googleAuthCallback(@Request() req: any, @Res() res: Response): Promise<void> {
-    try {
-      const googleProfile = req.user;
-      const result = await this.authService.validateGoogleUser(googleProfile);
-      const frontendRedirectUrl = `${config.frontendUrl}/auth/callback?...`;
+ async googleAuthCallback(
+  @Request() req: GoogleAuthenticatedRequest,
+  @Res() res: Response,
+): Promise<void> {
+  try {
+    const googleProfile = req.user;
+    const result = await this.authService.validateGoogleUser(googleProfile);
+      const frontendRedirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback?access_token=${result.access_token}&refresh_token=${result.refresh_token}`;
       res.redirect(frontendRedirectUrl);
     } catch (error) {
-      const frontendErrorUrl = `${config.frontendUrl}/auth/error?...`;
+      const frontendErrorUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/error?message=${encodeURIComponent((error as Error).message)}`;
       res.redirect(frontendErrorUrl);
     }
   }
 
-  private getClientIp(request: any): string {
-    const xForwardedFor = request.headers['x-forwarded-for'];
-    if (xForwardedFor) {
-      const forwardedIps = Array.isArray(xForwardedFor)
-        ? xForwardedFor[0]
-        : xForwardedFor.split(',')[0];
-      return forwardedIps.trim();
+ private getClientIp(request: ExpressRequest): string {
+  const xForwardedFor = request.headers['x-forwarded-for'];
+
+  if (xForwardedFor) {
+    if (Array.isArray(xForwardedFor)) {
+      // express puede devolver string[] si hay múltiples cabeceras
+      return xForwardedFor[0]?.trim() ?? 'unknown';
     }
-    return request.ip || request.socket.remoteAddress || 'unknown';
+    // string: puede ser "ip1, ip2, ip3" → cogemos la primera
+    return xForwardedFor.split(',')[0]?.trim() ?? 'unknown';
   }
+
+  return request.ip ?? request.socket.remoteAddress ?? 'unknown';
+}
 }

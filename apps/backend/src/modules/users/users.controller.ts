@@ -36,6 +36,7 @@ import {
   ValidateResourceExists,
 } from '../../common/decorators';
 
+
 @ApiTags('👥 Users')
 @Controller('users')
 export class UsersController {

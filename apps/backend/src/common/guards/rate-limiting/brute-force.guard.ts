@@ -29,7 +29,6 @@ export class BruteForceGuard implements CanActivate {
     const isBlocked = await this.bruteForceService.isBlocked(clientIp);
 
     if (isBlocked) {
-      const attempts = await this.bruteForceService.getAttempts(clientIp);
       this.logger.warn(`🚨 Acceso rechazado para IP bloqueada: ${clientIp}`);
       throw new HttpException(
         {

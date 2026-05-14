@@ -67,7 +67,7 @@ export class UserCreateService {
         }
 
         if (createUserDto.role !== Role.SUPER_ADMIN && createUserDto.role !== Role.ORG_OWNER) {
-          const userCount = await queryRunner.manager.count(UserEntity, {
+          const _userCount = await queryRunner.manager.count(UserEntity, {
             where: { organizationId: organizationId },
           });
           // TODO: Integrar LimitsService para validar límites según plan

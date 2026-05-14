@@ -251,7 +251,7 @@ export class AuthService {
       expiresIn: `${this.REFRESH_TOKEN_EXPIRY}s`,
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     const { password: _pwd, ...userWithoutPassword } = user;
 
     return { access_token, refresh_token, user: userWithoutPassword };
