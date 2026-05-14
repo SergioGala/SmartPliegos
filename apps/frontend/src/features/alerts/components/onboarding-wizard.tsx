@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Dialog } from '@base-ui/react/dialog';
-import { X, Check } from 'lucide-react';
+import { X } from 'lucide-react';
 import { toast } from 'sonner';
 import { useOnboardingStore } from '../stores/onboarding-store';
 import { alertsApi } from '../api/alerts.api';

@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { Bell, ExternalLink } from 'lucide-react';
 import { alertsApi } from '@/features/alerts/api/alerts.api';
-import { cn } from '@/lib/utils';
+
 
 export function AjustesNotificacionesTab() {
   const { t } = useTranslation(['settings', 'alerts']);
@@ -12,7 +12,6 @@ export function AjustesNotificacionesTab() {
     queryFn: () => alertsApi.list(),
   });
 
-  const activeCount = alerts.filter((a) => a.isActive).length;
 
   return (
     <div className="space-y-6">

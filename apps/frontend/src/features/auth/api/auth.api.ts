@@ -9,7 +9,6 @@ import type {
 } from '../types';
 import type {
   LoginFormData,
-  RegisterFormData,
   CompleteSignupFormData,
 } from '../schemas/auth.schemas';
 

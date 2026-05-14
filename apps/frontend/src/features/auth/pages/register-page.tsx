@@ -24,7 +24,7 @@ export function RegisterPage() {
     formState: { errors },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { acceptTerms: false },
+    defaultValues: { acceptTerms: false } as unknown as Partial<RegisterFormData>,
   });
 
   const onSubmit = async (data: RegisterFormData) => {

@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
 import { Plus, Bell } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { alertsApi } from '../api/alerts.api';
 import { AlertCard } from '../components/alert-card';
 import { AlertFormDialog } from '../components/alert-form-dialog';

@@ -10,7 +10,6 @@ import i18n from '@/i18n/config';
  * Usamos `i18n.t` directamente porque los schemas se crean fuera de
  * componentes React.
  */
-
 const t = i18n.t.bind(i18n);
 
 /**
@@ -20,7 +19,6 @@ export const loginSchema = z.object({
   email: z.string().min(1).email(),
   password: z.string().min(8),
 });
-
 export type LoginFormData = z.infer<typeof loginSchema>;
 
 /**
@@ -32,12 +30,9 @@ export const registerSchema = z.object({
   lastName: z.string().min(2).max(50),
   phone: z.string().max(20).optional().or(z.literal('')),
   acceptTerms: z.literal(true, {
-    errorMap: () => ({
-      message: t('auth:register.validation.acceptTermsRequired'),
-    }),
+    message: t('auth:register.validation.acceptTermsRequired'),
   }),
 });
-
 export type RegisterFormData = z.infer<typeof registerSchema>;
 
 /**
@@ -52,14 +47,15 @@ export const completeSignupSchema = z
     password: z
       .string()
       .min(8)
-      .regex(passwordRegex, () => t('auth:completeSignup.errors.invalidToken')),
+      .regex(passwordRegex, {
+        message: t('auth:completeSignup.errors.invalidPassword'),
+      }),
     passwordConfirm: z.string().min(1),
   })
   .refine((data) => data.password === data.passwordConfirm, {
     message: 'passwordMismatch',
     path: ['passwordConfirm'],
   });
-
 export type CompleteSignupFormData = z.infer<typeof completeSignupSchema>;
 
 /**
@@ -67,24 +63,9 @@ export type CompleteSignupFormData = z.infer<typeof completeSignupSchema>;
  * Los ids se usan en t('auth:passwordRequirements.<id>').
  */
 export const passwordRequirements = [
-  {
-    id: 'length',
-    test: (v: string) => v.length >= 8,
-  },
-  {
-    id: 'lowercase',
-    test: (v: string) => /[a-z]/.test(v),
-  },
-  {
-    id: 'uppercase',
-    test: (v: string) => /[A-Z]/.test(v),
-  },
-  {
-    id: 'number',
-    test: (v: string) => /\d/.test(v),
-  },
-  {
-    id: 'special',
-    test: (v: string) => /[@$!%*?&]/.test(v),
-  },
+  { id: 'length', test: (v: string) => v.length >= 8 },
+  { id: 'lowercase', test: (v: string) => /[a-z]/.test(v) },
+  { id: 'uppercase', test: (v: string) => /[A-Z]/.test(v) },
+  { id: 'number', test: (v: string) => /\d/.test(v) },
+  { id: 'special', test: (v: string) => /[@$!%*?&]/.test(v) },
 ] as const;

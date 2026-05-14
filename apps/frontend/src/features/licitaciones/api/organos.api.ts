@@ -9,10 +9,6 @@ export interface OrganoSearchResult {
   totalLicitaciones: number;
 }
 
-interface ApiEnvelope<T> {
-  success: boolean;
-  data: T;
-}
 
 export interface SearchOrganosParams {
   q?: string;

@@ -9,43 +9,60 @@ import i18n from './config';
  * SÍ se respetan y no pasan por este map.
  *
  * Uso: llamar `setupZodErrors()` en main.tsx al arrancar la app.
+ *
+ * En Zod v4 la API cambió:
+ * - z.setErrorMap → z.config({ customError })
+ * - ZodIssueCode.invalid_string → invalid_format
+ * - issue.received, issue.type, issue.validation cambiaron de shape
  */
 export function setupZodErrors() {
-  z.setErrorMap((issue, ctx) => {
-    const t = i18n.t.bind(i18n);
+  const t = i18n.t.bind(i18n);
 
-    switch (issue.code) {
-      case z.ZodIssueCode.invalid_type:
-        if (issue.received === 'undefined' || issue.received === 'null') {
-          return { message: t('common:validation.required') };
-        }
-        break;
-
-      case z.ZodIssueCode.too_small:
-        if (issue.type === 'string') {
-          if (issue.minimum === 1) {
-            return { message: t('common:validation.required') };
+  z.config({
+    customError: (issue) => {
+      switch (issue.code) {
+        case 'invalid_type': {
+          // En v4, cuando un campo requerido falta, el code es 'invalid_type'
+          // con input undefined/null.
+          if (issue.input === undefined || issue.input === null) {
+            return t('common:validation.required');
           }
-          return {
-            message: t('common:validation.tooShort', { min: issue.minimum }),
-          };
+          break;
         }
-        break;
 
-      case z.ZodIssueCode.too_big:
-        if (issue.type === 'string') {
-          return {
-            message: t('common:validation.tooLong', { max: issue.maximum }),
-          };
+        case 'too_small': {
+          // Solo procesamos strings; números y arrays heredan defaultError.
+          if (issue.origin === 'string') {
+            const min = Number(issue.minimum);
+            if (min === 1) {
+              return t('common:validation.required');
+            }
+            return t('common:validation.tooShort', { min });
+          }
+          break;
         }
-        break;
 
-      case z.ZodIssueCode.invalid_string:
-        if (issue.validation === 'email') {
-          return { message: t('common:validation.invalidEmail') };
+        case 'too_big': {
+          if (issue.origin === 'string') {
+            const max = Number(issue.maximum);
+            return t('common:validation.tooLong', { max });
+          }
+          break;
         }
-        break;
-    }
-    return { message: ctx.defaultError };
+
+        case 'invalid_format': {
+          // En v4 los errores de email/url/regex/etc son 'invalid_format'
+          // y traen un campo `format` que indica cuál.
+          if ((issue as { format?: string }).format === 'email') {
+            return t('common:validation.invalidEmail');
+          }
+          break;
+        }
+      }
+
+      // Si no hemos manejado el caso, devolver undefined hace que Zod use
+      // su mensaje por defecto (en inglés).
+      return undefined;
+    },
   });
 }

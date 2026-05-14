@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { Power, PowerOff, Pencil, Trash2, MapPin, Euro } from 'lucide-react';
+import { Power, PowerOff, Pencil, Trash2} from 'lucide-react';
 import { alertsApi } from '../api/alerts.api';
 import type { Alert } from '../types';
 import { cn } from '@/lib/utils';
