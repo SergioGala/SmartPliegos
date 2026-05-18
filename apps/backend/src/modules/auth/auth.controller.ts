@@ -446,7 +446,7 @@ async signup(
 ): Promise<void> {
   try {
     const googleProfile = req.user;
-    const result = await this.authService.validateGoogleUser(googleProfile);
+   const result = await this.authService.loginWithGoogle(googleProfile);
       const frontendRedirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback?access_token=${result.access_token}&refresh_token=${result.refresh_token}`;
       res.redirect(frontendRedirectUrl);
     } catch (error) {

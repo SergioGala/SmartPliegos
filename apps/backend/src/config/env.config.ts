@@ -54,6 +54,10 @@ export const config = {
   // Frontend
   frontendUrl: process.env.FRONTEND_URL ?? 'http://localhost:5173',
 
+  logFormat: process.env.LOG_FORMAT ?? 'pretty',
+  logLevel: process.env.LOG_LEVEL ?? 'info',
+  mailProviderType: (process.env.MAIL_PROVIDER_TYPE ?? 'resend') as 'resend' | 'memory',
+
   // Resend
   resend: {
     apiKey: process.env.RESEND_API_KEY!,

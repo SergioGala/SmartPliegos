@@ -1,0 +1,1 @@
+export const OAUTH_GOOGLE_PROVIDER = Symbol('OAUTH_GOOGLE_PROVIDER');

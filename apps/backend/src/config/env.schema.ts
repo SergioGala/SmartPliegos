@@ -124,8 +124,29 @@ export const ENV_SPEC: EnvVarSpec[] = [
   { name: 'MAX_FILE_SIZE', required: false, default: '5242880' },
   { name: 'UPLOAD_DIR', required: false, default: './uploads' },
 
-  // ─── Logging ───
+   // ─── Logging ───
+  {
+    name: 'LOG_FORMAT',
+    required: false,
+    default: 'pretty',
+    validate: (value) =>
+      ['json', 'pretty'].includes(value)
+        ? null
+        : `must be 'json' or 'pretty' (got '${value}')`,
+  },
+
   { name: 'LOG_LEVEL', required: false, default: 'info' },
+
+   // ─── Email provider ───
+  {
+    name: 'MAIL_PROVIDER_TYPE',
+    required: false,
+    default: 'resend',
+    validate: (value) =>
+      ['resend', 'memory'].includes(value)
+        ? null
+        : `must be 'resend' or 'memory' (got '${value}')`,
+  },
 ];
 
 /**
