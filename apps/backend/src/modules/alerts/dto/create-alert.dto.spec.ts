@@ -13,8 +13,8 @@ describe('createAlertSchema', () => {
             ccaa: ['Madrid', 'Cataluña'],
             provincia: ['Madrid', 'Barcelona'],
             cpvCodes: [''],
-            importeMin: 0,
-            importeMax: 0,
+            importeMin: "0",
+            importeMax: "0",
             palabrasClave: 'palabraClave',
             isActive: true,
         });
@@ -33,8 +33,8 @@ describe('createAlertSchema', () => {
             ccaa: ['Madrid', 'Cataluña'],
             provincia: ['Madrid', 'Barcelona'],
             cpvCodes: [''],
-            importeMin: 0,
-            importeMax: 0,
+            importeMin: "0",
+            importeMax: "0",
             palabrasClave: 'palabraClave',
             isActive: true,
         });
@@ -53,8 +53,8 @@ describe('createAlertSchema', () => {
             ccaa: ['Madrid', 'Cataluña'],
             provincia: ['Madrid', 'Barcelona'],
             cpvCodes: [''],
-            importeMin: 0,
-            importeMax: 0,
+            importeMin: "0",
+            importeMax: "0",
             palabrasClave: 'palabraClave',
             isActive: true,
         });
@@ -73,8 +73,8 @@ describe('createAlertSchema', () => {
             ccaa: ['Madrid', 'Cataluña'],
             provincia: ['Madrid', 'Barcelona'],
             cpvCodes: [''],
-            importeMin: 0,
-            importeMax: 0,
+            importeMin: "0",
+            importeMax: "0",
             palabrasClave: 'palabraClave',
             isActive: true,
         });
