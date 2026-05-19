@@ -62,7 +62,7 @@ interface GoogleAuthenticatedRequest extends ExpressRequest {
 @ApiExtraModels(LoginDtoSwagger, SignupDtoSwagger, CompleteSignupDtoSwagger, RefreshTokenDtoSwagger)
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   /**
    * Login - Autentica usuario con email y contraseña
@@ -137,17 +137,17 @@ export class AuthController {
     required: false,
     description: 'Requests restantes',
   })
- async login(
-  @ZodBody(loginSchema) loginDto: LoginDto,
-  @Request() request: ExpressRequest,
-): Promise<{
-  access_token: string;
-  refresh_token: string;
-  user: any;
-}> {
-  const clientIp = this.getClientIp(request);
-  return this.authService.login(loginDto, clientIp);
-}
+  async login(
+    @ZodBody(loginSchema) loginDto: LoginDto,
+    @Request() request: ExpressRequest,
+  ): Promise<{
+    access_token: string;
+    refresh_token: string;
+    user: any;
+  }> {
+    const clientIp = this.getClientIp(request);
+    return this.authService.login(loginDto, clientIp);
+  }
 
   /**
    * Refresh Token - Genera nuevo access token
@@ -255,8 +255,8 @@ export class AuthController {
     description: 'Token inválido o expirado',
   })
   async me(@Request() request: JwtAuthenticatedRequest) {
-  return this.authService.getCurrentUser(request.user.id);
-}
+    return this.authService.getCurrentUser(request.user.id);
+  }
 
   /**
    * Signup (Step 1) - Registra nuevo usuario
@@ -305,13 +305,13 @@ export class AuthController {
     status: 429,
     description: 'Rate limit excedido',
   })
-async signup(
-  @ZodBody(signupSchema) signupDto: SignupDto,
-  @Request() request: ExpressRequest,  
-): Promise<{ message: string }> {
-  const clientIp = this.getClientIp(request);   
-  return this.authService.signup(signupDto, clientIp);
-}
+  async signup(
+    @ZodBody(signupSchema) signupDto: SignupDto,
+    @Request() request: ExpressRequest,
+  ): Promise<{ message: string }> {
+    const clientIp = this.getClientIp(request);
+    return this.authService.signup(signupDto, clientIp);
+  }
 
   /**
    * Complete Signup (Step 2) - Completa el registro con contraseña
@@ -374,18 +374,18 @@ async signup(
     status: 429,
     description: 'Rate limit excedido',
   })
- async completeSignup(
-  @Param('token') token: string,
-  @ZodBody(completeSignupSchema) completeSignupDto: CompleteSignupDto,
-  @Request() request: ExpressRequest,
-): Promise<{
-  access_token: string;
-  refresh_token: string;
-  user: any;
-}> {
-  const clientIp = this.getClientIp(request);
-  return this.authService.completeSignup(token, completeSignupDto, clientIp);
-}
+  async completeSignup(
+    @Param('token') token: string,
+    @ZodBody(completeSignupSchema) completeSignupDto: CompleteSignupDto,
+    @Request() request: ExpressRequest,
+  ): Promise<{
+    access_token: string;
+    refresh_token: string;
+    user: any;
+  }> {
+    const clientIp = this.getClientIp(request);
+    return this.authService.completeSignup(token, completeSignupDto, clientIp);
+  }
 
   /**
    * Google OAuth - Inicia el flujo de autenticación con Google
@@ -442,13 +442,13 @@ async signup(
     status: 400,
     description: 'Email ya registrado sin Google o error de autenticación',
   })
- async googleAuthCallback(
-  @Request() req: GoogleAuthenticatedRequest,
-  @Res() res: Response,
-): Promise<void> {
-  try {
-    const googleProfile = req.user;
-    const result = await this.authService.validateGoogleUser(googleProfile);
+  async googleAuthCallback(
+    @Request() req: GoogleAuthenticatedRequest,
+    @Res() res: Response,
+  ): Promise<void> {
+    try {
+      const googleProfile = req.user;
+      const result = await this.authService.loginWithGoogle(googleProfile);
       const frontendRedirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback?access_token=${result.access_token}&refresh_token=${result.refresh_token}`;
       res.redirect(frontendRedirectUrl);
     } catch (error) {
@@ -457,18 +457,18 @@ async signup(
     }
   }
 
- private getClientIp(request: ExpressRequest): string {
-  const xForwardedFor = request.headers['x-forwarded-for'];
+  private getClientIp(request: ExpressRequest): string {
+    const xForwardedFor = request.headers['x-forwarded-for'];
 
-  if (xForwardedFor) {
-    if (Array.isArray(xForwardedFor)) {
-      // express puede devolver string[] si hay múltiples cabeceras
-      return xForwardedFor[0]?.trim() ?? 'unknown';
+    if (xForwardedFor) {
+      if (Array.isArray(xForwardedFor)) {
+        // express puede devolver string[] si hay múltiples cabeceras
+        return xForwardedFor[0]?.trim() ?? 'unknown';
+      }
+      // string: puede ser "ip1, ip2, ip3" → cogemos la primera
+      return xForwardedFor.split(',')[0]?.trim() ?? 'unknown';
     }
-    // string: puede ser "ip1, ip2, ip3" → cogemos la primera
-    return xForwardedFor.split(',')[0]?.trim() ?? 'unknown';
-  }
 
-  return request.ip ?? request.socket.remoteAddress ?? 'unknown';
-}
+    return request.ip ?? request.socket.remoteAddress ?? 'unknown';
+  }
 }

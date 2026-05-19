@@ -6,6 +6,7 @@ import { BruteForceService } from '../../common/services/brute-force.service';
 import { REDIS_CLIENT } from '../../infrastructure/redis';
 import { UnauthorizedException } from '@nestjs/common';
 import { Role, Plan } from '../users/enums';
+import { OAUTH_GOOGLE_PROVIDER } from '../../infrastructure/oauth';
 
 const mockUser = {
   id: 'user-uuid-1',
@@ -17,6 +18,19 @@ const mockUser = {
   organizationId: null,
   userPlan: Plan.FREE,
   password: 'hashed-password',
+};
+
+const mockGoogleOAuthProvider = {
+  providerName: 'google' as const,
+  normalizeProfile: jest.fn().mockReturnValue({
+    externalId: 'g-mock',
+    provider: 'google',
+    email: 'mock@gmail.com',
+    emailVerified: true,
+    firstName: 'Mock',
+    lastName: 'User',
+    pictureUrl: null,
+  }),
 };
 
 const mockUsersService = {
@@ -60,6 +74,7 @@ describe('AuthService', () => {
         { provide: JwtService, useValue: mockJwtService },
         { provide: BruteForceService, useValue: mockBruteForceService },
         { provide: REDIS_CLIENT, useValue: mockRedis },
+        { provide: OAUTH_GOOGLE_PROVIDER, useValue: mockGoogleOAuthProvider },
       ],
     }).compile();
     service = module.get<AuthService>(AuthService);

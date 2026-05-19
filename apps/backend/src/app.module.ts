@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WinstonModule } from 'nest-winston';
@@ -18,6 +18,7 @@ import { AlertsModule } from './modules/alerts/alerts.module';
 import { SearchModule } from './modules/search/search.module';
 import { OrganosModule } from './modules/organos/organos.module';
 import { RedisModule } from './infrastructure/redis';
+import { RequestIdMiddleware } from './common/middleware';
 
 
 @Module({
@@ -44,4 +45,8 @@ import { RedisModule } from './infrastructure/redis';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(RequestIdMiddleware).forRoutes('*');
+  }
+}

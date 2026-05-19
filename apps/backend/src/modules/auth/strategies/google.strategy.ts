@@ -1,9 +1,13 @@
- 
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+/**
+ * Shape del perfil que devuelve passport-google-oauth20 en validate().
+ * Se exporta solo como documentación del contrato; la normalización a
+ * NormalizedOAuthProfile la realiza GoogleOAuthProvider dentro de AuthService.
+ */
 export interface GoogleProfile {
   id: string;
   displayName: string;
@@ -42,21 +46,17 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     });
   }
 
+  /**
+   * Pasamos el perfil CRUDO de Google. La normalización a
+   * NormalizedOAuthProfile la hace GoogleOAuthProvider.normalizeProfile()
+   * dentro de AuthService.loginWithGoogle().
+   */
   validate(
     _accessToken: string,
     _refreshToken: string,
     profile: GoogleProfile,
     done: VerifyCallback,
   ): void {
-    const { id, name, emails } = profile;
-
-    const user = {
-      google_id: id,
-      email: emails[0]?.value || '',
-      firstName: name?.givenName || '',
-      lastName: name?.familyName || '',
-    };
-
-    done(null, user);
+    done(null, profile);
   }
 }

@@ -1,68 +1,53 @@
-/* eslint-disable @typescript-eslint/no-base-to-string */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import * as winston from 'winston';
+import { utilities as nestUtils } from 'nest-winston';
+import { requestContextStorage } from '../common/middleware';
 import { config } from './env.config';
 
-/**
- * Colores personalizados para Winston
- */
-const customColors = {
-  error: 'red',
-  warn: 'yellow',
-  info: 'green',
-  http: 'magenta',
-  debug: 'blue',
-};
+const SERVICE_NAME = config.appName;
 
 /**
- * Formato personalizado para los logs
+ * Format que inyecta requestId desde AsyncLocalStorage.
+ * Si la log no viene de una request HTTP (ej. cron, bootstrap), requestId
+ * sale como null.
  */
-const customFormat = winston.format.combine(
-  winston.format.timestamp({ format: 'DD-MM-YYYY HH:mm:ss' }),
+const injectRequestId = winston.format((info) => {
+  const ctx = requestContextStorage.getStore();
+  info.requestId = ctx?.requestId ?? null;
+  return info;
+});
+
+const baseMetadata = winston.format((info) => {
+  info.service = SERVICE_NAME;
+  info.env = config.nodeEnv;
+  return info;
+});
+
+const jsonFormat = winston.format.combine(
+  winston.format.timestamp({ format: () => new Date().toISOString() }),
   winston.format.errors({ stack: true }),
-  winston.format.printf(({ timestamp, level, message, stack }) => {
-    const stackTrace = stack ? `\n${stack}` : '';
-    return `${timestamp} [${level.toUpperCase()}]: ${message}${stackTrace}`;
-  })
+  injectRequestId(),
+  baseMetadata(),
+  winston.format.json(),
 );
 
-/**
- * Transportes para desarrollo
- */
-const devTransports = [
-  new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.colorize({ colors: customColors }),
-      customFormat
-    ),
+const prettyFormat = winston.format.combine(
+  winston.format.timestamp({ format: 'HH:mm:ss.SSS' }),
+  winston.format.errors({ stack: true }),
+  injectRequestId(),
+  winston.format.colorize({ all: false, level: true }),
+  nestUtils.format.nestLike(SERVICE_NAME, {
+    prettyPrint: true,
+    colors: true,
   }),
-];
+);
 
-/**
- * Transportes para producción
- */
-const prodTransports = [
-  new winston.transports.File({
-    filename: 'logs/error.log',
-    level: 'error',
-    format: customFormat,
-  }),
-  new winston.transports.File({
-    filename: 'logs/combined.log',
-    format: customFormat,
-  }),
-  new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.colorize({ colors: customColors }),
-      customFormat
-    ),
-  }),
-];
+const useJson = config.logFormat === 'json' || config.nodeEnv === 'production';
 
-/**
- * Configuración de Winston para NestJS WinstonModule
- */
 export const winstonConfig = {
-  transports: config.nodeEnv === 'production' ? prodTransports : devTransports,
-  level: config.nodeEnv === 'development' ? 'debug' : 'warn',
+  level: config.logLevel,
+  transports: [
+    new winston.transports.Console({
+      format: useJson ? jsonFormat : prettyFormat,
+    }),
+  ],
 };

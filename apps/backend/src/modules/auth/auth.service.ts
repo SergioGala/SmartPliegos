@@ -1,17 +1,31 @@
-import { Injectable, BadRequestException, Logger, UnauthorizedException, NotFoundException, Inject } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  Logger,
+  UnauthorizedException,
+  NotFoundException,
+  Inject,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { SignupDto } from './dto/signup.dto';
-import { GoogleOAuthDto } from './dto/google-oauth.dto';
 import { Plan } from '../users/enums';
 import { BruteForceService } from '../../common/services/brute-force.service';
 import { REDIS_CLIENT } from '../../infrastructure/redis';
 import type { RedisClientType } from 'redis';
 import type { UserEntity } from '../users/entities';
-import type { JwtTokenPayload, AuthTokensResponse, AuthUserResponse } from './auth.types';
+import type {
+  JwtTokenPayload,
+  AuthTokensResponse,
+  AuthUserResponse,
+} from './auth.types';
 import * as crypto from 'crypto';
+import {
+  OAUTH_GOOGLE_PROVIDER,
+  type IOAuthProvider,
+} from '../../infrastructure/oauth';
 
 @Injectable()
 export class AuthService {
@@ -24,6 +38,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly bruteForceService: BruteForceService,
     @Inject(REDIS_CLIENT) private readonly redisClient: RedisClientType,
+    @Inject(OAUTH_GOOGLE_PROVIDER) private readonly googleOAuth: IOAuthProvider,
   ) {}
 
   async login(
@@ -46,11 +61,16 @@ export class AuthService {
         throw new UnauthorizedException('La cuenta ha sido desactivada');
       }
 
-      const isPasswordValid = await this.usersService.validatePassword(password, user.password);
+      const isPasswordValid = await this.usersService.validatePassword(
+        password,
+        user.password,
+      );
 
       if (!isPasswordValid) {
         await this.bruteForceService.recordFailedAttempt(clientIp);
-        this.logger.warn(`Intento de login fallido para: ${sanitizedEmail} desde IP: ${clientIp}`);
+        this.logger.warn(
+          `Intento de login fallido para: ${sanitizedEmail} desde IP: ${clientIp}`,
+        );
         throw new UnauthorizedException('Email o contraseña incorrectos');
       }
 
@@ -64,7 +84,9 @@ export class AuthService {
     }
   }
 
-  async refreshToken(refreshTokenDto: RefreshTokenDto): Promise<AuthTokensResponse> {
+  async refreshToken(
+    refreshTokenDto: RefreshTokenDto,
+  ): Promise<AuthTokensResponse> {
     try {
       const { refresh_token } = refreshTokenDto;
 
@@ -132,7 +154,9 @@ export class AuthService {
 
       return user;
     } catch (error) {
-      this.logger.error(`Error al obtener usuario actual: ${(error as Error).message}`);
+      this.logger.error(
+        `Error al obtener usuario actual: ${(error as Error).message}`,
+      );
       throw error;
     }
   }
@@ -166,7 +190,9 @@ export class AuthService {
       };
     } catch (error) {
       await this.bruteForceService.recordFailedAttempt(clientIp);
-      this.logger.error(`Error en signup desde IP ${clientIp}: ${(error as Error).message}`);
+      this.logger.error(
+        `Error en signup desde IP ${clientIp}: ${(error as Error).message}`,
+      );
       throw error;
     }
   }
@@ -191,24 +217,37 @@ export class AuthService {
       return this.generateTokensResponse(user);
     } catch (error) {
       await this.bruteForceService.recordFailedAttempt(clientIp);
-      this.logger.error(`Error al completar signup desde IP ${clientIp}: ${(error as Error).message}`);
+      this.logger.error(
+        `Error al completar signup desde IP ${clientIp}: ${(error as Error).message}`,
+      );
       throw error;
     }
   }
 
-  async validateGoogleUser(googleOAuthDto: GoogleOAuthDto): Promise<AuthUserResponse> {
+  /**
+   * Inicia sesión o registra un usuario mediante Google OAuth.
+   *
+   * Recibe el perfil CRUDO devuelto por Passport (`req.user` tal cual lo
+   * pasa `GoogleStrategy.validate()`) y delega la normalización al provider
+   * OAuth inyectado. De este modo el service no conoce la forma concreta
+   * del perfil de Google y depende solo de `IOAuthProvider`.
+   */
+  async loginWithGoogle(rawGoogleProfile: unknown): Promise<AuthUserResponse> {
     try {
-      const { google_id, email, firstName, lastName } = googleOAuthDto;
-      const sanitizedEmail = email.toLowerCase().trim();
+      const profile = this.googleOAuth.normalizeProfile(rawGoogleProfile);
+      const sanitizedEmail = profile.email.toLowerCase().trim();
 
-      const user = await this.usersService.findByGoogleId(google_id);
+      // 1) ¿Ya existe un usuario vinculado a este google_id?
+      const user = await this.usersService.findByGoogleId(profile.externalId);
 
       if (user) {
         this.logger.log(`Login Google exitoso para: ${user.email}`);
         return this.generateTokensResponse(user);
       }
 
-      const existingUserByEmail = await this.usersService.findByEmail(sanitizedEmail);
+      // 2) ¿Existe un usuario con ese email pero sin Google vinculado?
+      const existingUserByEmail =
+        await this.usersService.findByEmail(sanitizedEmail);
 
       if (existingUserByEmail && !existingUserByEmail.google_id) {
         throw new BadRequestException(
@@ -216,17 +255,17 @@ export class AuthService {
         );
       }
 
+      // 3) Crear nuevo usuario con datos provenientes de Google.
       const newUser = await this.usersService.createUserWithGoogle({
-        google_id,
+        google_id: profile.externalId,
         email: sanitizedEmail,
-        firstName,
-        lastName,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
         role: undefined,
         userPlan: Plan.FREE,
       });
 
       this.logger.log(`Nuevo usuario creado vía Google: ${newUser.email}`);
-
       return this.generateTokensResponse(newUser);
     } catch (error) {
       this.logger.error(`Error en Google OAuth: ${(error as Error).message}`);
@@ -251,7 +290,6 @@ export class AuthService {
       expiresIn: `${this.REFRESH_TOKEN_EXPIRY}s`,
     });
 
-     
     const { password: _pwd, ...userWithoutPassword } = user;
 
     return { access_token, refresh_token, user: userWithoutPassword };
