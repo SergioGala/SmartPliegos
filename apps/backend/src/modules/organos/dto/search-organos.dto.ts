@@ -1,39 +1,35 @@
-import { Transform, Type } from 'class-transformer';
-import { IsArray, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { z } from 'zod';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { parseCommaList } from '../../licitaciones/dto/search-licitaciones.dto';
 
-function parseCommaList(value: unknown): string[] | undefined {
-  if (value === undefined || value === null || value === '') return undefined;
-  if (Array.isArray(value)) return value.map((v) => String(v).trim()).filter(Boolean);
-  if (typeof value === 'string') {
-    return value.split(',').map((v) => v.trim()).filter(Boolean);
-  }
-  return undefined;
+function toOptionalInt(val: unknown) {
+  if (val === undefined || val === null || val === '') return undefined;
+  const n = Number(val);
+  return isNaN(n) ? undefined : n;
 }
 
-export class SearchOrganosDto {
+const commaArray = z.preprocess(parseCommaList, z.array(z.string()).optional());
+
+export const searchOrganosSchema = z.object({
+  q: z.string().optional(),
+  ccaa: commaArray,
+  provincia: commaArray,
+  limit: z.preprocess(toOptionalInt, z.number().int().min(1).max(50).default(30)),
+});
+
+/** Tipo inferido. Reemplaza a la antigua clase. */
+export type SearchOrganosDto = z.infer<typeof searchOrganosSchema>;
+
+export class SearchOrganosDtoSwagger {
   @ApiPropertyOptional({ description: 'Texto de búsqueda' })
-  @IsOptional()
-  @IsString()
   q?: string;
 
   @ApiPropertyOptional({ description: 'CCAAs (comma-separated)' })
-  @IsOptional()
-  @IsArray()
-  @Transform(({ value }) => parseCommaList(value))
-  ccaa?: string[];
+  ccaa?: string;
 
   @ApiPropertyOptional({ description: 'Provincias (comma-separated)' })
-  @IsOptional()
-  @IsArray()
-  @Transform(({ value }) => parseCommaList(value))
-  provincia?: string[];
+  provincia?: string;
 
-  @ApiPropertyOptional({ default: 30, maximum: 50 })
-  @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  @Max(50)
-  limit?: number = 30;
+  @ApiPropertyOptional({ default: 30, maximum: 50, type: Number })
+  limit?: number;
 }

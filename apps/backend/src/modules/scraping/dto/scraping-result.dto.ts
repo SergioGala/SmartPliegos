@@ -1,23 +1,46 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { z } from 'zod';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class ScrapingResultDto {
+// ─── ScrapingResult ───────────────────────────────────────────────────────────
+
+export const scrapingResultSchema = z.object({
+  newItems: z.number().int(),
+  updatedItems: z.number().int().optional(),
+  errors: z.number().int(),
+  duration: z.string(),
+});
+
+export type ScrapingResultDto = z.infer<typeof scrapingResultSchema>;
+
+// ─── ScrapingStatus ───────────────────────────────────────────────────────────
+
+export const scrapingStatusSchema = z.object({
+  status: z.enum(['SUCCESS', 'PARTIAL', 'PENDING']),
+  result: scrapingResultSchema,
+});
+
+export type ScrapingStatusDto = z.infer<typeof scrapingStatusSchema>;
+
+// ─── Swagger (solo para documentación de respuestas) ─────────────────────────
+
+export class ScrapingResultDtoSwagger {
   @ApiProperty({ example: 150 })
-  newItems: number;
+  newItems!: number;
 
-  @ApiProperty({ example: 45 })
+  @ApiPropertyOptional({ example: 45 })
   updatedItems?: number;
 
   @ApiProperty({ example: 5 })
-  errors: number;
+  errors!: number;
 
   @ApiProperty({ example: '5.23s' })
-  duration: string;
+  duration!: string;
 }
 
-export class ScrapingStatusDto {
-  @ApiProperty({ example: 'SUCCESS' })
-  status: 'SUCCESS' | 'PARTIAL' | 'PENDING';
+export class ScrapingStatusDtoSwagger {
+  @ApiProperty({ example: 'SUCCESS', enum: ['SUCCESS', 'PARTIAL', 'PENDING'] })
+  status!: 'SUCCESS' | 'PARTIAL' | 'PENDING';
 
-  @ApiProperty()
-  result: ScrapingResultDto;
+  @ApiProperty({ type: () => ScrapingResultDtoSwagger })
+  result!: ScrapingResultDtoSwagger;
 }

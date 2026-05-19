@@ -1,7 +1,8 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { OrganosService } from './organos.service';
-import { SearchOrganosDto } from './dto/search-organos.dto';
+import { ZodQuery } from '../../common/zod';
+import { searchOrganosSchema, type SearchOrganosDto } from './dto/search-organos.dto';
 
 @ApiTags('Órganos de contratación')
 @Controller('organos')
@@ -14,7 +15,7 @@ export class OrganosController {
     description:
       'Búsqueda incremental con filtrado por CCAA/provincia. Limitado a 30 resultados.',
   })
-  async search(@Query() dto: SearchOrganosDto) {
+  async search(@ZodQuery(searchOrganosSchema) dto: SearchOrganosDto) {
     return this.organosService.search(dto);
   }
 

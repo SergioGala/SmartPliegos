@@ -1,16 +1,21 @@
-import { IsString, IsNotEmpty } from 'class-validator';
+import { z } from 'zod';
 import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * DTO para Refresh Token
  */
-export class RefreshTokenDto {
+
+export const refreshTokenSchema = z.object({
+  refresh_token: z.string().min(1, 'refresh_token is required'),
+});
+
+/** Tipo inferido. Reemplaza a la antigua clase. */
+export type RefreshTokenDto = z.infer<typeof refreshTokenSchema>;
+
+export class RefreshTokenDtoSwagger {
   @ApiProperty({
-    description: 'JWT Refresh Token válido (válido por 7 días)',
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
-    type: String,
+    example:
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
   })
-  @IsString()
-  @IsNotEmpty()
-  refresh_token: string;
+  refresh_token!: string;
 }

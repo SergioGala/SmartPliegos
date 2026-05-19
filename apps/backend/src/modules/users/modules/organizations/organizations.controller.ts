@@ -29,8 +29,9 @@ import { JwtService } from '@nestjs/jwt';
 import { OrganizationsService } from './organizations.service';
 import { UsersService } from '../../users.service';
 import { CreateOrganizationDto } from './dto';
+import { CreateOrganizationDtoSwagger } from './dto/create-organization.dto';
 import { RoleGuard, JwtAuthGuard, OwnershipGuard } from '../../../../common/guards';
-import { RequireRoles,ValidateResourceExists, ValidateOwnership, CurrentUser  } from '../../../../common/decorators';
+import { RequireRoles, ValidateResourceExists, ValidateOwnership, CurrentUser } from '../../../../common/decorators';
 import { Role } from '../../enums';
 import { OrganizationEntity, UserEntity } from '../../entities';
 
@@ -46,7 +47,7 @@ export class OrganizationsController {
     private readonly jwtService: JwtService,
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
-  ) {}
+  ) { }
 
   /**
    * Crear una nueva organización
@@ -62,7 +63,7 @@ export class OrganizationsController {
     description: 'Crea una nueva organización en el sistema. El usuario que la crea es automáticamente promovido a ORG_OWNER. Solo usuarios PUBLIC_USER pueden crear organizaciones.',
   })
   @ApiBody({
-    type: CreateOrganizationDto,
+    type: CreateOrganizationDtoSwagger,
     description: 'Datos para crear la organización',
     examples: {
       example1: {
@@ -93,15 +94,15 @@ export class OrganizationsController {
   @ApiForbiddenResponse({ description: 'Solo usuarios PUBLIC_USER pueden crear organizaciones' })
   @ApiConflictResponse({ description: 'La organización ya existe' })
   async createOrganization(
-  @Body() createOrgDto: CreateOrganizationDto,
-  @CurrentUser() userId: string,
-) {
-  this.logger.log(`Usuario ${userId} creando nueva organización: ${createOrgDto.name}`);
-  
-  const organization = await this.organizationsService.createOrganization(
-    userId,
-    createOrgDto,
-  );
+    @Body() createOrgDto: CreateOrganizationDtoSwagger,
+    @CurrentUser() userId: string,
+  ) {
+    this.logger.log(`Usuario ${userId} creando nueva organización: ${createOrgDto.name}`);
+
+    const organization = await this.organizationsService.createOrganization(
+      userId,
+      createOrgDto,
+    );
 
     // Query directo al repositorio para obtener usuario actualizado con nuevo rol
     const updatedUser = await this.usersRepository.findOne({
@@ -172,7 +173,7 @@ export class OrganizationsController {
   @ApiNotFoundResponse({ description: 'Organización no encontrada' })
   async getOrganization(@Param('id') id: string) {
     this.logger.log(`Obteniendo organización: ${id}`);
-    
+
     const organization = await this.organizationsService.findById(id);
 
     return {
@@ -219,7 +220,7 @@ export class OrganizationsController {
   @ApiForbiddenResponse({ description: 'Solo SUPER_ADMIN puede acceder' })
   async getAllOrganizations() {
     this.logger.log('Obteniendo todas las organizaciones');
-    
+
     const organizations = await this.organizationsService.findAll();
 
     return {
@@ -249,7 +250,7 @@ export class OrganizationsController {
     description: 'ID de la organización a actualizar',
   })
   @ApiBody({
-    type: CreateOrganizationDto,
+    type: CreateOrganizationDtoSwagger,
     description: 'Datos a actualizar',
     examples: {
       partial: {
@@ -266,16 +267,16 @@ export class OrganizationsController {
   @ApiForbiddenResponse({ description: 'Solo ORG_OWNER o SUPER_ADMIN pueden actualizar' })
   @ApiNotFoundResponse({ description: 'Organización no encontrada' })
   async updateOrganization(
-  @Param('id') id: string,
-  @Body() updateData: Partial<CreateOrganizationDto>,
-  @CurrentUser() userId: string,
-) {
-  this.logger.log(`Usuario ${userId} actualizando organización: ${id}`);
-  
-  const organization = await this.organizationsService.updateOrganization(
-    id,
-    updateData,
-  );
+    @Param('id') id: string,
+    @Body() updateData: Partial<CreateOrganizationDto>,
+    @CurrentUser() userId: string,
+  ) {
+    this.logger.log(`Usuario ${userId} actualizando organización: ${id}`);
+
+    const organization = await this.organizationsService.updateOrganization(
+      id,
+      updateData,
+    );
 
     return {
       statusCode: HttpStatus.OK,
@@ -316,7 +317,7 @@ export class OrganizationsController {
   @ApiNotFoundResponse({ description: 'Organización no encontrada' })
   async getUserCount(@Param('id') id: string) {
     this.logger.log(`Obteniendo cantidad de usuarios de organización: ${id}`);
-    
+
     const count = await this.organizationsService.getUserCount(id);
 
     return {

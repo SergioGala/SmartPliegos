@@ -59,15 +59,6 @@ async function bootstrap() {
     ],
   });
 
-  // Configurar ValidationPipe global
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    })
-  );
-
   // Configurar prefijo global de rutas (excluir health)
   app.setGlobalPrefix(`${config.api.prefix}/${config.api.version}`, {
     exclude: ['health', 'health/ready', 'health/live'],

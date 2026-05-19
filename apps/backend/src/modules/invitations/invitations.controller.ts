@@ -23,7 +23,8 @@ import {
   ApiConflictResponse,
 } from '@nestjs/swagger';
 import { InvitationsService } from './invitations.service';
-import { CreateInvitationDto } from './dto/create-invitation.dto';
+import { ZodBody } from '../../common/zod';
+import { createInvitationSchema, type CreateInvitationDto, CreateInvitationDtoSwagger } from './dto/create-invitation.dto';
 import { RoleGuard, JwtAuthGuard } from '../../common/guards';
 import { RequireRoles, ValidateResourceExists } from '../../common/decorators';
 import { Role } from '../users/enums';
@@ -50,7 +51,7 @@ export class InvitationsController {
     description: 'Envía una invitación por correo a una persona para unirse a la organización. Solo el propietario de la organización (ORG_OWNER) puede enviar invitaciones.',
   })
   @ApiBody({
-    type: CreateInvitationDto,
+    type: CreateInvitationDtoSwagger,
     description: 'Datos para la invitación',
     examples: {
       example1: {
@@ -78,7 +79,7 @@ export class InvitationsController {
     @ApiForbiddenResponse({ description: 'Solo ORG_OWNER puede enviar invitaciones' })
   @ApiConflictResponse({ description: 'El usuario ya es miembro de la organización' })
   async sendInvitation(
-    @Body() createInvitationDto: CreateInvitationDto,
+    @ZodBody(createInvitationSchema) createInvitationDto: CreateInvitationDto,
     @CurrentUser() userId: string,
   ) {
     return this.invitationsService.sendInvitation(

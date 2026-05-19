@@ -1,10 +1,33 @@
-import { IsString, MinLength, Matches } from 'class-validator';
+import { z } from 'zod';
 import { ApiProperty } from '@nestjs/swagger';
+import { passwordSchema } from '../../../common/zod';
+
+export const completeSignupSchema = z
+  .object({
+    password: passwordSchema,
+    passwordConfirm: z.string().min(1, 'passwordConfirm is required'),
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: 'Las contraseñas no coinciden',
+    path: ['passwordConfirm'],
+  });
+
+/** Tipo inferido. Reemplaza a la antigua clase. */
+export type CompleteSignupDto = z.infer<typeof completeSignupSchema>;
+
+export class CompleteSignupDtoSwagger {
+  @ApiProperty({ example: 'SecurePassword123!', minLength: 8 })
+  password!: string;
+
+  @ApiProperty({ example: 'SecurePassword123!' })
+  passwordConfirm!: string;
+}
+
 
 /**
  * DTO para Completar Signup (Step 2)
  */
-export class CompleteSignupDto {
+/* export class CompleteSignupDto {
   @ApiProperty({
     description: 'Contraseña nueva (mínimo 8 caracteres, debe incluir mayúscula, minúscula, número)',
     example: 'SecurePassword123!',
@@ -29,3 +52,4 @@ export class CompleteSignupDto {
   @IsString()
   passwordConfirm: string;
 }
+ */

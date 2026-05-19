@@ -1,5 +1,5 @@
- 
- 
+
+
 import {
   Controller,
   Get,
@@ -26,7 +26,13 @@ import {
   ApiConflictResponse,
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
-import { UpdateUserDto, RequestPasswordChangeDto, ConfirmPasswordChangeDto, ChangePasswordDto } from './dto';
+import { ZodBody } from '../../common/zod';
+import { updateUserSchema, type UpdateUserDto, UpdateUserDtoSwagger } from './dto/update-user.dto';
+import {
+  requestPasswordChangeSchema, type RequestPasswordChangeDto, RequestPasswordChangeDtoSwagger,
+  confirmPasswordChangeSchema, type ConfirmPasswordChangeDto, ConfirmPasswordChangeDtoSwagger,
+  changePasswordSchema, type ChangePasswordDto, ChangePasswordDtoSwagger,
+} from './dto/password-change.dto';
 import { UserEntity } from './entities';
 import { Role } from './enums';
 import { OrganizationEntity } from './entities/organization.entity';
@@ -52,7 +58,7 @@ interface JwtAuthenticatedRequest extends ExpressRequest {
 @ApiTags('👥 Users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   /**
    * Obtener todos los usuarios (admin only)
@@ -158,7 +164,7 @@ export class UsersController {
     description: 'ID del usuario a actualizar',
   })
   @ApiBody({
-    type: UpdateUserDto,
+    type: UpdateUserDtoSwagger,
     description: 'Datos a actualizar del usuario',
     examples: {
       partial: {
@@ -178,7 +184,7 @@ export class UsersController {
   @ApiConflictResponse({ description: 'Email duplicado o datos inválidos' })
   async update(
     @Param('userId') userId: string,
-    @Body() updateUserDto: UpdateUserDto,
+    @ZodBody(updateUserSchema) updateUserDto: UpdateUserDto,
   ): Promise<Partial<UserEntity>> {
     return this.usersService.updateUser(userId, undefined, updateUserDto);
   }
@@ -200,15 +206,15 @@ export class UsersController {
   })
   @ApiResponse({ status: 204, description: 'Usuario desactivado exitosamente' })
   @ApiNotFoundResponse({ description: 'Usuario no encontrado' })
- async deactivate(
-  @Param('userId') userId: string,
-  @Request() req: JwtAuthenticatedRequest,
-): Promise<void> {
-  if (!req.user.organizationId) {
-    throw new BadRequestException('Usuario no asociado a organización');
+  async deactivate(
+    @Param('userId') userId: string,
+    @Request() req: JwtAuthenticatedRequest,
+  ): Promise<void> {
+    if (!req.user.organizationId) {
+      throw new BadRequestException('Usuario no asociado a organización');
+    }
+    return this.usersService.deactivate(userId, req.user.organizationId);
   }
-  return this.usersService.deactivate(userId, req.user.organizationId);
-}
   /**
    * Reactivar un usuario
    */
@@ -228,14 +234,14 @@ export class UsersController {
   })
   @ApiNotFoundResponse({ description: 'Usuario no encontrado' })
   async activate(
-  @Param('userId') userId: string,
-  @Request() req: JwtAuthenticatedRequest,
-): Promise<Partial<UserEntity>> {
-  if (!req.user.organizationId) {
-    throw new BadRequestException('Usuario no asociado a organización');
+    @Param('userId') userId: string,
+    @Request() req: JwtAuthenticatedRequest,
+  ): Promise<Partial<UserEntity>> {
+    if (!req.user.organizationId) {
+      throw new BadRequestException('Usuario no asociado a organización');
+    }
+    return this.usersService.activate(userId, req.user.organizationId);
   }
-  return this.usersService.activate(userId, req.user.organizationId);
-}
 
   /**
    * Eliminar un usuario
@@ -271,7 +277,7 @@ export class UsersController {
     description: 'Inicia el proceso de cambio de contraseña enviando un email con un link de verificación válido por 1 hora.',
   })
   @ApiBody({
-    type: RequestPasswordChangeDto,
+    type: RequestPasswordChangeDtoSwagger,
     examples: {
       example1: {
         value: {
@@ -288,7 +294,7 @@ export class UsersController {
   })
   @ApiNotFoundResponse({ description: 'Usuario con este email no encontrado' })
   async requestPasswordChange(
-    @Body() requestPasswordChangeDto: RequestPasswordChangeDto,
+    @ZodBody(requestPasswordChangeSchema) requestPasswordChangeDto: RequestPasswordChangeDto,
   ): Promise<{ message: string }> {
     return this.usersService.requestPasswordChange(requestPasswordChangeDto.email);
   }
@@ -308,7 +314,7 @@ export class UsersController {
     example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
   })
   @ApiBody({
-    type: ConfirmPasswordChangeDto,
+    type: ConfirmPasswordChangeDtoSwagger,
     examples: {
       example1: {
         value: {
@@ -327,7 +333,7 @@ export class UsersController {
   @ApiConflictResponse({ description: 'Token ya ha sido utilizado' })
   async confirmPasswordChange(
     @Param('token') token: string,
-    @Body() confirmPasswordChangeDto: ConfirmPasswordChangeDto,
+    @ZodBody(confirmPasswordChangeSchema) confirmPasswordChangeDto: ConfirmPasswordChangeDto,
   ): Promise<{ message: string }> {
     return this.usersService.confirmPasswordChange(
       token,
@@ -345,7 +351,7 @@ export class UsersController {
     description: 'Permite a un usuario autenticado cambiar su contraseña directamente. Requiere la contraseña anterior como validación de seguridad.',
   })
   @ApiBody({
-    type: ChangePasswordDto,
+    type: ChangePasswordDtoSwagger,
     examples: {
       example1: {
         value: {
@@ -363,16 +369,16 @@ export class UsersController {
     },
   })
   @ApiUnauthorizedResponse({ description: 'Contraseña anterior incorrecta' })
-async changePassword(
-  @Body() changePasswordDto: ChangePasswordDto,
-  @CurrentUser() userId: string,
-): Promise<{ message: string }> {
-  return this.usersService.changePassword(
-    userId,
-    changePasswordDto.oldPassword,
-    changePasswordDto.newPassword,
-    changePasswordDto.newPasswordConfirm,
-  );
-}
+  async changePassword(
+    @ZodBody(changePasswordSchema) changePasswordDto: ChangePasswordDto,
+    @CurrentUser() userId: string,
+  ): Promise<{ message: string }> {
+    return this.usersService.changePassword(
+      userId,
+      changePasswordDto.oldPassword,
+      changePasswordDto.newPassword,
+      changePasswordDto.newPasswordConfirm,
+    );
+  }
 }
 

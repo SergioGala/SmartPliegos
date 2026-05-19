@@ -1,38 +1,14 @@
-import { IsString, IsOptional, IsUrl, Length, Matches } from 'class-validator';
+import { z } from 'zod';
+import { createOrganizationSchema } from './create-organization.dto';
 
 /**
  * DTO para actualizar una organización
  */
-export class UpdateOrganizationDto {
-  @IsOptional()
-  @IsString()
-  @Length(3, 255)
-  name?: string;
+/**
+ * Todos los campos de createOrganizationSchema se vuelven opcionales.
+ * No duplicar validaciones: .partial() lo hace automáticamente.
+ */
+export const updateOrganizationSchema = createOrganizationSchema.partial();
 
-  @IsOptional()
-  @IsString()
-  @Length(0, 1000)
-  description?: string;
-
-  @IsOptional()
-  @IsUrl()
-  @Length(0, 255)
-  website?: string;
-
-  @IsOptional()
-  @IsUrl()
-  @Length(0, 255)
-  logo?: string;
-
-  @IsOptional()
-  @Matches(/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/, {
-    message: 'El teléfono debe tener un formato válido (ej: +34 912345678)',
-  })
-  phone?: string;
-
-  @IsOptional()
-  @Matches(/^[ABCDEFGHJNPQRSUVW]\d{7}[0-9A-Z]$/, {
-    message: 'El CIF debe tener un formato válido español (ej: A12345678)',
-  })
-  cif?: string;
-}
+/** Tipo inferido. Reemplaza a la antigua clase. */
+export type UpdateOrganizationDto = z.infer<typeof updateOrganizationSchema>;

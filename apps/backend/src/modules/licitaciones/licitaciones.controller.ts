@@ -1,4 +1,4 @@
- 
+
 import { Controller, Get, Param, Query, ParseUUIDPipe } from '@nestjs/common';
 import {
   ApiTags,
@@ -10,14 +10,14 @@ import {
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
 import { LicitacionesService } from './licitaciones.service';
-import { SearchLicitacionesDto } from './dto/search-licitaciones.dto';
+import { type SearchLicitacionesDto } from './dto/search-licitaciones.dto';
 import { ValidateResourceExists } from '../../common/decorators';
 import { Licitacion } from '../scraping/shared/entities/licitacion.entity';
 
 @ApiTags('📋 Licitaciones')
 @Controller('licitaciones')
 export class LicitacionesController {
-  constructor(private readonly licitacionesService: LicitacionesService) {}
+  constructor(private readonly licitacionesService: LicitacionesService) { }
 
   /**
    * Buscar licitaciones con filtros avanzados

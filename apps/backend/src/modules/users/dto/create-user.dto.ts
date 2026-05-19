@@ -1,7 +1,29 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength, IsEnum, IsUUID, IsOptional, Matches } from 'class-validator';
-import { Role, Plan, Timezone } from '../enums';
+import { z } from 'zod';
+import {
+  emailSchema,
+  passwordSchema,
+  uuidSchema,
+  optionalPhoneSchema,
+  optionalTimezoneSchema,
+} from '../../../common/zod';
+import { Role, Plan } from '../enums';
 
-export class CreateUserDto {
+export const createUserSchema = z.object({
+  email: emailSchema,
+  firstName: z.string().trim().min(1, 'firstName is required'),
+  lastName: z.string().trim().min(1, 'lastName is required'),
+  phone: optionalPhoneSchema,
+  timezone: optionalTimezoneSchema,
+  password: passwordSchema,
+  role: z.nativeEnum(Role).optional().default(Role.PUBLIC_USER),
+  userPlan: z.nativeEnum(Plan).optional().default(Plan.FREE),
+  organizationId: uuidSchema.optional(),
+});
+
+export type CreateUserDto = z.infer<typeof createUserSchema>;
+
+
+/* export class CreateUserDto {
   @IsEmail()
   @IsNotEmpty()
   email: string;
@@ -36,7 +58,7 @@ export class CreateUserDto {
 
   /**
    * Plan del usuario (solo para PUBLIC_USER sin organizationId)
-   */
+   
   @IsEnum(Plan)
   @IsOptional()
   userPlan?: Plan = Plan.FREE;
@@ -44,4 +66,4 @@ export class CreateUserDto {
   @IsUUID()
   @IsOptional()
   organizationId?: string;
-}
+} */

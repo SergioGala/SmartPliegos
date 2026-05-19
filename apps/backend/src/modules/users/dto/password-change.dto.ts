@@ -1,40 +1,58 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { z } from 'zod';
+import { emailSchema, passwordSchema } from '../../../common/zod';
+import { ApiProperty } from '@nestjs/swagger';
 
-/**
- * DTO para solicitar cambio de contraseña
- */
-export class RequestPasswordChangeDto {
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
+// ─── Solicitar cambio (envía solo email) ──────────────────────────────────────
+
+export const requestPasswordChangeSchema = z.object({
+  email: emailSchema,
+});
+
+export type RequestPasswordChangeDto = z.infer<typeof requestPasswordChangeSchema>;
+
+/** Swagger metadata class — runtime validation uses requestPasswordChangeSchema + ZodBody. */
+export class RequestPasswordChangeDtoSwagger {
+  @ApiProperty({ description: 'Email del usuario', example: 'user@example.com' })
+  email!: string;
 }
 
-/**
- * DTO para confirmar cambio de contraseña (token va en params)
- */
-export class ConfirmPasswordChangeDto {
-  @IsString()
-  @MinLength(8)
-  @IsNotEmpty()
-  newPassword: string;
+// ─── Confirmar cambio vía token (token va en params, no en body) ──────────────
+
+export const confirmPasswordChangeSchema = z.object({
+  newPassword: passwordSchema,
+});
+
+export type ConfirmPasswordChangeDto = z.infer<typeof confirmPasswordChangeSchema>;
+
+/** Swagger metadata class — runtime validation uses confirmPasswordChangeSchema + ZodBody. */
+export class ConfirmPasswordChangeDtoSwagger {
+  @ApiProperty({ description: 'Nueva contraseña', example: 'NewSecurePassword123!' })
+  newPassword!: string;
 }
 
-/**
- * DTO para cambio directo de contraseña (usuario logueado)
- */
-export class ChangePasswordDto {
-  @IsString()
-  @MinLength(8)
-  @IsNotEmpty()
-  oldPassword: string;
+// ─── Cambio directo (usuario logueado) ────────────────────────────────────────
 
-  @IsString()
-  @MinLength(8)
-  @IsNotEmpty()
-  newPassword: string;
+export const changePasswordSchema = z
+  .object({
+    oldPassword: passwordSchema,
+    newPassword: passwordSchema,
+    newPasswordConfirm: z.string().min(1, 'newPasswordConfirm is required'),
+  })
+  .refine((data) => data.newPassword === data.newPasswordConfirm, {
+    message: 'Las contraseñas no coinciden',
+    path: ['newPasswordConfirm'],
+  });
 
-  @IsString()
-  @MinLength(8)
-  @IsNotEmpty()
-  newPasswordConfirm: string;
+export type ChangePasswordDto = z.infer<typeof changePasswordSchema>;
+
+/** Swagger metadata class — runtime validation uses changePasswordSchema + ZodBody. */
+export class ChangePasswordDtoSwagger {
+  @ApiProperty({ description: 'Contraseña actual', example: 'CurrentPassword123!' })
+  oldPassword!: string;
+
+  @ApiProperty({ description: 'Nueva contraseña', example: 'NewSecurePassword456!' })
+  newPassword!: string;
+
+  @ApiProperty({ description: 'Confirmación de la nueva contraseña', example: 'NewSecurePassword456!' })
+  newPasswordConfirm!: string;
 }

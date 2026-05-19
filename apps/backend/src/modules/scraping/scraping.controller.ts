@@ -16,7 +16,9 @@ import { PlaceScraperService } from './place/place-scraper.service';
 import { PlaceHistoricalService } from './place/place-historical.service';
 import { Licitacion } from './shared/entities/licitacion.entity';
 import { ScrapingLog } from './shared/entities/scraping-log.entity';
-import { RunPlaceDto, LoadHistoricalDto, ScrapingResultDto } from './dto/index';
+import { ZodBody } from '../../common/zod';
+import { runPlaceSchema, type RunPlaceDto } from './dto/run-place.dto';
+import { type ScrapingResultDto, ScrapingResultDtoSwagger } from './dto/scraping-result.dto';
 import { SecureAuthEndpoint, RequireRoles } from '../../common/decorators';
 import { Role } from '../users/enums';
 
@@ -30,13 +32,13 @@ export class ScrapingController {
     private readonly licitacionRepo: Repository<Licitacion>,
     @InjectRepository(ScrapingLog)
     private readonly logRepo: Repository<ScrapingLog>
-  ) {}
+  ) { }
 
   @Post('place/run')
   @SecureAuthEndpoint()
   @RequireRoles(Role.SUPER_ADMIN)
   @HttpCode(HttpStatus.ACCEPTED)
-  
+
   @ApiOperation({
     summary: 'Ejecutar scraping de PLACE manualmente',
     description:
@@ -45,9 +47,9 @@ export class ScrapingController {
   @ApiResponse({
     status: 202,
     description: 'Scraping iniciado exitosamente',
-    type: ScrapingResultDto,
+    type: ScrapingResultDtoSwagger,
   })
-  async runPlace(@Body() dto: RunPlaceDto) {
+  async runPlace(@ZodBody(runPlaceSchema) dto: RunPlaceDto) {
     return this.placeScraper.scrapeCurrentFeed(dto.maxPages ?? 3);
   }
 
@@ -68,10 +70,10 @@ export class ScrapingController {
   @ApiResponse({
     status: 202,
     description: 'Carga de histórico iniciada',
-    type: ScrapingResultDto,
+    type: ScrapingResultDtoSwagger,
   })
-  async loadHistorical(@Param() params: LoadHistoricalDto) {
-    return this.placeHistorical.loadHistorical(params.period);
+  async loadHistorical(@Param('period') params: string) {
+    return this.placeHistorical.loadHistorical(params);
   }
 
   @Post('place/historical-all')
@@ -154,13 +156,13 @@ export class ScrapingController {
       adjudicadas,
       ultimoScraping: lastLog
         ? {
-            fecha: lastLog.startedAt,
-            estado: lastLog.status,
-            nuevas: lastLog.itemsNew,
-            actualizadas: lastLog.itemsUpdated,
-            errores: lastLog.itemsErrors,
-            duracion: `${lastLog.duration}ms`,
-          }
+          fecha: lastLog.startedAt,
+          estado: lastLog.status,
+          nuevas: lastLog.itemsNew,
+          actualizadas: lastLog.itemsUpdated,
+          errores: lastLog.itemsErrors,
+          duracion: `${lastLog.duration}ms`,
+        }
         : null,
     };
   }

@@ -1,42 +1,48 @@
-import { IsString, IsOptional, IsEnum, IsBoolean, IsEmail, Matches } from 'class-validator';
-import { Role, Plan, Timezone } from '../enums';
+import { z } from 'zod';
+import { emailSchema, optionalPhoneSchema, optionalTimezoneSchema } from '../../../common/zod';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Role, Plan } from '../enums';
 
-export class UpdateUserDto {
-  @IsEmail()
-  @IsOptional()
+export const updateUserSchema = z.object({
+  email: emailSchema.optional(),
+  firstName: z.string().trim().min(1, 'firstName cannot be empty').optional(),
+  lastName: z.string().trim().min(1, 'lastName cannot be empty').optional(),
+  phone: optionalPhoneSchema,
+  timezone: optionalTimezoneSchema,
+  role: z.nativeEnum(Role).optional(),
+  userPlan: z.nativeEnum(Plan).optional(),
+  isActive: z.boolean().optional(),
+});
+
+/** Tipo inferido. Reemplaza a la antigua clase. */
+export type UpdateUserDto = z.infer<typeof updateUserSchema>;
+
+/**
+ * Swagger metadata class for PATCH /users/:userId.
+ * NOT used for runtime validation — that is handled by updateUserSchema + ZodBody.
+ */
+export class UpdateUserDtoSwagger {
+  @ApiPropertyOptional({ description: 'Email del usuario', example: 'user@example.com' })
   email?: string;
 
-  @IsString()
-  @IsOptional()
+  @ApiPropertyOptional({ description: 'Nombre', example: 'Juan' })
   firstName?: string;
 
-  @IsString()
-  @IsOptional()
+  @ApiPropertyOptional({ description: 'Apellido', example: 'García' })
   lastName?: string;
 
-  @IsString()
-  @Matches(/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/, {
-    message: 'El teléfono debe tener un formato válido (ej: +34 912345678)',
-  })
-  @IsOptional()
+  @ApiPropertyOptional({ description: 'Teléfono', example: '+34 612 345 678' })
   phone?: string;
 
-  @IsEnum(Timezone)
-  @IsOptional()
-  timezone?: Timezone;
+  @ApiPropertyOptional({ description: 'Zona horaria', example: 'Europe/Madrid' })
+  timezone?: string;
 
-  @IsEnum(Role)
-  @IsOptional()
+  @ApiPropertyOptional({ description: 'Rol del usuario', enum: Role })
   role?: Role;
 
-  /**
-   * Actualizar plan del usuario (solo para PUBLIC_USER)
-   */
-  @IsEnum(Plan)
-  @IsOptional()
+  @ApiPropertyOptional({ description: 'Plan del usuario', enum: Plan })
   userPlan?: Plan;
 
-  @IsBoolean()
-  @IsOptional()
+  @ApiPropertyOptional({ description: '¿Usuario activo?', example: true })
   isActive?: boolean;
 }

@@ -1,202 +1,115 @@
-/**
- * Schema de validación de variables de entorno.
- *
- * NOTA TEMPORAL: este archivo usa validación manual con tipos TypeScript.
- * En Sprint 1.4 se migrará a Zod (junto con el resto de DTOs del backend).
- * Cuando se haga, este archivo se reescribe pero el comportamiento al
- * arrancar es idéntico: si falta algo crítico, el backend NO arranca.
- *
- * Variables marcadas como `required: true` son críticas. Si falta una de
- * esas, validateEnv() lanza error y NestJS aborta el bootstrap.
- *
- * Variables `required: false` son opcionales (con default si se define).
- */
+import { z } from 'zod';
 
 /**
- * Especificación de UNA variable de entorno.
- * El array ENV_SPEC debajo es una lista de estas.
- */
-interface EnvVarSpec {
-  /** Nombre de la variable, tal cual aparece en .env y process.env. */
-  name: string;
-  /** Si es true, la variable debe estar definida y no vacía. */
-  required: boolean;
-  /** Valor por defecto si no está definida (solo aplica si required=false). */
-  default?: string;
-  /**
-   * Lista de valores que NO son aceptables para esta variable.
-   * Uso típico: rechazar placeholders peligrosos como
-   * 'change-me-in-production' o 'REEMPLAZA_ESTO'.
-   */
-  forbiddenValues?: string[];
-  /**
-   * Validador adicional. Recibe el valor y devuelve:
-   *   - null si el valor es válido.
-   *   - string con mensaje de error si es inválido.
-   * Uso típico: longitud mínima, regex, prefijo esperado.
-   */
-  validate?: (value: string) => string | null;
-}
-
-/**
- * Especificación de TODAS las variables que SmartPliegos lee.
+ * Schema Zod de las variables de entorno.
  *
- * Si añades una variable nueva al backend, AÑÁDELA AQUÍ.
- * Si no, validateEnv() no la valida y puede pasar undefined a tu código.
+ * Reemplaza la validación manual del Sprint 1.4. Comportamiento idéntico:
+ * si una required falla, lanzamos error agregado con todas las variables
+ * inválidas — no una a una.
  */
-export const ENV_SPEC: EnvVarSpec[] = [
+const ForbiddenJwtSecrets = new Set([
+  'REEMPLAZA_ESTO_CON_UN_SECRET_DE_AL_MENOS_32_CARACTERES_ALEATORIOS',
+  'default-secret-change-in-production',
+  'secret',
+  'changeme',
+  'mySecret',
+  'jwtSecret',
+]);
+
+export const envSchema = z.object({
   // ─── Application ───
-  { name: 'NODE_ENV', required: false, default: 'development' },
-  { name: 'APP_PORT', required: false, default: '3000' },
-  { name: 'APP_NAME', required: false, default: 'smartpliegos' },
-  { name: 'APP_URL', required: false, default: 'http://localhost:3000' },
+  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  APP_PORT: z.coerce.number().int().min(1).max(65535).default(3000),
+  APP_NAME: z.string().default('smartpliegos'),
+  APP_URL: z.string().url().default('http://localhost:3000'),
 
-  // ─── Database (PostgreSQL) ───
-  { name: 'DB_HOST', required: true },
-  { name: 'DB_PORT', required: false, default: '5432' },
-  { name: 'DB_USERNAME', required: true },
-  { name: 'DB_PASSWORD', required: true },
-  { name: 'DB_NAME', required: true },
+  // ─── Database ───
+  DB_HOST: z.string().min(1, 'DB_HOST is REQUIRED'),
+  DB_PORT: z.coerce.number().int().min(1).max(65535).default(5432),
+  DB_USERNAME: z.string().min(1, 'DB_USERNAME is REQUIRED'),
+  DB_PASSWORD: z.string().min(1, 'DB_PASSWORD is REQUIRED'),
+  DB_NAME: z.string().min(1, 'DB_NAME is REQUIRED'),
 
   // ─── JWT ───
-  {
-    name: 'JWT_SECRET',
-    required: true,
-    forbiddenValues: [
-      'REEMPLAZA_ESTO_CON_UN_SECRET_DE_AL_MENOS_32_CARACTERES_ALEATORIOS',
-      'default-secret-change-in-production',
-      'secret',
-      'changeme',
-      'mySecret',
-      'jwtSecret',
-    ],
-    validate: (value) =>
-      value.length < 32
-        ? `must be at least 32 characters (got ${value.length})`
-        : null,
-  },
-  { name: 'JWT_EXPIRATION', required: false, default: '3600' },
+  JWT_SECRET: z
+    .string()
+    .min(32, 'JWT_SECRET must be at least 32 characters')
+    .refine(
+      (v) => !ForbiddenJwtSecrets.has(v),
+      'JWT_SECRET has a forbidden placeholder value; generate a real one',
+    ),
+  JWT_EXPIRATION: z.coerce.number().int().positive().default(3600),
 
   // ─── API ───
-  { name: 'API_VERSION', required: false, default: 'v1' },
-  { name: 'API_PREFIX', required: false, default: 'api' },
+  API_VERSION: z.string().default('v1'),
+  API_PREFIX: z.string().default('api'),
 
   // ─── Frontend / CORS ───
-  { name: 'FRONTEND_URL', required: false, default: 'http://localhost:5173' },
-  { name: 'CORS_ORIGIN', required: false, default: 'http://localhost:5173' },
+  FRONTEND_URL: z.string().url().default('http://localhost:5173'),
+  CORS_ORIGIN: z.string().default('http://localhost:5173'),
 
   // ─── Resend ───
-  {
-    name: 'RESEND_API_KEY',
-    required: true,
-    validate: (value) =>
-      value.startsWith('re_') ? null : 'must start with "re_"',
-  },
-  {
-    name: 'RESEND_FROM_EMAIL',
-    required: false,
-    default: 'onboarding@resend.dev',
-  },
+  RESEND_API_KEY: z
+    .string()
+    .refine((v) => v.startsWith('re_'), 'RESEND_API_KEY must start with "re_"'),
+  RESEND_FROM_EMAIL: z.string().email().default('onboarding@resend.dev'),
 
-  // ─── Google OAuth ───
-  // Marcadas como NO requeridas porque OAuth puede estar desactivado en
-  // algunos entornos (ej. tests). El AuthModule fallará explícitamente
-  // si se invoca el endpoint de Google sin estas variables, lo cual es
-  // comportamiento aceptable.
-  { name: 'GOOGLE_CLIENT_ID', required: false },
-  { name: 'GOOGLE_CLIENT_SECRET', required: false },
-  {
-    name: 'GOOGLE_CALLBACK_URL',
-    required: false,
-    default: 'http://localhost:3000/api/v1/auth/google/callback',
-  },
+  // ─── Google OAuth (opcional) ───
+  GOOGLE_CLIENT_ID: z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
+  GOOGLE_CALLBACK_URL: z.string().url().default('http://localhost:3000/api/v1/auth/google/callback'),
 
   // ─── Redis ───
-  { name: 'REDIS_URL', required: false, default: 'redis://localhost:6379' },
-  { name: 'REDIS_HOST', required: false, default: 'localhost' },
-  { name: 'REDIS_PORT', required: false, default: '6379' },
-  { name: 'REDIS_PASSWORD', required: false, default: '' },
-   
+  REDIS_URL: z.string().default('redis://localhost:6379'),
+  REDIS_HOST: z.string().default('localhost'),
+  REDIS_PORT: z.coerce.number().int().min(1).max(65535).default(6379),
+  REDIS_PASSWORD: z.string().default(''),
+
   // ─── Sentry ───
-  { name: 'SENTRY_DSN', required: false },
+  SENTRY_DSN: z.string().optional(),
 
   // ─── File upload ───
-  { name: 'MAX_FILE_SIZE', required: false, default: '5242880' },
-  { name: 'UPLOAD_DIR', required: false, default: './uploads' },
+  MAX_FILE_SIZE: z.coerce.number().int().positive().default(5_242_880),
+  UPLOAD_DIR: z.string().default('./uploads'),
 
   // ─── Logging ───
-  { name: 'LOG_LEVEL', required: false, default: 'info' },
-];
+  LOG_LEVEL: z.enum(['error', 'warn', 'info', 'http', 'debug']).default('info'),
+  LOG_FORMAT: z.enum(['json', 'pretty']).default('pretty'),
 
-/**
- * Valida process.env contra ENV_SPEC.
- *
- * Comportamiento:
- *   - Aplica defaults a las opcionales que no estén definidas.
- *   - Valida que las requeridas existan y no sean strings vacíos.
- *   - Valida que las requeridas no contengan placeholders peligrosos.
- *   - Aplica validadores adicionales (longitud, regex).
- *
- * Si todo OK, retorna void.
- * Si algo falla, lanza Error con un mensaje detallado de TODAS las
- * variables que están mal (no solo la primera). Esto es importante:
- * el dev ve TODOS sus problemas de configuración en un solo error,
- * no uno detrás de otro.
- *
- * Esta función debe llamarse al inicio del proceso, antes de que
- * cualquier módulo de NestJS lea variables.
- */
-export function validateEnv(env: NodeJS.ProcessEnv): void {
-  const errors: string[] = [];
+  // ─── Email provider ───
+  MAIL_PROVIDER_TYPE: z.enum(['resend', 'memory']).default('resend'),
+});
 
-  for (const spec of ENV_SPEC) {
-    const rawValue = env[spec.name];
+export type Env = z.infer<typeof envSchema>;
 
-    // Caso 1: variable no definida o vacía
-    if (rawValue === undefined || rawValue === '') {
-      if (spec.required) {
-        errors.push(`  ✗ ${spec.name} is REQUIRED but missing or empty`);
-        continue;
-      }
-      // Si es opcional con default, lo aplicamos al process.env
-      if (spec.default !== undefined) {
-        env[spec.name] = spec.default;
-      }
-      continue;
-    }
+export function validateEnv(rawEnv: NodeJS.ProcessEnv): void {
+  const result = envSchema.safeParse(rawEnv);
 
-    // Caso 2: variable tiene valor pero está en la lista de prohibidos
-    if (spec.forbiddenValues?.includes(rawValue)) {
-      errors.push(
-        `  ✗ ${spec.name} has a forbidden placeholder value: "${rawValue}". Generate a real value.`,
-      );
-      continue;
-    }
-
-    // Caso 3: validador adicional (longitud, prefijo, regex)
-    if (spec.validate) {
-      const validationError = spec.validate(rawValue);
-      if (validationError) {
-        errors.push(`  ✗ ${spec.name}: ${validationError}`);
-      }
-    }
-  }
-
-  // Si hay errores, lanzar todos juntos en un mensaje legible
-  if (errors.length > 0) {
+  if (!result.success) {
+    const lines = result.error.issues.map((issue) => {
+      const path = issue.path.join('.') || '(root)';
+      return `  ✗${path}:${issue.message}`;
+    });
     const message = [
       '',
       '════════════════════════════════════════════════════════════════',
       '  Environment validation FAILED',
       '════════════════════════════════════════════════════════════════',
-      ...errors,
+      ...lines,
       '',
       'Fix the above issues in your .env file and restart.',
       'See .env.example for reference.',
       '════════════════════════════════════════════════════════════════',
       '',
     ].join('\n');
-
     throw new Error(message);
+  }
+
+  // Aplicar defaults validados de vuelta a process.env para que código
+  // que aún lee process.env directamente vea los defaults.
+  for (const [key, value] of Object.entries(result.data)) {
+    if (rawEnv[key] === undefined || rawEnv[key] === '') {
+      rawEnv[key] = String(value);
+    }
   }
 }

@@ -1,12 +1,41 @@
-import { IsEmail, IsString, MinLength, IsOptional } from 'class-validator';
+import { z } from 'zod';
 import { ApiProperty } from '@nestjs/swagger';
-import { Timezone } from '../../../modules/users/enums';
+import { emailSchema, optionalPhoneSchema, optionalTimezoneSchema } from '../../../common/zod';
+
+export const signupSchema = z.object({
+  email: emailSchema,
+  firstName: z.string().trim().min(1, 'firstName is required'),
+  lastName: z.string().trim().min(1, 'lastName is required'),
+  phone: optionalPhoneSchema,
+  timezone: optionalTimezoneSchema
+})
+
+export type SignupDto = z.infer<typeof signupSchema>;
+
+export class SignupDtoSwagger {
+  @ApiProperty({ example: 'user@example.com'})
+  email!: string;
+
+  @ApiProperty({ example: 'John', minLength: 2})
+  firstName!: string;
+
+  @ApiProperty({ example: 'Doe', minLength: 2})
+  lastName!: string;
+
+  @ApiProperty({ example: '+34912345678', required: false })
+  phone?: string;
+
+  @ApiProperty({ example: 'Europe/Madrid', required: false })
+  timezone?: string;
+}
+
+
 
 /**
  * DTO para Signup/Registro (Step 1)
  * No incluye password - se solicita en POST /complete-signup/:token
  */
-export class SignupDto {
+/*  export class SignupDto {
   @ApiProperty({
     description: 'Email del usuario (debe ser único)',
     example: 'user@example.com',
@@ -55,4 +84,5 @@ export class SignupDto {
   @IsOptional()
   @IsString()
   timezone?: Timezone;
-}
+} 
+ */

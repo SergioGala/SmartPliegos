@@ -16,8 +16,9 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 import { AlertsService } from './alerts.service';
-import { CreateAlertDto } from './dto/create-alert.dto';
-import { UpdateAlertDto } from './dto/update-alert.dto';
+import { ZodBody } from '../../common/zod';
+import { createAlertSchema, type CreateAlertDto, CreateAlertDtoSwagger } from './dto/create-alert.dto';
+import { updateAlertSchema, type UpdateAlertDto } from './dto/update-alert.dto';
 import { AlertEntity } from './entities/alert.entity';
 import {
   CurrentUser,
@@ -53,7 +54,7 @@ export class AlertsController {
     description: 'Datos inválidos',
   })
   create(
-    @Body() createAlertDto: CreateAlertDto,
+    @ZodBody(createAlertSchema) createAlertDto: CreateAlertDto,
     @CurrentUser() userId: string,
   ) {
     return this.alertsService.create(userId, createAlertDto);
@@ -147,7 +148,7 @@ export class AlertsController {
   })
   update(
     @Param('id') id: string,
-    @Body() updateAlertDto: UpdateAlertDto,
+    @ZodBody(updateAlertSchema) updateAlertDto: UpdateAlertDto,
     @CurrentUser() userId: string,
   ) {
     return this.alertsService.update(id, userId, updateAlertDto);

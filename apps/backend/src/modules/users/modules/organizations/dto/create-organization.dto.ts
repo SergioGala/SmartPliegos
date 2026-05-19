@@ -1,9 +1,49 @@
-import { IsNotEmpty, IsString, IsOptional, IsUrl, Length, MinLength, Matches } from 'class-validator';
+import { z } from 'zod';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { optionalPhoneSchema, optionalCifSchema } from '../../../../../common/zod/';
 
 /**
  * DTO para crear una nueva organización
  * Usado cuando un PUBLIC_USER crea su primera organización (automáticamente se convierte en ORG_OWNER)
  */
+
+/**
+ * optionalPhoneSchema y optionalCifSchema deben estar definidos en common/zod.
+ * Ver nota de migración al final de este archivo.
+ */
+export const createOrganizationSchema = z.object({
+  name: z.string().trim().min(3, 'name debe tener al menos 3 caracteres').max(255),
+  description: z.string().max(1000).optional(),
+  website: z.string().url('website debe ser una URL válida').max(255).optional(),
+  logo: z.string().url('logo debe ser una URL válida').max(255).optional(),
+  phone: optionalPhoneSchema,
+  cif: optionalCifSchema,
+});
+
+/** Tipo inferido. Reemplaza a la antigua clase. */
+export type CreateOrganizationDto = z.infer<typeof createOrganizationSchema>;
+
+export class CreateOrganizationDtoSwagger {
+  @ApiProperty({ example: 'Acme Corp', minLength: 3, maxLength: 255 })
+  name!: string;
+
+  @ApiPropertyOptional({ example: 'Empresa líder en tecnología', maxLength: 1000 })
+  description?: string;
+
+  @ApiPropertyOptional({ example: 'https://acme.com', maxLength: 255 })
+  website?: string;
+
+  @ApiPropertyOptional({ example: 'https://acme.com/logo.png', maxLength: 255 })
+  logo?: string;
+
+  @ApiPropertyOptional({ example: '+34912345678' })
+  phone?: string;
+
+  @ApiPropertyOptional({ example: 'A12345678' })
+  cif?: string;
+}
+
+/*
 export class CreateOrganizationDto {
   @IsNotEmpty()
   @IsString()
@@ -38,3 +78,4 @@ export class CreateOrganizationDto {
   })
   cif?: string;
 }
+*/

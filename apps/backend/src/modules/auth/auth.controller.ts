@@ -23,9 +23,11 @@ import {
 import type { Response } from 'express';
 import type { Request as ExpressRequest } from 'express';
 import { AuthService } from './auth.service';
-import { LoginDto, SignupDto } from './dto';
-import { CompleteSignupDto } from './dto/complete-signup.dto';
-import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { ZodBody } from '../../common/zod';
+import { loginSchema, type LoginDto, LoginDtoSwagger } from './dto/login.dto';
+import { signupSchema, type SignupDto, SignupDtoSwagger } from './dto/signup.dto';
+import { completeSignupSchema, type CompleteSignupDto, CompleteSignupDtoSwagger } from './dto/complete-signup.dto';
+import { refreshTokenSchema, type RefreshTokenDto, RefreshTokenDtoSwagger } from './dto/refresh-token.dto';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { BruteForceCooldown, RateLimitStrict, SecureAuthEndpoint } from '../../common/decorators';
 
@@ -57,7 +59,7 @@ interface GoogleAuthenticatedRequest extends ExpressRequest {
   };
 }
 @ApiTags('Authentication')
-@ApiExtraModels(LoginDto, SignupDto, CompleteSignupDto, RefreshTokenDto)
+@ApiExtraModels(LoginDtoSwagger, SignupDtoSwagger, CompleteSignupDtoSwagger, RefreshTokenDtoSwagger)
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -88,7 +90,7 @@ export class AuthController {
     `,
   })
   @ApiBody({
-    type: LoginDto,
+    type: LoginDtoSwagger,
     examples: {
       example1: {
         value: {
@@ -136,7 +138,7 @@ export class AuthController {
     description: 'Requests restantes',
   })
  async login(
-  @Body() loginDto: LoginDto,
+  @ZodBody(loginSchema) loginDto: LoginDto,
   @Request() request: ExpressRequest,
 ): Promise<{
   access_token: string;
@@ -161,7 +163,7 @@ export class AuthController {
       Útil cuando el access token expira (después de 1 hora).
     `,
   })
-  @ApiBody({ type: RefreshTokenDto })
+  @ApiBody({ type: RefreshTokenDtoSwagger })
   @ApiResponse({
     status: 200,
     description: 'Token renovado exitosamente',
@@ -176,7 +178,7 @@ export class AuthController {
     status: 401,
     description: 'Refresh token inválido o expirado',
   })
-  async refresh(@Body() refreshTokenDto: RefreshTokenDto): Promise<{
+  async refresh(@ZodBody(refreshTokenSchema) refreshTokenDto: RefreshTokenDto): Promise<{
     access_token: string;
     refresh_token: string;
   }> {
@@ -198,7 +200,7 @@ export class AuthController {
       Es necesario hacer login nuevamente para obtener nuevos tokens.
     `,
   })
-  @ApiBody({ type: RefreshTokenDto })
+  @ApiBody({ type: RefreshTokenDtoSwagger })
   @ApiResponse({
     status: 200,
     description: 'Logout exitoso',
@@ -212,7 +214,7 @@ export class AuthController {
     status: 401,
     description: 'Token inválido o expirado',
   })
-  async logout(@Body() body: RefreshTokenDto): Promise<{ message: string }> {
+  async logout(@ZodBody(refreshTokenSchema) body: RefreshTokenDto): Promise<{ message: string }> {
     return this.authService.logout(body.refresh_token);
   }
 
@@ -285,7 +287,7 @@ export class AuthController {
       - Email de verificación requerido
     `,
   })
-  @ApiBody({ type: SignupDto })
+  @ApiBody({ type: SignupDtoSwagger })
   @ApiResponse({
     status: 201,
     description: 'Usuario creado, email de verificación enviado',
@@ -304,7 +306,7 @@ export class AuthController {
     description: 'Rate limit excedido',
   })
 async signup(
-  @Body() signupDto: SignupDto,
+  @ZodBody(signupSchema) signupDto: SignupDto,
   @Request() request: ExpressRequest,  
 ): Promise<{ message: string }> {
   const clientIp = this.getClientIp(request);   
@@ -344,7 +346,7 @@ async signup(
     description: 'Token de verificación enviado por email (válido 24 horas)',
     example: 'a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6',
   })
-  @ApiBody({ type: CompleteSignupDto })
+  @ApiBody({ type: CompleteSignupDtoSwagger })
   @ApiResponse({
     status: 200,
     description: 'Registro completado y usuario autenticado',
@@ -374,7 +376,7 @@ async signup(
   })
  async completeSignup(
   @Param('token') token: string,
-  @Body() completeSignupDto: CompleteSignupDto,
+  @ZodBody(completeSignupSchema) completeSignupDto: CompleteSignupDto,
   @Request() request: ExpressRequest,
 ): Promise<{
   access_token: string;
