@@ -19,6 +19,8 @@ import { SearchModule } from './modules/search/search.module';
 import { OrganosModule } from './modules/organos/organos.module';
 import { RedisModule } from './infrastructure/redis';
 import { RequestIdMiddleware } from './common/middleware';
+import { AiInfrastructureModule } from './infrastructure/ai';
+import { AiModule } from './modules/ai/ai.module';
 
 
 @Module({
@@ -41,6 +43,8 @@ import { RequestIdMiddleware } from './common/middleware';
     SearchModule,
     OrganosModule,
     RedisModule,
+    AiInfrastructureModule,
+    AiModule,
   ],
   controllers: [AppController],
   providers: [AppService],

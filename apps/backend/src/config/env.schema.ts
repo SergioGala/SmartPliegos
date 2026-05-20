@@ -78,6 +78,13 @@ export const envSchema = z.object({
 
   // ─── Email provider ───
   MAIL_PROVIDER_TYPE: z.enum(['resend', 'memory']).default('resend'),
+  
+  // ═══ AI Providers ═══
+  ANTHROPIC_API_KEY: z.string().optional(),
+  OPENAI_API_KEY: z.string().optional(),
+  QDRANT_URL: z.string().url().default('http://localhost:6333'),
+  QDRANT_API_KEY: z.string().optional(),
+  QDRANT_COLLECTION_LICITACIONES: z.string().default('licitaciones'),
 });
 
 export type Env = z.infer<typeof envSchema>;

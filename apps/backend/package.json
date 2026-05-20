@@ -26,6 +26,7 @@
     "migration:show": "npm run typeorm -- migration:show"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.40.1",
     "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.4",
@@ -38,6 +39,7 @@
     "@nestjs/swagger": "^11.2.7",
     "@nestjs/terminus": "^11.1.1",
     "@nestjs/typeorm": "^11.0.1",
+    "@qdrant/js-client-rest": "^1.18.0",
     "@sentry/node": "^10.53.0",
     "@sentry/profiling-node": "^10.53.0",
     "adm-zip": "^0.5.17",
@@ -49,6 +51,7 @@
     "fast-xml-parser": "^5.5.11",
     "morgan": "^1.10.1",
     "nest-winston": "^1.10.2",
+    "openai": "^4.104.0",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",

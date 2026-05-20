@@ -36,6 +36,22 @@ export const config = {
     fromEmail: env.RESEND_FROM_EMAIL,
   },
 
+  ai: {
+  anthropic: {
+    apiKey: env.ANTHROPIC_API_KEY ?? null,
+    model: process.env.ANTHROPIC_MODEL ?? 'claude-sonnet-4-6',
+  },
+  openai: {
+    apiKey: env.OPENAI_API_KEY ?? null,
+    embeddingModel: process.env.OPENAI_EMBEDDING_MODEL ?? 'text-embedding-3-small',
+  },
+  qdrant: {
+    url: env.QDRANT_URL,
+    apiKey: env.QDRANT_API_KEY ?? null,
+    collectionLicitaciones: env.QDRANT_COLLECTION_LICITACIONES,
+  },
+},
+
   logFormat: env.LOG_FORMAT,
   logLevel: env.LOG_LEVEL,
   mailProviderType: env.MAIL_PROVIDER_TYPE,
