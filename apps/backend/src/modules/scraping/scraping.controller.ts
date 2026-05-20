@@ -14,10 +14,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PlaceScraperService } from './place/place-scraper.service';
 import { PlaceHistoricalService } from './place/place-historical.service';
+import { BoeScraperService } from './boe';
 import { Licitacion } from './shared/entities/licitacion.entity';
 import { ScrapingLog } from './shared/entities/scraping-log.entity';
 import { ZodBody } from '../../common/zod';
 import { runPlaceSchema, type RunPlaceDto } from './dto/run-place.dto';
+import { runBoeSchema, type RunBoeDto } from './dto/run-boe.dto';
 import { type ScrapingResultDto, ScrapingResultDtoSwagger } from './dto/scraping-result.dto';
 import { SecureAuthEndpoint, RequireRoles } from '../../common/decorators';
 import { Role } from '../users/enums';
@@ -28,11 +30,23 @@ export class ScrapingController {
   constructor(
     private readonly placeScraper: PlaceScraperService,
     private readonly placeHistorical: PlaceHistoricalService,
+    private readonly boeScraper: BoeScraperService,
     @InjectRepository(Licitacion)
     private readonly licitacionRepo: Repository<Licitacion>,
     @InjectRepository(ScrapingLog)
     private readonly logRepo: Repository<ScrapingLog>
   ) { }
+
+  @Post('boe/run')
+  @SecureAuthEndpoint()
+  @RequireRoles(Role.SUPER_ADMIN)
+  @HttpCode(HttpStatus.ACCEPTED)
+  @ApiOperation({ summary: 'Ejecutar scraper BOE para un día (sección III)' })
+  @ApiResponse({ status: 202, description: 'Scraping BOE iniciado' })
+  async runBoe(@ZodBody(runBoeSchema) dto: RunBoeDto) {
+    const target = dto.date ? new Date(`${dto.date}T00:00:00Z`) : new Date();
+    return this.boeScraper.scrapeDay(target);
+  }
 
   @Post('place/run')
   @SecureAuthEndpoint()
