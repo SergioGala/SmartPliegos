@@ -1,12 +1,7 @@
 "use client"
 
-<<<<<<< HEAD
-import { Tabs as TabsPrimitive } from "@base-ui/react/tabs"
-import { type VariantProps } from "class-variance-authority"
-=======
 import * as TabsPrimitive from "@radix-ui/react-tabs"
-import { cva, type VariantProps } from "class-variance-authority"
->>>>>>> 1a99033 (refactor: migrate Base UI components to Radix UI)
+import { type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 import { tabsListVariants } from "./tabs.variants"
@@ -29,24 +24,6 @@ function Tabs({
   )
 }
 
-<<<<<<< HEAD
-=======
-const tabsListVariants = cva(
-  "group/tabs-list inline-flex w-fit items-center justify-center rounded-lg p-[3px] text-muted-foreground group-data-[orientation=horizontal]/tabs:h-8 group-data-[orientation=vertical]/tabs:h-fit group-data-[orientation=vertical]/tabs:flex-col data-[variant=line]:rounded-none",
-  {
-    variants: {
-      variant: {
-        default: "bg-muted",
-        line: "gap-1 bg-transparent",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-    },
-  }
-)
-
->>>>>>> 1a99033 (refactor: migrate Base UI components to Radix UI)
 function TabsList({
   className,
   variant = "default",
@@ -95,8 +72,4 @@ function TabsContent({
   )
 }
 
-<<<<<<< HEAD
-export { Tabs, TabsList, TabsTrigger, TabsContent }
-=======
 export { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants }
->>>>>>> 1a99033 (refactor: migrate Base UI components to Radix UI)
