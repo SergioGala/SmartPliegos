@@ -10,9 +10,13 @@ import {
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
 import { LicitacionesService } from './licitaciones.service';
-import { type SearchLicitacionesDto } from './dto/search-licitaciones.dto';
 import { ValidateResourceExists } from '../../common/decorators';
 import { Licitacion } from '../scraping/shared/entities/licitacion.entity';
+import { ZodQuery } from '../../common/zod';
+import {
+  searchLicitacionesSchema,
+  type SearchLicitacionesDto,
+} from './dto/search-licitaciones.dto';
 
 @ApiTags('📋 Licitaciones')
 @Controller('licitaciones')
@@ -177,9 +181,9 @@ export class LicitacionesController {
     },
   })
   @ApiBadRequestResponse({ description: 'Parámetros inválidos' })
-  async search(@Query() dto: SearchLicitacionesDto) {
-    return this.licitacionesService.search(dto);
-  }
+  async search(@ZodQuery(searchLicitacionesSchema) dto: SearchLicitacionesDto) {
+  return this.licitacionesService.search(dto);
+}
 
   /**
    * Obtener opciones de filtros
