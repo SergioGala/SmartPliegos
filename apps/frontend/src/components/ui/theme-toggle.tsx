@@ -21,20 +21,18 @@ export function ThemeToggle({ variant = 'icon', className }: ThemeToggleProps) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger
-        render={
-          <Button
-            variant="ghost"
-            size={variant === 'icon' ? 'icon-sm' : 'sm'}
-            className={cn('relative', className)}
-          />
-        }
-      >
-        <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-        <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-        {variant === 'full' && <span className="ml-2">{t('theme.label')}</span>}
-        <span className="sr-only">{t('theme.change')}</span>
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
+  <Button
+    variant="ghost"
+    size={variant === 'icon' ? 'icon-sm' : 'sm'}
+    className={cn('relative', className)}
+  >
+    <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+    <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+    {variant === 'full' && <span className="ml-2">{t('theme.label')}</span>}
+    <span className="sr-only">{t('theme.change')}</span>
+  </Button>
+</DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-36">
         <DropdownMenuItem
           onClick={() => setTheme('light')}

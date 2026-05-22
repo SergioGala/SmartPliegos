@@ -90,10 +90,12 @@ export function LicitacionPage() {
                 <p className="text-sm text-muted-foreground mb-6">
                     {t('detail.notFoundBody')}
                 </p>
-                <Button render={<Link to="/buscar" />}>
-                    <ArrowLeft size={14} />
-                    {t('detail.backToSearch')}
-                </Button>
+                <Button asChild>
+  <Link to="/buscar">
+    <ArrowLeft size={14} />
+    {t('detail.backToSearch')}
+  </Link>
+</Button>
             </div>
         )
     }
