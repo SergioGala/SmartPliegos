@@ -136,14 +136,13 @@ export class BoeScraperService {
     ].filter((d): d is { tipo: string; url: string } => d !== null);
 
     if (existing) {
-      await licRepo.update(existing.id, {
-        title: disp.titulo,
-        description: disp.epigrafeNombre,
-        fechaPublicacion: disp.fechaPublicacion,
-        documentos: documentos as any,
-      });
-      return 'updated';
-    }
+  existing.title = disp.titulo;
+  existing.description = disp.epigrafeNombre;
+  existing.fechaPublicacion = disp.fechaPublicacion;
+  existing.documentos = documentos;
+  await licRepo.save(existing);
+  return 'updated';
+}
 
     const nueva = licRepo.create();
     nueva.externalId = disp.externalId;

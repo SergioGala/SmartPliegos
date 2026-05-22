@@ -29,7 +29,7 @@ describe('BoeScraperService', () => {
     logRepo = {
       save: jest.fn().mockImplementation((log) => Promise.resolve({ id: 'log-uuid', ...log })),
       update: jest.fn().mockResolvedValue(undefined),
-      create: jest.fn().mockImplementation((entity) => entity),
+      create: jest.fn().mockImplementation((entity: Partial<ScrapingLog>) => entity),
     };
 
     dataSource = {

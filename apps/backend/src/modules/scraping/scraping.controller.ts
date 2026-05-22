@@ -5,7 +5,6 @@ import {
   Post,
   Get,
   Param,
-  Body,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
@@ -20,7 +19,7 @@ import { ScrapingLog } from './shared/entities/scraping-log.entity';
 import { ZodBody } from '../../common/zod';
 import { runPlaceSchema, type RunPlaceDto } from './dto/run-place.dto';
 import { runBoeSchema, type RunBoeDto } from './dto/run-boe.dto';
-import { type ScrapingResultDto, ScrapingResultDtoSwagger } from './dto/scraping-result.dto';
+import { ScrapingResultDtoSwagger } from './dto/scraping-result.dto';
 import { SecureAuthEndpoint, RequireRoles } from '../../common/decorators';
 import { Role } from '../users/enums';
 
