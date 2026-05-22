@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Dialog } from '@base-ui/react/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import { X } from 'lucide-react';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -134,135 +134,133 @@ export function AlertFormDialog({ open, onOpenChange, editingId }: Props) {
   };
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Portal>
-        <Dialog.Backdrop className="fixed inset-0 bg-black/50 z-50" />
-        <Dialog.Popup
-          className={cn(
-            'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50',
-            'w-full max-w-2xl max-h-[90vh] overflow-y-auto',
-            'bg-card border border-border rounded-xl p-6 shadow-xl'
-          )}
-        >
-          <div className="flex items-start justify-between mb-6">
-            <Dialog.Title className="text-lg font-semibold">
-              {isEdit ? t('form.editTitle') : t('form.createTitle')}
-            </Dialog.Title>
-            <Dialog.Close className="p-1 rounded hover:bg-accent">
-              <X size={16} />
-            </Dialog.Close>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        showCloseButton={false}
+        className={cn(
+          'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50',
+          'w-full max-w-2xl max-h-[90vh] overflow-y-auto',
+          'bg-card border border-border rounded-xl p-6 shadow-xl'
+        )}
+      >
+        <div className="flex items-start justify-between mb-6">
+          <DialogTitle className="text-lg font-semibold">
+            {isEdit ? t('form.editTitle') : t('form.createTitle')}
+          </DialogTitle>
+          <DialogClose className="p-1 rounded hover:bg-accent">
+            <X size={16} />
+          </DialogClose>
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <div>
+            <label className="block text-sm font-medium mb-1.5">
+              {t('form.nameLabel')}
+            </label>
+            <input
+              {...register('name')}
+              placeholder={t('form.namePlaceholder')}
+              className={cn(
+                'w-full h-10 px-3 rounded-md border bg-background text-sm',
+                errors.name ? 'border-destructive' : 'border-input'
+              )}
+            />
+            {errors.name && (
+              <p className="mt-1 text-xs text-destructive">
+                {t('form.validation.nameRequired')}
+              </p>
+            )}
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium mb-1.5">
-                {t('form.nameLabel')}
-              </label>
-              <input
-                {...register('name')}
-                placeholder={t('form.namePlaceholder')}
-                className={cn(
-                  'w-full h-10 px-3 rounded-md border bg-background text-sm',
-                  errors.name ? 'border-destructive' : 'border-input'
-                )}
-              />
-              {errors.name && (
-                <p className="mt-1 text-xs text-destructive">
-                  {t('form.validation.nameRequired')}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1.5">
-                {t('form.keywordsLabel')}
-              </label>
-              <input
-                {...register('palabrasClave')}
-                className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
-              />
-              <p className="mt-1 text-xs text-muted-foreground">
-                {t('form.cpvHelp')}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-1.5">
-                  {t('form.importeMinLabel')}
-                </label>
-                <input
-                  type="number"
-                  {...register('importeMin')}
-                  className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1.5">
-                  {t('form.importeMaxLabel')}
-                </label>
-                <input
-                  type="number"
-                  {...register('importeMax')}
-                  className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1.5">
-                {t('form.emailLabel')}
-              </label>
-              <input
-                type="email"
-                {...register('email')}
-                placeholder={t('form.emailHelp')}
-                className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
-              />
-            </div>
-
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                {...register('isActive')}
-                className="h-4 w-4 accent-primary"
-              />
-              <div>
-                <div className="text-sm font-medium">{t('form.isActiveLabel')}</div>
-                <div className="text-xs text-muted-foreground">
-                  {t('form.isActiveHelp')}
-                </div>
-              </div>
+          <div>
+            <label className="block text-sm font-medium mb-1.5">
+              {t('form.keywordsLabel')}
             </label>
+            <input
+              {...register('palabrasClave')}
+              className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
+            />
+            <p className="mt-1 text-xs text-muted-foreground">
+              {t('form.cpvHelp')}
+            </p>
+          </div>
 
-            <div className="flex justify-end gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => onOpenChange(false)}
-                disabled={isSubmitting}
-                className="h-9 px-4 rounded-md border border-input text-sm hover:bg-accent"
-              >
-                {t('form.cancelButton')}
-              </button>
-              <button
-                type="submit"
-                disabled={isSubmitting || createMutation.isPending || updateMutation.isPending}
-                className={cn(
-                  'h-9 px-4 rounded-md bg-primary text-primary-foreground',
-                  'font-medium text-sm hover:bg-primary/90',
-                  'disabled:opacity-50'
-                )}
-              >
-                {isSubmitting
-                  ? t('form.submitting')
-                  : isEdit
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1.5">
+                {t('form.importeMinLabel')}
+              </label>
+              <input
+                type="number"
+                {...register('importeMin')}
+                className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1.5">
+                {t('form.importeMaxLabel')}
+              </label>
+              <input
+                type="number"
+                {...register('importeMax')}
+                className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1.5">
+              {t('form.emailLabel')}
+            </label>
+            <input
+              type="email"
+              {...register('email')}
+              placeholder={t('form.emailHelp')}
+              className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
+            />
+          </div>
+
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              {...register('isActive')}
+              className="h-4 w-4 accent-primary"
+            />
+            <div>
+              <div className="text-sm font-medium">{t('form.isActiveLabel')}</div>
+              <div className="text-xs text-muted-foreground">
+                {t('form.isActiveHelp')}
+              </div>
+            </div>
+          </label>
+
+          <div className="flex justify-end gap-2 pt-2">
+            <button
+              type="button"
+              onClick={() => onOpenChange(false)}
+              disabled={isSubmitting}
+              className="h-9 px-4 rounded-md border border-input text-sm hover:bg-accent"
+            >
+              {t('form.cancelButton')}
+            </button>
+            <button
+              type="submit"
+              disabled={isSubmitting || createMutation.isPending || updateMutation.isPending}
+              className={cn(
+                'h-9 px-4 rounded-md bg-primary text-primary-foreground',
+                'font-medium text-sm hover:bg-primary/90',
+                'disabled:opacity-50'
+              )}
+            >
+              {isSubmitting
+                ? t('form.submitting')
+                : isEdit
                   ? t('form.submitEdit')
                   : t('form.submitCreate')}
-              </button>
-            </div>
-          </form>
-        </Dialog.Popup>
-      </Dialog.Portal>
-    </Dialog.Root>
+            </button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
