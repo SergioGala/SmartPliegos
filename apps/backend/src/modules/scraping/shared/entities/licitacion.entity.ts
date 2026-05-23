@@ -10,16 +10,16 @@ import {
 } from 'typeorm';
 import { OrganoContratacion } from './organo-contratacion.entity';
 
-@Entity('licitaciones')
-@Index(['externalId', 'source'], { unique: true })
-@Index(['estado'])
-@Index(['fechaPresentacion'])
 
 export interface LicitacionDocumento {
   tipo: string;
   url: string;
   nombre?: string;   // PLACE lo incluye; BOE no
 }
+@Entity('licitaciones')
+@Index(['externalId', 'source'], { unique: true })
+@Index(['estado'])
+@Index(['fechaPresentacion'])
 
 export class Licitacion {
   @PrimaryGeneratedColumn('uuid')
@@ -95,7 +95,7 @@ export class Licitacion {
   numLicitadores: number | null;
 
  @Column({ type: 'jsonb', default: [] }) 
-documentos: LicitacionDocumento[]; 
+ documentos: LicitacionDocumento[]; 
 
   @Column({ type: 'boolean', default: false })
   tieneLotes: boolean;
