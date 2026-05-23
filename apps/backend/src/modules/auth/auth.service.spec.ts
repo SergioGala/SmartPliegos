@@ -150,11 +150,12 @@ describe('AuthService', () => {
     it('refreshToken rota el token correctamente si es válido', async () => {
       mockRedis.get.mockResolvedValue(null); // no en blacklist
       mockJwtService.verify.mockReturnValue({
-        sub: 'user-uuid-1',
-        email: 'test@example.com',
-        role: Role.PUBLIC_USER,
-        isActive: true,
-      });
+  sub: 'user-uuid-1',
+  email: 'test@example.com',
+  role: Role.PUBLIC_USER,
+  isActive: true,
+  type: 'refresh', 
+});
 
       const result = await service.refreshToken({ refresh_token: 'valid-token' });
 
