@@ -4,7 +4,6 @@ import {
   Post,
   Get,
   Patch,
-  Body,
   Param,
   UseGuards,
   HttpCode,
@@ -23,20 +22,22 @@ import {
   ApiNotFoundResponse,
   ApiConflictResponse,
 } from '@nestjs/swagger';
+import { ZodBody } from '../../../../common/zod';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { OrganizationsService } from './organizations.service';
 import { UsersService } from '../../users.service';
-import { CreateOrganizationDto } from './dto';
-import { CreateOrganizationDtoSwagger } from './dto/create-organization.dto';
+import type { CreateOrganizationDto } from './dto';
+import { CreateOrganizationDtoSwagger,createOrganizationSchema } from './dto/create-organization.dto';
 import { RoleGuard, JwtAuthGuard, OwnershipGuard } from '../../../../common/guards';
 import { RequireRoles, ValidateResourceExists, ValidateOwnership, CurrentUser } from '../../../../common/decorators';
+import { updateOrganizationSchema, type UpdateOrganizationDto } from './dto/update-organization.dto';
 import { Role } from '../../enums';
 import { OrganizationEntity, UserEntity } from '../../entities';
 
 @ApiTags('🏢 Organizations')
-@ApiBearerAuth('access-token')
+@ApiBearerAuth('access_token')
 @Controller('organizations')
 export class OrganizationsController {
   private readonly logger = new Logger(OrganizationsController.name);
@@ -54,7 +55,7 @@ export class OrganizationsController {
    * Automáticamente convierte al usuario PUBLIC_USER en ORG_OWNER
    */
   @Post()
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('access_token')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @RequireRoles(Role.PUBLIC_USER)
   @HttpCode(HttpStatus.CREATED)
@@ -94,7 +95,7 @@ export class OrganizationsController {
   @ApiForbiddenResponse({ description: 'Solo usuarios PUBLIC_USER pueden crear organizaciones' })
   @ApiConflictResponse({ description: 'La organización ya existe' })
   async createOrganization(
-    @Body() createOrgDto: CreateOrganizationDtoSwagger,
+    @ZodBody(createOrganizationSchema) createOrgDto: CreateOrganizationDto,
     @CurrentUser() userId: string,
   ) {
     this.logger.log(`Usuario ${userId} creando nueva organización: ${createOrgDto.name}`);
@@ -137,7 +138,7 @@ export class OrganizationsController {
    * Obtener datos de una organización específica
    */
   @Get(':id')
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('access_token')
   @ValidateResourceExists(OrganizationEntity, 'id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @HttpCode(HttpStatus.OK)
@@ -187,7 +188,7 @@ export class OrganizationsController {
    * Obtener todas las organizaciones (SUPER_ADMIN solo)
    */
   @Get()
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('access_token')
   @RequireRoles(Role.SUPER_ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @HttpCode(HttpStatus.OK)
@@ -236,7 +237,7 @@ export class OrganizationsController {
    * Solo ORG_OWNER o SUPER_ADMIN pueden actualizar
    */
   @Patch(':id')
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('access_token')
   @UseGuards(JwtAuthGuard, OwnershipGuard, RoleGuard)
   @RequireRoles(Role.ORG_OWNER, Role.SUPER_ADMIN)
   @ValidateOwnership('id')
@@ -268,7 +269,7 @@ export class OrganizationsController {
   @ApiNotFoundResponse({ description: 'Organización no encontrada' })
   async updateOrganization(
     @Param('id') id: string,
-    @Body() updateData: Partial<CreateOrganizationDto>,
+    @ZodBody(updateOrganizationSchema) updateData: UpdateOrganizationDto,
     @CurrentUser() userId: string,
   ) {
     this.logger.log(`Usuario ${userId} actualizando organización: ${id}`);
@@ -289,7 +290,7 @@ export class OrganizationsController {
    * Obtener cantidad de usuarios en una organización
    */
   @Get(':id/user-count')
-  @ApiBearerAuth('access-token')
+  @ApiBearerAuth('access_token')
   @ValidateResourceExists(OrganizationEntity, 'id')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @HttpCode(HttpStatus.OK)
