@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OrganoContratacion } from '../scraping/shared/entities/organo-contratacion.entity';
 import { SearchOrganosDto } from './dto/search-organos.dto';
+import { whereIn } from '../../common/typeorm';
 
 export interface OrganoSearchResult {
   id: string;
@@ -45,11 +46,11 @@ export class OrganosService {
       .where("o.nombre != 'Desconocido'");
 
     if (dto.ccaa?.length) {
-      qb.andWhere('o.ccaa IN (:...ccaas)', { ccaas: dto.ccaa });
+     whereIn(qb, 'o.ccaa', 'ccaas', dto.ccaa);
     }
     if (dto.provincia?.length) {
-      qb.andWhere('o.provincia IN (:...provs)', { provs: dto.provincia });
-    }
+      whereIn(qb, 'o.provincia', 'provs', dto.provincia);
+ }
 
     if (q) {
       qb.andWhere('LOWER(o.nombre) LIKE :qContains', {

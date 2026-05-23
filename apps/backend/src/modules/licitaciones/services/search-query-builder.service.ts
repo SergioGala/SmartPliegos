@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { Licitacion } from '../../scraping/shared/entities/licitacion.entity';
 import { ISearchQueryBuilder } from '../interfaces/search-query-builder.interface';
-
+import { whereIn } from '../../../common/typeorm'
 /**
  * Servicio que implementa el patrón Builder para construir queries dinámicamente.
  * Todos los filtros de dominio (estado, tipo, ccaa...) aceptan ARRAYS — multi-select.
@@ -46,46 +46,30 @@ export class SearchQueryBuilderService implements ISearchQueryBuilder {
   // ═══════════════════════════════════════════════
 
   addStateFilter(estados?: string[]): this {
-    if (estados?.length) {
-      this.qb.andWhere('l.estado IN (:...estados)', { estados });
-    }
-    return this;
-  }
+  whereIn(this.qb, 'l.estado', 'estados', estados);
+  return this;
+}
 
   addTypeFilter(tipos?: string[]): this {
-    if (tipos?.length) {
-      this.qb.andWhere('l."tipoContrato" IN (:...tipos)', { tipos });
-    }
-    return this;
-  }
+  whereIn(this.qb, 'l."tipoContrato"', 'tipos', tipos);
+  return this;
+}
 
-  addProcedureFilter(procedimientos?: string[]): this {
-    if (procedimientos?.length) {
-      this.qb.andWhere('l.procedimiento IN (:...procs)', {
-        procs: procedimientos,
-      });
-    }
-    return this;
-  }
+ addProcedureFilter(procedimientos?: string[]): this {
+  whereIn(this.qb, 'l.procedimiento', 'procs', procedimientos);
+  return this;
+}
 
-  addUrgencyFilter(tramitaciones?: string[]): this {
-    if (tramitaciones?.length) {
-      this.qb.andWhere('l.tramitacion IN (:...trams)', {
-        trams: tramitaciones,
-      });
-    }
-    return this;
-  }
+ addUrgencyFilter(tramitaciones?: string[]): this {
+  whereIn(this.qb, 'l.tramitacion', 'trams', tramitaciones);
+  return this;
+}
 
-  addLocationFilters(ccaa?: string[], provincia?: string[]): this {
-    if (ccaa?.length) {
-      this.qb.andWhere('l.ccaa IN (:...ccaas)', { ccaas: ccaa });
-    }
-    if (provincia?.length) {
-      this.qb.andWhere('l.provincia IN (:...provs)', { provs: provincia });
-    }
-    return this;
-  }
+ addLocationFilters(ccaa?: string[], provincia?: string[]): this {
+  whereIn(this.qb, 'l.ccaa', 'ccaas', ccaa);
+  whereIn(this.qb, 'l.provincia', 'provs', provincia);
+  return this;
+}
 
   // ═══════════════════════════════════════════════
   // Filtros single-value (strings / rangos)

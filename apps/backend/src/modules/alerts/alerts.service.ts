@@ -9,7 +9,7 @@ import { EmailService } from '../../infrastructure/email/email.service';
 import { Licitacion } from '../scraping/shared/entities/licitacion.entity';
 import { SearchEngineService } from '../search/search.engine';
 import { generateAlertEmailTemplate, generateAlertDigestEmailTemplate } from '../../common/email-templates';
-
+import { whereIn } from '../../common/typeorm';
 @Injectable()
 export class AlertsService {
   private readonly logger = new Logger(AlertsService.name);
@@ -485,22 +485,22 @@ export class AlertsService {
       .where('l."fechaPublicacion" >= :since', { since });
 
     if (alert.estados?.length) {
-      qb.andWhere('l.estado IN (:...estados)', { estados: alert.estados });
+      whereIn(qb, 'l.estado', 'estados', alert.estados);
     }
     if (alert.tiposContrato?.length) {
-      qb.andWhere('l."tipoContrato" IN (:...tipos)', { tipos: alert.tiposContrato });
+    whereIn(qb, 'l."tipoContrato"', 'tipos', alert.tiposContrato);
     }
     if (alert.procedimientos?.length) {
-      qb.andWhere('l.procedimiento IN (:...procs)', { procs: alert.procedimientos });
+whereIn(qb, 'l.procedimiento', 'procs', alert.procedimientos);
     }
     if (alert.tramitaciones?.length) {
-      qb.andWhere('l.tramitacion IN (:...trams)', { trams: alert.tramitaciones });
+whereIn(qb, 'l.tramitacion', 'trams', alert.tramitaciones);
     }
     if (alert.ccaas?.length) {
-      qb.andWhere('l.ccaa IN (:...ccaas)', { ccaas: alert.ccaas });
+whereIn(qb, 'l.ccaa', 'ccaas', alert.ccaas);
     }
     if (alert.provincias?.length) {
-      qb.andWhere('l.provincia IN (:...provs)', { provs: alert.provincias });
+whereIn(qb, 'l.provincia', 'provs', alert.provincias);
     }
     if (alert.cpvCodes?.length) {
       qb.andWhere(':cpv = ANY(l."cpvCodes")', { cpv: alert.cpvCodes[0] });

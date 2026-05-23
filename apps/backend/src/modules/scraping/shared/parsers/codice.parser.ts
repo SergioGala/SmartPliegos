@@ -10,6 +10,7 @@ import {
   getCCAAFromProvincia,
   inferProvinciaFromText,
 } from './geography.map';
+import type { LicitacionDocumento } from '../entities/licitacion.entity';
 
 export interface ParsedLicitacion {
   externalId: string;
@@ -35,7 +36,7 @@ export interface ParsedLicitacion {
   porcentajeBaja: number | null;
   numLicitadores: number | null;
   tieneLotes: boolean;
-  documentos: any[];
+  documentos: LicitacionDocumento[]; 
   organoExternalId: string | null;
   organoNombre: string | null;
   organoTipo: string | null;

@@ -98,6 +98,9 @@ export class AuthService {
       let payload: JwtTokenPayload;
       try {
         payload = this.jwtService.verify(refresh_token) as unknown as JwtTokenPayload;
+        if (payload.type !== 'refresh') {
+  throw new UnauthorizedException('Token inválido: se esperaba un refresh token');
+}
       } catch {
         throw new UnauthorizedException('Refresh token inválido o expirado');
       }
@@ -110,14 +113,15 @@ export class AuthService {
         organizationId: payload.organizationId,
       };
 
-      const access_token = this.jwtService.sign(newPayload, {
-        expiresIn: `${this.ACCESS_TOKEN_EXPIRY}s`,
-      });
+      const access_token = this.jwtService.sign(
+  { ...newPayload, type: 'access' },
+  { expiresIn: `${this.ACCESS_TOKEN_EXPIRY}s` },
+);
 
-      const new_refresh_token = this.jwtService.sign(newPayload, {
-        expiresIn: `${this.REFRESH_TOKEN_EXPIRY}s`,
-      });
-
+      const new_refresh_token = this.jwtService.sign(
+  { ...newPayload, type: 'refresh' },
+  { expiresIn: `${this.REFRESH_TOKEN_EXPIRY}s` },
+);
       this.logger.log(`Token refrescado para usuario: ${payload.email}`);
 
       return { access_token, refresh_token: new_refresh_token };
@@ -282,13 +286,15 @@ export class AuthService {
       organizationId: user.organizationId ?? null,
     };
 
-    const access_token = this.jwtService.sign(payload, {
-      expiresIn: `${this.ACCESS_TOKEN_EXPIRY}s`,
-    });
+    const access_token = this.jwtService.sign(
+  { ...payload, type: 'access' },
+  { expiresIn: `${this.ACCESS_TOKEN_EXPIRY}s` },
+);
 
-    const refresh_token = this.jwtService.sign(payload, {
-      expiresIn: `${this.REFRESH_TOKEN_EXPIRY}s`,
-    });
+    const refresh_token = this.jwtService.sign(
+  { ...payload, type: 'refresh' },
+  { expiresIn: `${this.REFRESH_TOKEN_EXPIRY}s` },
+);
 
     const { password: _pwd, ...userWithoutPassword } = user;
 
