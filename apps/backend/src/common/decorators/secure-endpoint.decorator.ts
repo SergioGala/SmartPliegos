@@ -3,6 +3,7 @@ import { ApiBearerAuth, ApiForbiddenResponse, ApiUnauthorizedResponse } from '@n
 import { JwtAuthGuard } from '../guards/auth/jwt-auth.guard';
 import { OwnershipGuard } from '../guards/authorization/ownership.guard';
 import { ValidateOwnership } from './validate-ownership.decorator';
+import { RoleGuard } from '../guards/authorization/role.guard';
 
 /**
  * Decorador compuesto para endpoints seguros con validación de propiedad
@@ -41,16 +42,13 @@ import { ValidateOwnership } from './validate-ownership.decorator';
  */
 export const SecureOwnershipEndpoint = (paramName: string) =>
   applyDecorators(
-    ApiBearerAuth(),
-    ApiUnauthorizedResponse({
-      description: 'Token JWT inválido o expirado (401)',
-    }),
-    ApiForbiddenResponse({
-      description: 'No tienes permisos para acceder este recurso (403)',
-    }),
-    UseGuards(JwtAuthGuard, OwnershipGuard),
+    ApiBearerAuth('access_token'),
+    ApiUnauthorizedResponse({ description: 'Token JWT inválido o expirado (401)' }),
+    ApiForbiddenResponse({ description: 'Sin permisos (403)' }),
+    UseGuards(JwtAuthGuard, RoleGuard, OwnershipGuard),
     ValidateOwnership(paramName),
   );
+
 
 /**
  * Decorador compuesto para endpoints que solo requieren autenticación
@@ -68,9 +66,8 @@ export const SecureOwnershipEndpoint = (paramName: string) =>
  */
 export const SecureAuthEndpoint = () =>
   applyDecorators(
-    ApiBearerAuth(),
-    ApiUnauthorizedResponse({
-      description: 'Token JWT inválido o expirado (401)',
-    }),
-    UseGuards(JwtAuthGuard),
+    ApiBearerAuth('access_token'),
+    ApiUnauthorizedResponse({ description: 'Token JWT inválido o expirado (401)' }),
+    ApiForbiddenResponse({ description: 'Rol insuficiente (403)' }),
+    UseGuards(JwtAuthGuard, RoleGuard),
   );
