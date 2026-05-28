@@ -68,14 +68,14 @@ export class ReclassifyOrphanTipoContrato1780000000000
         // Esto evita el problema de no poder distinguir, p.ej., un CONCESION_OBRAS legítimo
         // de uno que vino del '32': la tabla de backup nos dice exactamente qué filas se
         // tocaron y qué tenían antes.
-        const backupExists = await q.query(`
-      SELECT EXISTS (
-        SELECT 1 FROM information_schema.tables
-        WHERE table_name = 'licitaciones_tipo_backup'
-      ) AS exists;
-    `);
+        const backupExists = (await q.query(`
+    SELECT EXISTS (
+      SELECT 1 FROM information_schema.tables
+      WHERE table_name = 'licitaciones_tipo_backup'
+    ) AS exists;
+  `)) as Array<{ exists: boolean }>;
 
-        if (!backupExists?.[0]?.exists) {
+        if (!backupExists[0]?.exists) {
             // El backup ya se borró manualmente; revertir sería destructivo y no fiable.
             throw new Error(
                 'No existe licitaciones_tipo_backup: no se puede revertir esta migración con seguridad.',
@@ -83,11 +83,11 @@ export class ReclassifyOrphanTipoContrato1780000000000
         }
 
         await q.query(`
-      UPDATE "licitaciones" AS l
-      SET "tipoContrato" = b."tipoContrato_original"
-      FROM "licitaciones_tipo_backup" AS b
-      WHERE l."id" = b."id";
-    `);
+    UPDATE "licitaciones" AS l
+    SET "tipoContrato" = b."tipoContrato_original"
+    FROM "licitaciones_tipo_backup" AS b
+    WHERE l."id" = b."id";
+  `);
 
         // No borramos el backup automáticamente: si el rollback fue por error y se vuelve a
         // aplicar la migración, el INSERT ... ON CONFLICT DO NOTHING del up() lo respeta.
