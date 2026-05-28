@@ -74,7 +74,8 @@
     "SISTEMA_DINAMICO": "Sistema dinàmic",
     "PRIVADO": "Privat",
     "PATRIMONIAL": "Patrimonial",
-    "OTROS": "Altres"
+    "OTROS": "Altres",
+    "AUTORIZACION_DEMANIAL": "Autorització demanial"
   },
   "procedimiento": {
     "ABIERTO": "Obert",
@@ -83,7 +84,7 @@
     "NEGOCIADO_SIN_PUBLICIDAD": "Negociat sense publicitat",
     "DIALOGO_COMPETITIVO": "Diàleg competitiu",
     "ASOCIACION_INNOVACION": "Associació per a la innovació",
-     "SIMPLIFICADO": "Simplificat",
+    "SIMPLIFICADO": "Simplificat",
     "SIMPLIFICADO_ABREVIADO": "Simplificat abreujat",
     "NEGOCIADO_CON_PUBLICIDAD": "Negociat amb publicitat",
     "SISTEMA_DINAMICO": "Sistema dinàmic",

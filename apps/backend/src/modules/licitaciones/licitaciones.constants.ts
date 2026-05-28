@@ -62,6 +62,7 @@ export const VALID_TIPOS = new Set<string>([
   'CONCESION_SERVICIOS',
   'ACUERDO_MARCO',
   'SISTEMA_DINAMICO',
+  'AUTORIZACION_DEMANIAL'
 ]);
 
 /**

@@ -23,12 +23,16 @@ import {
     deadlineLabel,
     getEstadoStyle,
     prettyEnum,
+    cpvLabel,
+    getExternalSourceUrl,
+    formatLocation,
 } from '../utils'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
 // ═══ Sub-component: info row ═══
@@ -106,14 +110,28 @@ export function LicitacionPage() {
 
     return (
         <div className="max-w-5xl mx-auto space-y-6">
-            {/* ═══ Breadcrumb ═══ */}
-            <Link
-                to="/buscar"
-                className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-            >
-                <ArrowLeft size={14} />
-                 {t('detail.backToSearch')}
-            </Link>
+            {/* ═══ Breadcrumb & Enlace Fuente ═══ */}
+            <div className="flex items-center justify-between gap-4">
+                <Link
+                    to="/buscar"
+                    className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                    <ArrowLeft size={14} />
+                     {t('detail.backToSearch')}
+                </Link>
+                {getExternalSourceUrl(lic.source, lic.externalId) && (
+                    <Button asChild variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
+                        <a
+                            href={getExternalSourceUrl(lic.source, lic.externalId)!}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <ExternalLink size={13} />
+                            {lic.source === 'BOE' ? 'Ver en BOE' : 'Ver en PLACE'}
+                        </a>
+                    </Button>
+                )}
+            </div>
 
             {/* ═══ HERO — Estado + Título + Presupuesto ═══ */}
             <div className="rounded-2xl border border-border bg-card p-6">
@@ -148,6 +166,15 @@ export function LicitacionPage() {
                                     {tEnum('procedimiento', lic.procedimiento)}
                                 </Badge>
                             )}
+                            {lic.tramitacion && (
+                                <Badge variant="outline" className={cn(
+                                    "text-[11px] font-bold uppercase",
+                                    lic.tramitacion === 'URGENTE' && "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+                                    lic.tramitacion === 'EMERGENCIA' && "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20"
+                                )}>
+                                    {tEnum('tramitacion', lic.tramitacion)}
+                                </Badge>
+                            )}
                         </div>
 
                         <h1 className="text-2xl font-bold tracking-tight leading-snug mb-3">
@@ -161,11 +188,10 @@ export function LicitacionPage() {
                                     {lic.organo.nombre}
                                 </span>
                             )}
-                            {lic.ccaa && (
+                            {formatLocation(lic.municipio, lic.provincia, lic.ccaa) && (
                                 <span className="flex items-center gap-1.5">
                                     <MapPin size={13} />
-                                    {lic.ccaa}
-                                    {lic.provincia && ` · ${lic.provincia}`}
+                                    {formatLocation(lic.municipio, lic.provincia, lic.ccaa)}
                                 </span>
                             )}
                             {lic.fechaPublicacion && (
@@ -190,22 +216,25 @@ export function LicitacionPage() {
                                 {money.unit}
                             </span>
                         </div>
-                        {deadline && (
+                        {deadline && deadline.days !== null && (
                             <div
                                 className={cn(
                                     'inline-flex items-center gap-1.5 mt-3 px-2.5 py-1 rounded-md border text-[11px] font-bold',
-                                    deadline.urgent
-                                        ? 'text-destructive bg-destructive/10 border-destructive/20'
-                                        : 'text-muted-foreground bg-muted border-border'
+                                    deadline.expired
+                                        ? 'text-red-600 bg-red-500/10 border-red-500/20'
+                                        : deadline.days <= 7
+                                        ? 'text-amber-600 bg-amber-500/10 border-amber-500/20'
+                                        : 'text-emerald-600 bg-emerald-500/10 border-emerald-500/20'
                                 )}
                             >
                                 <span
                                     className={cn(
                                         'w-1.5 h-1.5 rounded-full bg-current',
-                                        deadline.urgent && 'animate-pulse'
+                                        deadline.urgent && !deadline.expired && 'animate-pulse'
                                     )}
                                 />
-                                 {deadlineLabel(deadline.days, t)} {t('detail.deadlineSuffix')}
+                                 {deadlineLabel(deadline.days, t)}
+                                 {!deadline.expired && deadline.days > 0 && ` ${t('detail.deadlineSuffix')}`}
                             </div>
                         )}
                     </div>
@@ -258,6 +287,10 @@ export function LicitacionPage() {
                                 }
                             />
                         )}
+                        <InfoRow
+                            label={t('detail.hasLots', { defaultValue: 'División en lotes' })}
+                            value={lic.tieneLotes ? t('detail.yes', { defaultValue: 'Sí' }) : t('detail.no', { defaultValue: 'No' })}
+                        />
                     </CardContent>
                 </Card>
 
@@ -286,19 +319,33 @@ export function LicitacionPage() {
                         <CardTitle className="text-sm">{t('detail.cpvTitle')}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="flex flex-wrap gap-1.5">
-                            {lic.cpvCodes.map((cpv : string) => (
-                                <Badge key={cpv} variant="outline" className="font-mono text-[11px]">
-                                    {cpv}
-                                </Badge>
-                            ))}
-                        </div>
+                        <TooltipProvider>
+                            <div className="flex flex-wrap gap-1.5">
+                                {lic.cpvCodes.map((cpv: string) => {
+                                    const label = cpvLabel(cpv);
+                                    return (
+                                        <Tooltip key={cpv}>
+                                            <TooltipTrigger asChild>
+                                                <Badge variant="outline" className="font-mono text-[11px] cursor-help">
+                                                    {cpv}
+                                                </Badge>
+                                            </TooltipTrigger>
+                                            {label && label !== cpv && (
+                                                <TooltipContent>
+                                                    <p>{label}</p>
+                                                </TooltipContent>
+                                            )}
+                                        </Tooltip>
+                                    );
+                                })}
+                            </div>
+                        </TooltipProvider>
                     </CardContent>
                 </Card>
             )}
 
             {/* ═══ Adjudicatario ═══ */}
-            {lic.adjudicatarioNombre && (
+            {lic.adjudicatarioNombre?.trim() && (
                 <Card>
                     <CardHeader>
                         <CardTitle className="text-sm">{t('detail.awardeeTitle')}</CardTitle>
@@ -315,7 +362,7 @@ export function LicitacionPage() {
             )}
 
             {/* ═══ Descripción ═══ */}
-            {lic.description && (
+            {lic.description?.trim() && (
                 <Card>
                     <CardHeader>
                         <CardTitle className="text-sm">{t('detail.descriptionTitle')}</CardTitle>
@@ -352,11 +399,13 @@ export function LicitacionPage() {
                                 >
                                     <FileText size={14} className="text-muted-foreground" />
                                     <span className="flex-1 text-sm truncate group-hover:text-primary transition-colors">
-                                        {doc.nombre}
+                                        {doc.nombre || doc.tipo || t('detail.documentFallback', { defaultValue: 'Documento' })}
                                     </span>
-                                    <Badge variant="outline" className="text-[10px]">
-                                        {doc.tipo}
-                                    </Badge>
+                                    {doc.tipo && (
+                                        <Badge variant="outline" className="text-[10px]">
+                                            {doc.tipo}
+                                        </Badge>
+                                    )}
                                     <ExternalLink size={12} className="text-muted-foreground" />
                                 </a>
                             ))}

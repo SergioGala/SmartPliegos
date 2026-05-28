@@ -1,4 +1,65 @@
 // ═══════════════════════════════════════════════
+// CPV — Familias más comunes (2 primeros dígitos)
+// ═══════════════════════════════════════════════
+
+const CPV_FAMILIES: Record<string, string> = {
+  '03': 'Productos agrícolas y ganaderos',
+  '09': 'Productos petrolíferos y combustibles',
+  '14': 'Productos de minería y canteras',
+  '15': 'Alimentos, bebidas y tabaco',
+  '18': 'Prendas de vestir y accesorios',
+  '22': 'Material impreso y productos relacionados',
+  '24': 'Productos químicos',
+  '30': 'Máquinas y equipos de oficina (excepto informáticos)',
+  '31': 'Equipos eléctricos y componentes',
+  '32': 'Equipos de radio, TV y comunicaciones',
+  '33': 'Equipos médicos y farmacéuticos',
+  '34': 'Equipos de transporte y productos auxiliares',
+  '35': 'Equipos de seguridad y defensa',
+  '37': 'Instrumentos musicales, deportivos y juegos',
+  '38': 'Equipos de laboratorio, ópticos y de precisión',
+  '39': 'Mobiliario y equipamiento',
+  '41': 'Agua recogida y depurada',
+  '42': 'Maquinaria industrial',
+  '43': 'Maquinaria para minería y canteras',
+  '44': 'Estructuras y materiales de construcción',
+  '45': 'Trabajos de construcción',
+  '48': 'Paquetes de software y sistemas de información',
+  '50': 'Servicios de reparación y mantenimiento',
+  '51': 'Servicios de instalación',
+  '55': 'Servicios de hostelería y restauración',
+  '60': 'Servicios de transporte terrestre',
+  '63': 'Servicios de transporte complementarios',
+  '64': 'Servicios postales y de telecomunicaciones',
+  '65': 'Suministros públicos (agua, energía, calefacción)',
+  '66': 'Servicios financieros y de seguros',
+  '70': 'Servicios inmobiliarios',
+  '71': 'Servicios de arquitectura, ingeniería y planificación',
+  '72': 'Servicios de TI: consultoría, desarrollo y soporte',
+  '73': 'Servicios de investigación y desarrollo',
+  '75': 'Servicios de administración pública y defensa',
+  '76': 'Servicios relacionados con petróleo y gas',
+  '77': 'Servicios agrícolas, forestales y de jardinería',
+  '79': 'Servicios empresariales: legal, marketing, consultoría',
+  '80': 'Servicios de enseñanza y formación',
+  '85': 'Servicios de salud y asistencia social',
+  '90': 'Servicios de alcantarillado, residuos y limpieza',
+  '92': 'Servicios recreativos, culturales y deportivos',
+  '98': 'Otros servicios comunitarios y personales',
+};
+
+/**
+ * Devuelve la descripción legible de un código CPV.
+ * Busca por los 2 primeros dígitos (familia) en el mapa estático.
+ * Si no encuentra coincidencia, devuelve el propio código.
+ */
+export function cpvLabel(code: string | null | undefined): string {
+  if (!code || code.length < 2) return code ?? '';
+  const family = code.slice(0, 2);
+  return CPV_FAMILIES[family] ?? code;
+}
+
+// ═══════════════════════════════════════════════
 // Formateo de números y fechas
 // ═══════════════════════════════════════════════
 
@@ -93,16 +154,18 @@ export function formatDateTime(iso: string | null | undefined): string {
 }
 
 /**
- * Días hasta la fecha dada. Devuelve OBJETO con { days, text, urgent }
+ * Días hasta la fecha dada. Devuelve OBJETO con { days, text, urgent, expired }
  * para retrocompatibilidad con la página de detalle.
  *
- * `urgent` = true si quedan ≤ 7 días.
+ * `urgent` = true si quedan ≤ 7 días (incluido vencido).
+ * `expired` = true si la fecha ya pasó.
  * Accede al número entero con `.days` o castea con `Number(daysUntil(...))`.
  */
 export interface DaysUntilResult {
   days: number | null;
   text: string;
   urgent: boolean;
+  expired: boolean;
   /** Permite usar el resultado como número */
   valueOf(): number;
 }
@@ -112,6 +175,7 @@ export function daysUntil(iso: string | null | undefined): DaysUntilResult {
     days: null,
     text: '—',
     urgent: false,
+    expired: false,
     valueOf() {
       return -1;
     },
@@ -123,13 +187,27 @@ export function daysUntil(iso: string | null | undefined): DaysUntilResult {
 
   const now = new Date();
   const diffMs = d.getTime() - now.getTime();
-  if (diffMs < 0) return empty;
+
+  if (diffMs < 0) {
+    // Plazo vencido: devolvemos días negativos
+    const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    return {
+      days,
+      text: 'Vencido',
+      urgent: true,
+      expired: true,
+      valueOf() {
+        return days;
+      },
+    };
+  }
 
   const days = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
   return {
     days,
     text: days === 0 ? 'Hoy' : days === 1 ? '1 día' : `${days} días`,
     urgent: days <= 7,
+    expired: false,
     valueOf() {
       return days;
     },
@@ -291,7 +369,33 @@ export function deadlineLabel(
   t: (key: string, opts?: Record<string, unknown>) => string,
 ): string {
   if (days === null) return '—';
+  if (days < 0) return t('card.deadlineExpired', { defaultValue: 'Vencido' });
   if (days === 0) return t('card.deadlineToday');
   if (days === 1) return t('card.deadlineOneDay');
   return t('card.deadlineDays', { count: days });
+}
+
+// ═══════════════════════════════════════════════
+// Enlace a la fuente original (PLACE / BOE)
+// ═══════════════════════════════════════════════
+
+/**
+ * Construye la URL de la plataforma original a partir del source y externalId.
+ * Devuelve null si no hay datos suficientes para construirla.
+ */
+export function getExternalSourceUrl(
+  source: string | null | undefined,
+  externalId: string | null | undefined,
+): string | null {
+  if (!source || !externalId) return null;
+
+  const s = source.toUpperCase();
+  if (s === 'PLACE') {
+    return `https://contrataciondelestado.es/wps/poc?uri=deeplink:detalle_licitacion&idEvn=${encodeURIComponent(externalId)}`;
+  }
+  if (s === 'BOE') {
+    return `https://www.boe.es/buscar/doc.php?id=${encodeURIComponent(externalId)}`;
+  }
+
+  return null;
 }

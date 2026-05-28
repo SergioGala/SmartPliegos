@@ -16,7 +16,7 @@
     "previous": "Anterior",
     "next": "Siguiente",
     "pageLabel": "Página",
-     "of": "de"
+    "of": "de"
   },
   "filters": {
     "groups": {
@@ -74,7 +74,8 @@
     "SISTEMA_DINAMICO": "Sistema dinámico",
     "PRIVADO": "Privado",
     "PATRIMONIAL": "Patrimonial",
-    "OTROS": "Otros"
+    "OTROS": "Otros",
+    "AUTORIZACION_DEMANIAL": "Autorización demanial"
   },
   "procedimiento": {
     "ABIERTO": "Abierto",
@@ -84,7 +85,7 @@
     "DIALOGO_COMPETITIVO": "Diálogo competitivo",
     "ASOCIACION_INNOVACION": "Asociación para la innovación",
     "CONCURSO_PROYECTOS": "Concurso de proyectos",
-     "SIMPLIFICADO": "Simplificado",
+    "SIMPLIFICADO": "Simplificado",
     "SIMPLIFICADO_ABREVIADO": "Simplificado abreviado",
     "NEGOCIADO_CON_PUBLICIDAD": "Negociado con publicidad",
     "SISTEMA_DINAMICO": "Sistema dinámico",
