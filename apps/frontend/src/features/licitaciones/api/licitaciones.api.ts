@@ -62,4 +62,12 @@ export const licitacionesApi = {
   /** GET /licitaciones/filters — opciones de dropdown */
   getFilters: () =>
     apiClient.get<ApiEnvelope<FilterOptions>>('/licitaciones/filters').then(unwrap),
+  
+   generarResumen: (id: string) =>
+    apiClient
+      .post<ApiEnvelope<{ resumenIA: string; cached: boolean }>>(
+        `/licitaciones/${id}/resumen`,
+        {},
+      )
+      .then(unwrap),
 };

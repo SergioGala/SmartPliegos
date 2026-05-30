@@ -13,6 +13,7 @@ import {
     TrendingDown,
 } from 'lucide-react'
 import type { LicitacionDocumento } from '../types';
+import { ResumenIaCard } from '../components/resumen-ia-card';
 
 import { useLicitacion } from '../hooks/use-licitaciones'
 import {
@@ -415,22 +416,7 @@ export function LicitacionPage() {
             )}
 
             {/* ═══ Resumen IA (placeholder) ═══ */}
-            <Card className="border-dashed">
-                <CardHeader>
-                   <CardTitle className="text-sm flex items-center gap-2 text-muted-foreground">
-                        <Sparkles size={14} />
-                        {t('detail.aiSummaryTitle')}
-                        <Badge variant="outline" className="ml-1 text-[10px]">
-                            {t('detail.aiSummaryBadge')}
-                        </Badge>
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                        {t('detail.aiSummaryBody')}
-                    </p>
-                </CardContent>
-            </Card>
+           <ResumenIaCard licitacionId={lic.id} resumenInicial={lic.resumenIA} />
         </div>
     )
 }
