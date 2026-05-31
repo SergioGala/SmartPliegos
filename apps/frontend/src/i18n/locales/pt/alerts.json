@@ -143,7 +143,7 @@
     "title": "Pré-visualização do email",
     "subject": "Assunto: {{count}} novos concursos para \"{{alertName}}\"",
     "fromLabel": "De:",
-    "from": "LicitaApp <alerts@licitapp.com>",
+    "from": "SmartPliegos <alerts@licitapp.com>",
     "toLabel": "Para:",
     "sampleGreeting": "Olá {{name}},",
     "sampleBody": "Encontrámos {{count}} novos concursos que correspondem ao teu alerta:",

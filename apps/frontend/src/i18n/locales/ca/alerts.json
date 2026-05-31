@@ -143,7 +143,7 @@
     "title": "Preview de l'email",
     "subject": "Assumpte: {{count}} noves licitacions per a \"{{alertName}}\"",
     "fromLabel": "De:",
-    "from": "LicitaApp <alerts@licitapp.com>",
+    "from": "SmartPliegos <alerts@licitapp.com>",
     "toLabel": "Per a:",
     "sampleGreeting": "Hola {{name}},",
     "sampleBody": "Hem trobat {{count}} noves licitacions que coincideixen amb la teva alerta:",

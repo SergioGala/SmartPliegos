@@ -165,7 +165,7 @@ export class UserSignupService {
 
     await this.emailService.sendEmail({
       to: user.email,
-      subject: 'Completa tu Registro - LicitApp',
+      subject: 'Completa tu Registro - SmartPliegos',
       html: emailHtml,
     });
 

@@ -143,7 +143,7 @@
     "title": "Emailaren previewa",
     "subject": "Gaia: \"{{alertName}}\"-rako {{count}} lehiaketa berri",
     "fromLabel": "Nork:",
-    "from": "LicitaApp <alerts@licitapp.com>",
+    "from": "SmartPliegos <alerts@licitapp.com>",
     "toLabel": "Nori:",
     "sampleGreeting": "Kaixo {{name}},",
     "sampleBody": "Zure alertarekin bat datozen {{count}} lehiaketa berri aurkitu ditugu:",

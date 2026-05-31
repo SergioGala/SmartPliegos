@@ -249,4 +249,4 @@ async create() { ... }
 
 4. **Algunos `any` residuales en controllers.** Patrón `@Request() req: any → const userId = req.user.id`. Hay decorador `@CurrentUser()` ya creado para reemplazarlo. Trabajo pendiente.
 
-5. **Branding "LicitApp" residual** en plantillas de email, Swagger, etc. Cambiar a "SmartPliegos" en Fase 5 cuando se compre el dominio.
+5. **Branding:** el nombre visible ("LicitApp"/"LicitaApp") ya está migrado a "SmartPliegos" en emails, Swagger y metadatos del front (carril C4). Pendiente: dominios `licitapp.com` (meta, sitemap, mailto) y claves internas (localStorage, `APP_NAME`), a cambiar cuando se compre el dominio definitivo.
