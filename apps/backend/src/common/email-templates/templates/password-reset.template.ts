@@ -16,7 +16,7 @@ export function passwordResetTemplate(
       
       <p>Hola <strong>${firstName}</strong>,</p>
       
-      <p>Recibimos una solicitud para cambiar tu contraseña en LicitApp.</p>
+      <p>Recibimos una solicitud para cambiar tu contraseña en SmartPliegos.</p>
       
       <p style="margin: 30px 0;">Haz clic en el siguiente enlace para cambiar tu contraseña:</p>
       
@@ -37,7 +37,7 @@ export function passwordResetTemplate(
       <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
       
       <p style="color: #999; font-size: 12px; text-align: center;">
-        © 2026 LicitApp. Todos los derechos reservados.
+        © 2026 SmartPliegos. Todos los derechos reservados.
       </p>
     </div>
   `;

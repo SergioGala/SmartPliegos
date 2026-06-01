@@ -110,13 +110,13 @@ export function generateAlertDigestEmailTemplate(
           <!-- CTA -->
           <div style="text-align:center;margin-top:24px;">
             <a href="#" style="display:inline-block;background:#0066cc;color:#fff;padding:12px 32px;border-radius:5px;text-decoration:none;font-weight:600;font-size:14px;">
-              Ver todas en LicitApp →
+              Ver todas en SmartPliegos →
             </a>
           </div>
 
           <!-- Footer -->
           <div style="margin-top:28px;padding-top:18px;border-top:1px solid #ddd;text-align:center;font-size:11px;color:#aaa;line-height:1.8;">
-            <p style="margin:0;">Recibes este email porque tienes activa la alerta <em>"${escapeHtml(alert.name)}"</em> en LicitApp.</p>
+            <p style="margin:0;">Recibes este email porque tienes activa la alerta <em>"${escapeHtml(alert.name)}"</em> en SmartPliegos.</p>
             <p style="margin:0;">Puedes gestionar o desactivar tus alertas desde tu panel de control.</p>
           </div>
         </div>
@@ -344,7 +344,7 @@ export function generateAlertEmailTemplate(
           
           <div class="footer">
             <p class="footer-note">
-              Esta es una notificación automática de tu alerta en LicitApp.
+              Esta es una notificación automática de tu alerta en SmartPliegos.
               <br>
               Puedes gestionar tus alertas en la plataforma o editar tu configuración de notificaciones.
             </p>

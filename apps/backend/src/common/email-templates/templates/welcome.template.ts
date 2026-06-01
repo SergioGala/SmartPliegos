@@ -8,7 +8,7 @@ import { config } from '../../../config/env.config'
 export function welcomeTemplate(organizationName: string): string {
   return `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #333; border-bottom: 2px solid #28a745; padding-bottom: 10px;">¡Bienvenido a LicitApp!</h2>
+      <h2 style="color: #333; border-bottom: 2px solid #28a745; padding-bottom: 10px;">¡Bienvenido a SmartPliegos!</h2>
       
       <p>¡Hola!,</p>
       
@@ -28,7 +28,7 @@ export function welcomeTemplate(organizationName: string): string {
       
       <div style="text-align: center; margin: 30px 0;">
         <a href="${config.frontendUrl}/auth/error?.../login" style="background-color: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
-          Acceder a LicitApp
+          Acceder a SmartPliegos
         </a>
       </div>
       
@@ -40,7 +40,7 @@ export function welcomeTemplate(organizationName: string): string {
       <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
       
       <p style="color: #999; font-size: 12px; text-align: center;">
-        © 2026 LicitApp. Todos los derechos reservados.
+        © 2026 SmartPliegos. Todos los derechos reservados.
       </p>
     </div>
   `;

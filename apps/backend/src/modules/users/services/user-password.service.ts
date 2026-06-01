@@ -65,7 +65,7 @@ export class UserPasswordService {
       );
       await this.emailService.sendEmail({
         to: user.email,
-        subject: 'Solicitud de cambio de contraseña - LicitApp',
+        subject: 'Solicitud de cambio de contraseña - SmartPliegos',
         html: emailHtml,
       });
 
@@ -127,7 +127,7 @@ export class UserPasswordService {
       );
       await this.emailService.sendEmail({
         to: user.email,
-        subject: 'Contraseña actualizada - LicitApp',
+        subject: 'Contraseña actualizada - SmartPliegos',
         html: emailHtml,
       });
 

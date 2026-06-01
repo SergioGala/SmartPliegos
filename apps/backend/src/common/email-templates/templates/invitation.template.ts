@@ -20,7 +20,7 @@ export function invitationTemplate(
       
       <p>¡Hola!,</p>
       
-      <p>Has sido invitado a unirte a <strong style="color: #007bff;">${organizationName}</strong> en LicitApp.</p>
+      <p>Has sido invitado a unirte a <strong style="color: #007bff;">${organizationName}</strong> en SmartPliegos.</p>
       
       <p style="background-color: #e7f3ff; padding: 15px; border-radius: 5px; border-left: 4px solid #007bff; margin: 20px 0;">
         Tu equipo te está esperando. Aceptar esta invitación te permitirá colaborar y acceder a los datos compartidos.
@@ -48,7 +48,7 @@ export function invitationTemplate(
       <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
       
       <p style="color: #999; font-size: 12px; text-align: center;">
-        © 2026 LicitApp. Todos los derechos reservados.
+        © 2026 SmartPliegos. Todos los derechos reservados.
       </p>
     </div>
   `;

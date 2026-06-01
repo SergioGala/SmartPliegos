@@ -21,7 +21,7 @@ export function HomePage() {
           </div>
           <div>
             <div className="text-sm font-bold tracking-tight text-foreground leading-none">
-              LicitaApp
+              SmartPliegos
             </div>
             <div className="text-[9px] font-bold tracking-[0.18em] text-primary/80 mt-0.5">
               PRO · BETA

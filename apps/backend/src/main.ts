@@ -65,10 +65,10 @@ async function bootstrap() {
 
   // Configurar Swagger
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('🔐 LicitApp API - Authentication & Users')
+    .setTitle('🔐 SmartPliegos API - Authentication & Users')
     .setDescription(
       `
-      API de Autenticación y Gestión de Usuarios para LicitApp
+      API de Autenticación y Gestión de Usuarios para SmartPliegos
       
       **Features:**
       - ✅ Login/Logout con JWT
@@ -90,7 +90,7 @@ async function bootstrap() {
     )
     .setVersion('1.0.0')
     .setContact(
-      'LicitApp Support',
+      'SmartPliegos Support',
       'https://licitapp.com',
       'support@licitapp.com',
     )
