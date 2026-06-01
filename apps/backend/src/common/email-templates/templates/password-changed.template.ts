@@ -18,11 +18,11 @@ export function passwordChangedTemplate(firstName: string): string {
         <strong>✓ Cambio completado correctamente</strong>
       </p>
       
-      <p style="margin-top: 30px;">Ahora puedes acceder a LicitApp con tu nueva contraseña.</p>
+      <p style="margin-top: 30px;">Ahora puedes acceder a SmartPliegos con tu nueva contraseña.</p>
       
       <div style="text-align: center; margin: 30px 0;">
         <a href="${config.frontendUrl}/auth/error?..." style="background-color: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
-          Volver a LicitApp
+          Volver a SmartPliegos
         </a>
       </div>
       
@@ -33,7 +33,7 @@ export function passwordChangedTemplate(firstName: string): string {
       <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;">
       
       <p style="color: #999; font-size: 12px; text-align: center;">
-        © 2026 LicitApp. Todos los derechos reservados.
+        © 2026 SmartPliegos. Todos los derechos reservados.
       </p>
     </div>
   `;

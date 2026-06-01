@@ -6,6 +6,7 @@ import { Plus, Bell } from 'lucide-react';
 import { alertsApi } from '../api/alerts.api';
 import { AlertCard } from '../components/alert-card';
 import { AlertFormDialog } from '../components/alert-form-dialog';
+import { EstadoError } from '@/components/ui/estado-error';
 import { cn } from '@/lib/utils';
 
 type FilterTab = 'all' | 'active' | 'inactive';
@@ -16,7 +17,7 @@ export function AlertasPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  const { data: alerts = [], isLoading } = useQuery({
+ const { data: alerts = [], isLoading, isError, refetch }  = useQuery({
     queryKey: ['alerts'],
     queryFn: () => alertsApi.list(),
   });
@@ -40,7 +41,7 @@ export function AlertasPage() {
   return (
     <>
       <Helmet>
-        <title>{t('page.title')} · LicitaApp</title>
+        <title>{t('page.title')} · SmartPliegos</title>
       </Helmet>
 
       <div className="max-w-5xl mx-auto py-6 px-4 sm:px-6">
@@ -83,6 +84,12 @@ export function AlertasPage() {
         )}
 
         {/* Empty state */}
+           {!isLoading && isError && (
+          <EstadoError
+            titulo="No se pudieron cargar tus alertas"
+            onReintentar={() => refetch()}
+          />
+        )}
         {!isLoading && alerts.length === 0 && (
           <div className="bg-card border border-border rounded-xl p-10 text-center">
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-4">

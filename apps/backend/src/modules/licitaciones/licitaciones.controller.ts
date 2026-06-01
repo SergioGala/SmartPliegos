@@ -1,5 +1,5 @@
 
-import { Controller, Get, Param, Query, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe, Post, HttpCode, HttpStatus  } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -8,16 +8,24 @@ import {
   ApiOkResponse,
   ApiNotFoundResponse,
   ApiBadRequestResponse,
+  ApiBearerAuth
 } from '@nestjs/swagger';
 import { LicitacionesService } from './licitaciones.service';
-import { type SearchLicitacionesDto } from './dto/search-licitaciones.dto';
-import { ValidateResourceExists } from '../../common/decorators';
+import { ValidateResourceExists, SecureAuthEndpoint, RateLimitStrict } from '../../common/decorators';
 import { Licitacion } from '../scraping/shared/entities/licitacion.entity';
+import { ZodQuery } from '../../common/zod';
+import {
+  searchLicitacionesSchema,
+  type SearchLicitacionesDto,
+} from './dto/search-licitaciones.dto';
+import { LicitacionResumenService } from './services/licitacion-resumen.service';
 
 @ApiTags('📋 Licitaciones')
 @Controller('licitaciones')
 export class LicitacionesController {
-  constructor(private readonly licitacionesService: LicitacionesService) { }
+  constructor(private readonly licitacionesService: LicitacionesService,
+    private readonly resumenService: LicitacionResumenService
+  ) { }
 
   /**
    * Buscar licitaciones con filtros avanzados
@@ -177,9 +185,9 @@ export class LicitacionesController {
     },
   })
   @ApiBadRequestResponse({ description: 'Parámetros inválidos' })
-  async search(@Query() dto: SearchLicitacionesDto) {
-    return this.licitacionesService.search(dto);
-  }
+  async search(@ZodQuery(searchLicitacionesSchema) dto: SearchLicitacionesDto) {
+  return this.licitacionesService.search(dto);
+}
 
   /**
    * Obtener opciones de filtros
@@ -280,4 +288,18 @@ export class LicitacionesController {
   async findById(@Param('id', ParseUUIDPipe) id: string) {
     return this.licitacionesService.findById(id);
   }
+  @Post(':id/resumen')
+@SecureAuthEndpoint()
+@RateLimitStrict()
+@HttpCode(HttpStatus.OK)
+@ApiBearerAuth('access_token')
+@ApiParam({ name: 'id', format: 'uuid' })
+@ApiOperation({
+  summary: 'Generar (o recuperar cacheado) el resumen IA de la licitación',
+})
+generarResumen(
+  @Param('id') id: string,
+): Promise<{ resumenIA: string; cached: boolean }> {
+  return this.resumenService.getOrCreate(id);
+}
 }

@@ -14,7 +14,7 @@ export function getSignupVerificationTemplate(
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Completa tu Registro - LicitApp</title>
+        <title>Completa tu Registro - SmartPliegos</title>
         <style>
             body {
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -83,7 +83,7 @@ export function getSignupVerificationTemplate(
     <body>
         <div class="container">
             <div class="header">
-                <h1>¡Bienvenido a LicitApp!</h1>
+                <h1>¡Bienvenido a SmartPliegos!</h1>
             </div>
             <div class="content">
                 <h2>Hola ${firstName},</h2>
@@ -115,8 +115,8 @@ export function getSignupVerificationTemplate(
 
                 <div class="footer">
                     <p>Este es un mensaje automático. Por favor, no respondas a este correo.</p>
-                    <p>Si no solicitaste crear una cuenta en LicitApp, ignora este mensaje.</p>
-                    <p>&copy; 2026 LicitApp. Todos los derechos reservados.</p>
+                    <p>Si no solicitaste crear una cuenta en SmartPliegos, ignora este mensaje.</p>
+                    <p>&copy; 2026 SmartPliegos. Todos los derechos reservados.</p>
                 </div>
             </div>
         </div>

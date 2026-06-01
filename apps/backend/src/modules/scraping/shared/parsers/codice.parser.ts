@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
- 
+
 import { Injectable, Logger } from '@nestjs/common';
 import { XMLParser } from 'fast-xml-parser';
 import {
@@ -10,6 +10,7 @@ import {
   getCCAAFromProvincia,
   inferProvinciaFromText,
 } from './geography.map';
+import type { LicitacionDocumento } from '../entities/licitacion.entity';
 
 export interface ParsedLicitacion {
   externalId: string;
@@ -35,7 +36,7 @@ export interface ParsedLicitacion {
   porcentajeBaja: number | null;
   numLicitadores: number | null;
   tieneLotes: boolean;
-  documentos: any[];
+  documentos: LicitacionDocumento[];
   organoExternalId: string | null;
   organoNombre: string | null;
   organoTipo: string | null;
@@ -414,7 +415,23 @@ export class CodiceParser {
     return m[c || ''] || c || 'DESCONOCIDO';
   }
 
+  /**
+   * Mapea el TypeCode de CODICE a una etiqueta legible.
+   *
+   * Históricamente este método devolvía el código crudo si no lo conocía, lo que dejó
+   * en BD valores como '22', '32', '50' sin etiqueta. Tras inspección de datos reales
+   * (mayo 2026, 8.408 registros huérfanos), se mapearon explícitamente:
+   *   - '22' → CONCESION_SERVICIOS  (verificado: bares, cafeterías, piscinas, ciclotrón)
+   *   - '32' → CONCESION_OBRAS      (verificado: obras + explotación de la obra)
+   *   - '50' → AUTORIZACION_DEMANIAL (verificado: cesiones de uso, chiringuitos, despachos
+   *           públicos arrendados — figura de la LPAP, NO de la LCSP).
+   *
+   * Si llega un código no mapeado, se etiqueta como 'OTROS' y se avisa por logs para
+   * añadirlo al mapa en cuanto aparezca (en vez de descubrirlo meses después).
+   */
   private mapTipo(c: string | null): string | null {
+    if (!c) return null;
+
     const m: Record<string, string> = {
       '1': 'SUMINISTROS',
       '2': 'SERVICIOS',
@@ -426,11 +443,25 @@ export class CodiceParser {
       '8': 'PATRIMONIAL',
       '9': 'OTROS',
       '10': 'MIXTO',
+      // Codificación histórica (PLACE la sigue emitiendo en algunos casos)
       '21': 'CONCESION_SERVICIOS',
       '31': 'CONCESION_OBRAS',
+      // Codificación actual extendida (verificada con datos reales en BD, mayo 2026)
+      '22': 'CONCESION_SERVICIOS',
+      '32': 'CONCESION_OBRAS',
       '40': 'MIXTO',
+      '50': 'AUTORIZACION_DEMANIAL',
     };
-    return m[c || ''] || c || null;
+
+    if (m[c]) return m[c];
+
+    // Código desconocido: no guardamos el código crudo en BD (eso es lo que dejó '22',
+    // '32', '50' sueltos antes de esta corrección). Lo etiquetamos como OTROS y avisamos
+    // en logs para mapearlo cuando aparezca uno nuevo.
+    this.logger.warn(
+      `TypeCode desconocido en CODICE: '${c}' → se mapea a 'OTROS'. Considera añadirlo al mapa.`,
+    );
+    return 'OTROS';
   }
 
   private mapProc(c: string | null): string | null {
@@ -480,11 +511,9 @@ export class CodiceParser {
    *   2. Match con namespace: 'cac:Party' → local name es 'Party' → match
    *   3. No matchea si el local name es distinto (ej. 'ContractingPartyTypeCode')
    */
-
-   
   private getLocal(obj: any, localName: string): any {
     if (!obj || typeof obj !== 'object') return null;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- parser CODICE acepta cualquier shape de XML
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- parser CODICE acepta cualquier shape de XML
     for (const k of Object.keys(obj)) {
       if (this.localNameOf(k) === localName) return obj[k];
     }

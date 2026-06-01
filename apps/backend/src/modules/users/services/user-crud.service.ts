@@ -111,22 +111,6 @@ export class UserCrudService {
         throw new NotFoundException('Usuario no encontrado');
       }
 
-      // Verificar si el correo ya está registrado por otro usuario
-      if (updateUserDto.email) {
-        const sanitizedNewEmail = this.sanitizeHelper.sanitizeEmail(updateUserDto.email);
-        if (sanitizedNewEmail !== user.email) {
-          const existingUser = await this.queryHelper
-            .buildUserQuery(this.usersRepository)
-            .where('user.email = :email', { email: sanitizedNewEmail })
-            .getOne();
-
-          if (existingUser) {
-            throw new BadRequestException('El correo electrónico ya está registrado');
-          }
-        }
-
-        user.email = sanitizedNewEmail;
-      }
 
       // Actualizar campos
       if (updateUserDto.firstName) {
@@ -134,12 +118,6 @@ export class UserCrudService {
       }
       if (updateUserDto.lastName) {
         user.lastName = this.sanitizeHelper.sanitizeName(updateUserDto.lastName);
-      }
-      if (updateUserDto.role) {
-        user.role = updateUserDto.role;
-      }
-      if (updateUserDto.isActive !== undefined) {
-        user.isActive = updateUserDto.isActive;
       }
 
       await this.usersRepository.save(user);

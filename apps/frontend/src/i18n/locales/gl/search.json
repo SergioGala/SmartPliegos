@@ -73,8 +73,9 @@
     "ADMINISTRATIVO_ESPECIAL": "Administrativo especial",
     "ACUERDO_MARCO": "Acordo marco",
     "SISTEMA_DINAMICO": "Sistema dinámico",
-     "PATRIMONIAL": "Patrimonial",
-    "OTROS": "Outros"
+    "PATRIMONIAL": "Patrimonial",
+    "OTROS": "Outros",
+    "AUTORIZACION_DEMANIAL": "Autorización demanial"
   },
   "procedimiento": {
     "ABIERTO": "Aberto",

@@ -12,7 +12,7 @@ import {
   Settings as SettingsIcon,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { Menu } from '@base-ui/react/menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
@@ -57,9 +57,7 @@ function NavItem({ path, label, icon: Icon, badge }: NavItemDef) {
         <>
           {isActive && (
             <span
-              className="absolute left-0 top-[22%] h-[56%] w-[2px] rounded-r-full bg-sidebar-primary"
-              style={{ boxShadow: '0 0 8px var(--sidebar-primary)' }}
-              aria-hidden
+              className="absolute left-0 top-[22%] h-[56%] w-[2px] rounded-r-full bg-sidebar-primary shadow-glow"
             />
           )}
           <Icon size={16} strokeWidth={1.75} className="shrink-0" />
@@ -141,62 +139,67 @@ function SidebarUserMenu() {
 
   return (
     <div className="border-t border-sidebar-border p-3">
-      <Menu.Root>
-        <Menu.Trigger
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            className={cn(
+              'flex items-center gap-2.5 w-full px-2 py-1.5 rounded-lg',
+              'hover:bg-sidebar-accent/30 transition-colors text-left'
+            )}
+          >
+            <div className="w-8 h-8 rounded-lg bg-sidebar-primary/15 border border-sidebar-primary/25 flex items-center justify-center shrink-0">
+              <span className="text-[11px] font-bold text-sidebar-accent-foreground">
+                {initials}
+              </span>
+            </div>
+
+            <div className="flex-1 min-w-0">
+              <div className="text-xs font-semibold truncate">
+                {user.firstName} {user.lastName}
+              </div>
+
+              <div className="text-[10px] text-sidebar-foreground/40 truncate">
+                {user.email}
+              </div>
+            </div>
+          </button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent
+          sideOffset={8}
+          align="end"
           className={cn(
-            'flex items-center gap-2.5 w-full px-2 py-1.5 rounded-lg',
-            'hover:bg-sidebar-accent/30 transition-colors text-left'
+            'min-w-[200px] rounded-md border border-border bg-popover',
+            'text-popover-foreground shadow-md p-1 text-sm'
           )}
         >
-          <div className="w-8 h-8 rounded-lg bg-sidebar-primary/15 border border-sidebar-primary/25 flex items-center justify-center shrink-0">
-            <span className="text-[11px] font-bold text-sidebar-accent-foreground">
-              {initials}
-            </span>
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-xs font-semibold truncate">
-              {user.firstName} {user.lastName}
-            </div>
-            <div className="text-[10px] text-sidebar-foreground/40 truncate">
-              {user.email}
-            </div>
-          </div>
-        </Menu.Trigger>
+          <DropdownMenuItem
+            onClick={() => navigate('/ajustes/perfil')}
+            className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-accent hover:text-accent-foreground"
+          >
+            <UserIcon size={14} />
+            {t('navigation.profile')}
+          </DropdownMenuItem>
 
-        <Menu.Portal>
-          <Menu.Positioner sideOffset={8} align="end">
-            <Menu.Popup
-              className={cn(
-                'min-w-[200px] rounded-md border border-border bg-popover',
-                'text-popover-foreground shadow-md p-1 text-sm'
-              )}
-            >
-              <Menu.Item
-                onClick={() => navigate('/ajustes/perfil')}
-                className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-accent hover:text-accent-foreground"
-              >
-                <UserIcon size={14} />
-                {t('navigation.profile')}
-              </Menu.Item>
-              <Menu.Item
-                onClick={() => navigate('/ajustes')}
-                className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-accent hover:text-accent-foreground"
-              >
-                <SettingsIcon size={14} />
-                {t('navigation.settings')}
-              </Menu.Item>
-              <Menu.Separator className="my-1 h-px bg-border" />
-              <Menu.Item
-                onClick={handleLogout}
-                className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-accent hover:text-accent-foreground text-destructive"
-              >
-                <LogOut size={14} />
-                {t('navigation.logout')}
-              </Menu.Item>
-            </Menu.Popup>
-          </Menu.Positioner>
-        </Menu.Portal>
-      </Menu.Root>
+          <DropdownMenuItem
+            onClick={() => navigate('/ajustes')}
+            className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-accent hover:text-accent-foreground"
+          >
+            <SettingsIcon size={14} />
+            {t('navigation.settings')}
+          </DropdownMenuItem>
+
+          <DropdownMenuSeparator className="my-1 h-px bg-border" />
+
+          <DropdownMenuItem
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-accent hover:text-accent-foreground text-destructive"
+          >
+            <LogOut size={14} />
+            {t('navigation.logout')}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       {/* Controles de idioma y tema */}
       <div className="mt-2 flex justify-end gap-1">
@@ -248,10 +251,7 @@ export function Sidebar() {
         className="group flex items-center gap-2.5 px-5 py-5 border-b border-sidebar-border hover:bg-sidebar-accent/30 transition-colors"
       >
         <div
-          className="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center transition-shadow"
-          style={{
-            boxShadow: '0 0 16px oklch(from var(--sidebar-primary) l c h / 0.35)',
-          }}
+           className="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center transition-shadow shadow-glow"
         >
           <span className="font-black text-base text-sidebar-primary-foreground leading-none">
             L

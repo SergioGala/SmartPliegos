@@ -69,6 +69,7 @@ export interface LicitacionDetail {
   tieneLotes: boolean;
   documentos: LicitacionDocumento[];
   organo: Organo | null;
+  resumenIA: string | null;
 }
 
 // Alias por compatibilidad con código existente

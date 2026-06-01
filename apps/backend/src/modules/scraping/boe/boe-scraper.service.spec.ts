@@ -29,7 +29,7 @@ describe('BoeScraperService', () => {
     logRepo = {
       save: jest.fn().mockImplementation((log) => Promise.resolve({ id: 'log-uuid', ...log })),
       update: jest.fn().mockResolvedValue(undefined),
-      create: jest.fn().mockImplementation((entity) => entity),
+      create: jest.fn().mockImplementation((entity: Partial<ScrapingLog>) => entity),
     };
 
     dataSource = {
@@ -138,7 +138,9 @@ describe('BoeScraperService', () => {
     const result = await scraper.scrapeDay(new Date('2026-05-14T00:00:00Z'));
     expect(result.newItems).toBe(0);
     expect(result.updatedItems).toBe(1);
-    expect(licRepo.update).toHaveBeenCalledWith('existing-id', expect.any(Object));
+   expect(licRepo.save).toHaveBeenCalledWith(
+  expect.objectContaining({ id: 'existing-id', title: 'Una' }),
+);
   });
 
   it('logs FAILED status when HTTP throws non-404 error', async () => {

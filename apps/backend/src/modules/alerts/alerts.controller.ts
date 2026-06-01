@@ -2,7 +2,6 @@ import {
   Controller,
   Get,
   Post,
-  Body,
   Patch,
   Param,
   Delete,
@@ -17,7 +16,7 @@ import {
 } from '@nestjs/swagger';
 import { AlertsService } from './alerts.service';
 import { ZodBody } from '../../common/zod';
-import { createAlertSchema, type CreateAlertDto, CreateAlertDtoSwagger } from './dto/create-alert.dto';
+import { createAlertSchema, type CreateAlertDto } from './dto/create-alert.dto';
 import { updateAlertSchema, type UpdateAlertDto } from './dto/update-alert.dto';
 import { AlertEntity } from './entities/alert.entity';
 import {

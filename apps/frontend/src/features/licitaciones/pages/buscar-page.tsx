@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { EstadoError } from '@/components/ui/estado-error';
+
 
 import { useLicitaciones, useFilterOptions } from '../hooks/use-licitaciones';
 import { LicitacionCard } from '../components/licitacion-card';
@@ -65,7 +67,7 @@ export function BuscarPage() {
   const [searchText, setSearchText] = useState(params.q || '');
   const [focused, setFocused] = useState(false);
 
-  const { data, isLoading } = useLicitaciones(params);
+  const { data, isLoading, isError, refetch } = useLicitaciones(params);
   const { data: filterOptions } = useFilterOptions();
 
   const commit = (next: SearchParams, resetPage = true) => {
@@ -98,7 +100,6 @@ export function BuscarPage() {
         <div className="inline-flex items-center gap-2 rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5">
           <span
             className="h-2 w-2 animate-pulse rounded-full bg-emerald-500 dark:bg-emerald-400"
-            style={{ boxShadow: '0 0 6px currentColor' }}
           />
           <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
             {t('page.scrapingActive')}
@@ -158,7 +159,12 @@ export function BuscarPage() {
 
       {/* RESULTS */}
       <div>
-        {isLoading ? (
+        {isError ? (
+          <EstadoError
+            titulo="No se pudieron cargar las licitaciones"
+            onReintentar={() => refetch()}
+          />
+        ) : isLoading ? (
           <LicitacionCardSkeletonList count={6} />
         ) : data && data.data.length > 0 ? (
           <>

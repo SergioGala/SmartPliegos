@@ -22,5 +22,11 @@
     "turbo": "^2.4",
     "prettier": "^3.5",
     "typescript": "^5.7"
+  },
+  "overrides": {
+    "zod": "4.4.3",
+    "**": {
+      "zod": "4.4.3"
+    }
   }
 }

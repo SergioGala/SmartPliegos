@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Dialog } from '@base-ui/react/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { X } from 'lucide-react';
 import { toast } from 'sonner';
 import { useOnboardingStore } from '../stores/onboarding-store';
@@ -60,97 +60,100 @@ export function OnboardingWizard() {
   };
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Portal>
-        <Dialog.Backdrop className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50" />
-        <Dialog.Popup
-          className={cn(
-            'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50',
-            'w-full max-w-xl bg-card border border-border rounded-xl shadow-2xl',
-            'p-6'
-          )}
-        >
-          {/* Header con progress */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <Dialog.Title className="text-lg font-semibold">
-                  {t('onboarding.title')}
-                </Dialog.Title>
-                <p className="text-sm text-muted-foreground mt-0.5">
-                  {t('onboarding.subtitle')}
-                </p>
-              </div>
-              <button
-                onClick={handleSkip}
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
-              >
-                <X size={14} />
-                {t('onboarding.skip')}
-              </button>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent
+        className={cn(
+          'w-full max-w-xl bg-card border border-border rounded-xl shadow-2xl',
+          'p-6'
+        )}
+      >
+        {/* Header con progress */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <DialogTitle className="text-lg font-semibold">
+                {t('onboarding.title')}
+              </DialogTitle>
+
+              <p className="text-sm text-muted-foreground mt-0.5">
+                {t('onboarding.subtitle')}
+              </p>
             </div>
 
-            {/* Progress bar */}
-            <div className="flex items-center gap-1">
-              {Array.from({ length: TOTAL_STEPS }).map((_, i) => {
-                const step = i + 1;
-                const isCompleted = step < currentStep;
-                const isCurrent = step === currentStep;
-                return (
-                  <div
-                    key={step}
-                    className={cn(
-                      'h-1 flex-1 rounded-full transition-colors',
-                      isCompleted
-                        ? 'bg-primary'
-                        : isCurrent
-                        ? 'bg-primary/60'
-                        : 'bg-muted'
-                    )}
-                  />
-                );
-              })}
-            </div>
-            <p className="text-xs text-muted-foreground mt-2">
-              {t('common:pagination.page', {
-                current: currentStep,
-                total: TOTAL_STEPS,
-              })}
-            </p>
+            <button
+              onClick={handleSkip}
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+            >
+              <X size={14} />
+              {t('onboarding.skip')}
+            </button>
           </div>
 
-          {/* Steps */}
-          {currentStep === 1 && (
-            <StepSector
-              defaultValue={data.sector || ''}
-              onNext={(val) => handleNext(val)}
-            />
-          )}
-          {currentStep === 2 && (
-            <StepRegions
-              defaultValue={data.ccaas || []}
-              onBack={handleBack}
-              onNext={(val) => handleNext(val)}
-            />
-          )}
-          {currentStep === 3 && (
-            <StepBudget
-              defaultMin={data.importeMin}
-              defaultMax={data.importeMax}
-              onBack={handleBack}
-              onNext={(val) => handleNext(val)}
-            />
-          )}
-          {currentStep === 4 && (
-            <StepFinalize
-              defaultData={data}
-              isSubmitting={isSubmitting}
-              onBack={handleBack}
-              onFinalize={handleFinalize}
-            />
-          )}
-        </Dialog.Popup>
-      </Dialog.Portal>
-    </Dialog.Root>
+          {/* Progress bar */}
+          <div className="flex items-center gap-1">
+            {Array.from({ length: TOTAL_STEPS }).map((_, i) => {
+              const step = i + 1;
+              const isCompleted = step < currentStep;
+              const isCurrent = step === currentStep;
+
+              return (
+                <div
+                  key={step}
+                  className={cn(
+                    'h-1 flex-1 rounded-full transition-colors',
+                    isCompleted
+                      ? 'bg-primary'
+                      : isCurrent
+                        ? 'bg-primary/60'
+                        : 'bg-muted'
+                  )}
+                />
+              );
+            })}
+          </div>
+
+          <p className="text-xs text-muted-foreground mt-2">
+            {t('common:pagination.page', {
+              current: currentStep,
+              total: TOTAL_STEPS,
+            })}
+          </p>
+        </div>
+
+        {/* Steps */}
+        {currentStep === 1 && (
+          <StepSector
+            defaultValue={data.sector || ''}
+            onNext={(val) => handleNext(val)}
+          />
+        )}
+
+        {currentStep === 2 && (
+          <StepRegions
+            defaultValue={data.ccaas || []}
+            onBack={handleBack}
+            onNext={(val) => handleNext(val)}
+          />
+        )}
+
+        {currentStep === 3 && (
+          <StepBudget
+            defaultMin={data.importeMin}
+            defaultMax={data.importeMax}
+            onBack={handleBack}
+            onNext={(val) => handleNext(val)}
+          />
+        )}
+
+        {currentStep === 4 && (
+          <StepFinalize
+            defaultData={data}
+            isSubmitting={isSubmitting}
+            onBack={handleBack}
+            onFinalize={handleFinalize}
+          />
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }

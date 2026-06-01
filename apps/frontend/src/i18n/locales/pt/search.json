@@ -67,14 +67,15 @@
     "SUMINISTROS": "Fornecimentos",
     "CONCESION_OBRAS": "Concessão de obras",
     "CONCESION_SERVICIOS": "Concessão de serviços",
-     "MIXTO": "Misto",
+    "MIXTO": "Misto",
     "ACUERDO_MARCO": "Acordo-quadro",
     "SISTEMA_DINAMICO": "Sistema dinâmico",
     "GESTION_SERVICIOS_PUBLICOS": "Gestão de serviços públicos",
     "ADMINISTRATIVO_ESPECIAL": "Administrativo especial",
     "PRIVADO": "Privado",
     "PATRIMONIAL": "Patrimonial",
-    "OTROS": "Outros"
+    "OTROS": "Outros",
+    "AUTORIZACION_DEMANIAL": "Autorização de domínio público"
   },
   "procedimiento": {
     "ABIERTO": "Aberto",
@@ -84,7 +85,7 @@
     "DIALOGO_COMPETITIVO": "Diálogo competitivo",
     "ASOCIACION_INNOVACION": "Parceria para inovação",
     "CONCURSO_PROYECTOS": "Concurso de projetos",
-     "SIMPLIFICADO": "Simplificado",
+    "SIMPLIFICADO": "Simplificado",
     "SIMPLIFICADO_ABREVIADO": "Simplificado abreviado",
     "NEGOCIADO_CON_PUBLICIDAD": "Negociado com publicidade",
     "SISTEMA_DINAMICO": "Sistema dinâmico",

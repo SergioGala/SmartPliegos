@@ -102,7 +102,7 @@ export class InvitationsService {
     );
     await this.emailService.sendEmail({
       to: sanitizedEmail,
-      subject: `Invitación a unirte a ${organization.name} en LicitApp`,
+      subject: `Invitación a unirte a ${organization.name} en SmartPliegos`,
       html: emailHtml,
     });
 

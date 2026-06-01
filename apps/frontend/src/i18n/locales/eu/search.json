@@ -16,7 +16,7 @@
     "previous": "Aurrekoa",
     "next": "Hurrengoa",
     "pageLabel": "Orria",
-     "of": "/"
+    "of": "/"
   },
   "filters": {
     "groups": {
@@ -70,11 +70,12 @@
     "GESTION_SERVICIOS_PUBLICOS": "Zerbitzu publikoen kudeaketa",
     "ADMINISTRATIVO_ESPECIAL": "Administratibo berezia",
     "PRIVADO": "Pribatua",
-     "MIXTO": "Mistoa",
+    "MIXTO": "Mistoa",
     "ACUERDO_MARCO": "Esparru-akordioa",
     "SISTEMA_DINAMICO": "Sistema dinamikoa",
     "PATRIMONIAL": "Ondarezkoa",
-    "OTROS": "Besteak"
+    "OTROS": "Besteak",
+    "AUTORIZACION_DEMANIAL": "Domeinu publikoaren baimena"
   },
   "procedimiento": {
     "ABIERTO": "Irekia",
@@ -82,7 +83,7 @@
     "NEGOCIADO": "Negoziatua",
     "NEGOCIADO_SIN_PUBLICIDAD": "Negoziatua publizitaterik gabe",
     "DIALOGO_COMPETITIVO": "Elkarrizketa lehiakorra",
-     "SIMPLIFICADO": "Sinplifikatua",
+    "SIMPLIFICADO": "Sinplifikatua",
     "SIMPLIFICADO_ABREVIADO": "Sinplifikatu laburtua",
     "NEGOCIADO_CON_PUBLICIDAD": "Negoziatua publizitatearekin",
     "SISTEMA_DINAMICO": "Sistema dinamikoa",

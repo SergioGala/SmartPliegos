@@ -33,7 +33,7 @@ import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { OrganizationEntity } from '../users/entities/organization.entity';
 
 @ApiTags('📧 Invitations')
-@ApiBearerAuth('access-token')
+@ApiBearerAuth('access_token')
 @Controller('invitations')
 export class InvitationsController {
   constructor(private readonly invitationsService: InvitationsService) {}

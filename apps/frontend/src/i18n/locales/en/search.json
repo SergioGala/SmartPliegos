@@ -74,7 +74,8 @@
     "ADMINISTRATIVO_ESPECIAL": "Special administrative",
     "PRIVADO": "Private",
     "PATRIMONIAL": "Property",
-    "OTROS": "Other"
+    "OTROS": "Other",
+    "AUTORIZACION_DEMANIAL": "Public domain authorisation"
   },
   "procedimiento": {
     "ABIERTO": "Open",
