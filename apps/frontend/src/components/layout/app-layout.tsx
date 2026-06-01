@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
 import { Menu } from 'lucide-react';
 import { Sidebar } from './sidebar';
 import {
@@ -18,10 +17,14 @@ export function AppLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
 
-  // Al navegar a otra ruta, cerrar el drawer móvil
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [location.pathname]);
+  // Cerramos el drawer cuando cambia la ruta. Comparar la pathname actual
+  // con la última vista durante el render hace el "reset" sin useEffect.
+  // Patrón oficial de React: "Adjusting state during a render".
+  const [lastPath, setLastPath] = useState(location.pathname);
+  if (lastPath !== location.pathname) {
+    setLastPath(location.pathname);
+    if (mobileOpen) setMobileOpen(false);
+  }
 
   return (
     <div className="flex min-h-screen">
