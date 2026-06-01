@@ -7,6 +7,8 @@
 // export type UserRole = 'PUBLIC_USER' | 'ADMIN' | 'SUPER_ADMIN'; nuevos : 'ORG_OWNER' | 'ORG_MEMBER'
 export type UserRole = 'PUBLIC_USER' | 'ORG_OWNER' | 'ORG_MEMBER' | 'ADMIN' | 'SUPER_ADMIN';
 
+
+//AUDITORIA: PLANES
 // Planes (del enum Plan del backend, solo expuesto en /me)
 export type UserPlan = 'FREE' | 'STARTER' | 'PRO' | 'ENTERPRISE'; //PLANES DE MOMENTO
 //REMPLAZAR POR  EN AUDITORIA VERIFICAR:

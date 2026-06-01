@@ -1,3 +1,7 @@
+
+
+SPRINT CERRADO
+
 # Carril CRUDs (C1) — Manual CLICK A CLICK
 
 > Lo abro con la verdad por delante: dentro hay **cuatro agujeros de seguridad** que vamos a cerrar primero (tarea 1). Después, los pulidos visibles: borrar cuenta (tarea 2) y la tab Organización con miembros e invitaciones (tarea 3, la gorda). Mismo formato que C3: archivo + línea + copia y pega.
