@@ -57,9 +57,7 @@ function NavItem({ path, label, icon: Icon, badge }: NavItemDef) {
         <>
           {isActive && (
             <span
-              className="absolute left-0 top-[22%] h-[56%] w-[2px] rounded-r-full bg-sidebar-primary"
-              style={{ boxShadow: '0 0 8px var(--sidebar-primary)' }}
-              aria-hidden
+              className="absolute left-0 top-[22%] h-[56%] w-[2px] rounded-r-full bg-sidebar-primary shadow-glow"
             />
           )}
           <Icon size={16} strokeWidth={1.75} className="shrink-0" />
@@ -253,10 +251,7 @@ export function Sidebar() {
         className="group flex items-center gap-2.5 px-5 py-5 border-b border-sidebar-border hover:bg-sidebar-accent/30 transition-colors"
       >
         <div
-          className="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center transition-shadow"
-          style={{
-            boxShadow: '0 0 16px oklch(from var(--sidebar-primary) l c h / 0.35)',
-          }}
+           className="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center transition-shadow shadow-glow"
         >
           <span className="font-black text-base text-sidebar-primary-foreground leading-none">
             L

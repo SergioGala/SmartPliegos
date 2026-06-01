@@ -13,8 +13,7 @@ export function HomePage() {
       <div className="absolute top-4 left-6 right-6 z-50 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div
-            className="w-7 h-7 rounded-md bg-primary flex items-center justify-center"
-            style={{ boxShadow: '0 0 16px oklch(from var(--primary) l c h / 0.35)' }}
+            className="w-7 h-7 rounded-md bg-primary flex items-center justify-center shadow-glow"
           >
             <span className="text-primary-foreground font-black text-sm leading-none">
               L
@@ -38,13 +37,11 @@ export function HomePage() {
         onNavigate={(path) => navigate(path)}
         centerContent={
           <div
-            className="relative w-20 h-20 rounded-full bg-primary flex items-center justify-center animate-pulse"
-            style={{ boxShadow: '0 0 40px oklch(from var(--primary) l c h / 0.5)' }}
+            className="relative w-20 h-20 rounded-full bg-primary flex items-center justify-center animate-pulse shadow-glow-lg"
           >
             <div className="absolute w-24 h-24 rounded-full border border-primary/30 animate-ping opacity-70" />
             <div
-              className="absolute w-28 h-28 rounded-full border border-primary/20 animate-ping opacity-50"
-              style={{ animationDelay: '0.5s' }}
+              className="absolute w-28 h-28 rounded-full border border-primary/20 animate-ping opacity-50 [animation-delay:0.5s]"
             />
             <span className="relative text-3xl font-black text-primary-foreground tracking-tighter">
               L

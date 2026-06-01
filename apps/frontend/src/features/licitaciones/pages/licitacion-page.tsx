@@ -8,7 +8,6 @@ import {
     MapPin,
     Calendar,
     Euro,
-    Sparkles,
     Users,
     TrendingDown,
 } from 'lucide-react'

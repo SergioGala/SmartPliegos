@@ -72,8 +72,7 @@ export default function RadialOrbitalNav({
               <div className="relative w-16 h-16 rounded-full bg-primary flex items-center justify-center animate-pulse">
                 <div className="absolute w-20 h-20 rounded-full border border-primary/30 animate-ping opacity-70" />
                 <div
-                  className="absolute w-24 h-24 rounded-full border border-primary/20 animate-ping opacity-50"
-                  style={{ animationDelay: '0.5s' }}
+                  className="absolute w-24 h-24 rounded-full border border-primary/20 animate-ping opacity-50 [animation-delay:0.5s]"
                 />
                 <div className="w-8 h-8 rounded-full bg-primary-foreground/80 backdrop-blur-md" />
               </div>

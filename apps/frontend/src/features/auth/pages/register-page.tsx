@@ -70,10 +70,7 @@ export function RegisterPage() {
       >
         <div className="space-y-4 text-center">
           <div
-            className="inline-flex items-center justify-center w-14 h-14 rounded-full"
-            style={{
-              backgroundColor: 'oklch(from var(--primary) l c h / 0.12)',
-            }}
+            className="inline-flex items-center justify-center w-14 h-14 rounded-full shadow-glow"
           >
             <Mail size={24} className="text-primary" />
           </div>

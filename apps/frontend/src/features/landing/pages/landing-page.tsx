@@ -53,10 +53,7 @@ function PublicHeader() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5">
           <div
-            className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center"
-            style={{
-              boxShadow: '0 0 14px oklch(from var(--primary) l c h / 0.35)',
-            }}
+            className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center shadow-glow"
           >
             <span className="font-black text-sm text-primary-foreground leading-none">
               L
