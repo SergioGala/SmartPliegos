@@ -46,6 +46,19 @@
       "wrongOldPassword": "A palavra-passe atual não está correta",
       "rateLimit": "Demasiadas tentativas. Espera um momento.",
       "generic": "Erro ao alterar a palavra-passe"
+    },
+    "deleteAccount": {
+      "success": "A tua conta foi eliminada",
+      "error": "Não foi possível eliminar a conta"
+    },
+    "dangerZone": {
+      "title": "Zona perigosa",
+      "subtitle": "Eliminar a tua conta é permanente. Os teus alertas, favoritos e dados associados serão removidos.",
+      "button": "Eliminar a minha conta",
+      "deleting": "A eliminar...",
+      "confirmTitle": "Eliminar a tua conta?",
+      "confirmDescription": "Esta ação não pode ser desfeita. A tua conta e todos os seus dados serão eliminados permanentemente.",
+      "confirmButton": "Sim, eliminar a minha conta"
     }
   },
   "notifications": {
@@ -81,11 +94,33 @@
   },
   "organization": {
     "title": "Organização",
-    "subtitle": "Dados da tua organização e membros",
+    "subtitle": "Gere a tua organização e os seus membros.",
     "planLabel": "Plano atual",
-    "roleLabel": "Função",
-    "comingSoonTitle": "Gestão de membros em breve",
-    "comingSoonBody": "Convidar utilizadores, gerir funções e permissões chegará no próximo sprint."
+    "members": {
+      "title": "Membros",
+      "empty": "Não há outros membros na tua organização.",
+      "you": "tu"
+    },
+    "invitations": {
+      "title": "Convites pendentes",
+      "empty": "Não há convites pendentes.",
+      "cancel": "Cancelar convite",
+      "cancelled": "Convite cancelado"
+    },
+    "invite": {
+      "title": "Convidar um novo membro",
+      "subtitle": "Receberá um email com um link para se juntar à tua organização.",
+      "emailPlaceholder": "email@exemplo.com",
+      "send": "Enviar convite",
+      "sending": "A enviar...",
+      "success": "Convite enviado",
+      "errors": {
+        "invalidEmail": "Introduz um email válido",
+        "alreadyExists": "Já existe um convite pendente para esse email",
+        "forbidden": "Não tens permissão para convidar",
+        "generic": "Não foi possível enviar o convite"
+      }
+    }
   },
   "preferences": {
     "title": "Preferências",

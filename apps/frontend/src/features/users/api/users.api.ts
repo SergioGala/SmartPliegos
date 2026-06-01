@@ -1,4 +1,4 @@
-import { apiPatch, apiPost, apiGet } from '@/lib/api-client';
+import { apiPatch, apiPost, apiGet, apiDelete } from '@/lib/api-client';
 import type {
   AuthUser,
   UpdateUserPayload,
@@ -85,4 +85,23 @@ async confirmPasswordReset(
     body
   );
 },
+
+ /**
+   * DELETE /users/:userId
+   * Borra la cuenta del usuario autenticado. Ownership requerido.
+   */
+  async deleteUser(userId: string): Promise<void> {
+    await apiDelete<void>(`/users/${userId}`);
+  },
+  
+
+  /**
+   * GET /users/organization/:organizationId
+   * Lista los usuarios miembros de una organización.
+   */
+  async listByOrganization(organizationId: string): Promise<AuthUser[]> {
+    return apiGet<AuthUser[]>(`/users/organization/${organizationId}`);
+  },
+  
+  
 }

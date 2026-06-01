@@ -30,6 +30,19 @@
       "forbidden": "Ez duzu baimenik profil hau aldatzeko",
       "rateLimit": "Saiakera gehiegi. Itxaron une bat.",
       "generic": "Errorea aldaketak gordetzean"
+    },
+     "deleteAccount": {
+      "success": "Zure kontua ezabatu da",
+      "error": "Ezin izan da kontua ezabatu"
+    },
+    "dangerZone": {
+      "title": "Arriskuaren eremua",
+      "subtitle": "Zure kontua ezabatzea betikoa da. Zure alertak, gogokoak eta lotutako datuak ezabatuko dira.",
+      "button": "Nire kontua ezabatu",
+      "deleting": "Ezabatzen...",
+      "confirmTitle": "Zure kontua ezabatu?",
+      "confirmDescription": "Ekintza hau ezin da desegin. Zure kontua eta datu guztiak betirako ezabatuko dira.",
+      "confirmButton": "Bai, ezabatu nire kontua"
     }
   },
   "security": {
@@ -79,13 +92,35 @@
       "generic": "Errorea hobespenak gordetzean"
     }
   },
-  "organization": {
+   "organization": {
     "title": "Erakundea",
-    "subtitle": "Zure erakundearen datuak eta kideak",
+    "subtitle": "Kudeatu zure erakundea eta kideak.",
     "planLabel": "Oraingo plana",
-    "roleLabel": "Rola",
-    "comingSoonTitle": "Kideen kudeaketa laster",
-    "comingSoonBody": "Erabiltzaileak gonbidatzea, rolak eta baimenak kudeatzea hurrengo sprint-ean helduko da."
+    "members": {
+      "title": "Kideak",
+      "empty": "Ez dago beste kiderik zure erakundean.",
+      "you": "zu"
+    },
+    "invitations": {
+      "title": "Gonbidapen zain dauden",
+      "empty": "Ez dago gonbidapen zain dagoenak.",
+      "cancel": "Gonbidapena ezeztatu",
+      "cancelled": "Gonbidapena ezeztatu da"
+    },
+    "invite": {
+      "title": "Kide berria gonbidatu",
+      "subtitle": "Email bat jasoko du zure erakundean sartzeko esteka batekin.",
+      "emailPlaceholder": "email@adibidea.com",
+      "send": "Gonbidapena bidali",
+      "sending": "Bidaltzen...",
+      "success": "Gonbidapena bidalita",
+      "errors": {
+        "invalidEmail": "Sartu baliozko email bat",
+        "alreadyExists": "Email horretarako gonbidapen bat dagoeneko existitzen da",
+        "forbidden": "Ez duzu baimenik gonbidatzeko",
+        "generic": "Ezin izan da gonbidapena bidali"
+      }
+    }
   },
   "preferences": {
     "title": "Hobespenak",

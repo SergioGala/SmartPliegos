@@ -46,6 +46,19 @@
       "wrongOldPassword": "Current password is incorrect",
       "rateLimit": "Too many attempts. Wait a moment.",
       "generic": "Error changing password"
+    },
+        "deleteAccount": {
+      "success": "Your account has been deleted",
+      "error": "Could not delete account"
+    },
+    "dangerZone": {
+      "title": "Danger zone",
+      "subtitle": "Deleting your account is permanent. Your alerts, favourites and associated data will be removed.",
+      "button": "Delete my account",
+      "deleting": "Deleting...",
+      "confirmTitle": "Delete your account?",
+      "confirmDescription": "This action cannot be undone. Your account and all its data will be permanently deleted.",
+      "confirmButton": "Yes, delete my account"
     }
   },
   "notifications": {
@@ -79,13 +92,36 @@
       "generic": "Error saving preferences"
     }
   },
+  
   "organization": {
     "title": "Organization",
-    "subtitle": "Your organization data and members",
+    "subtitle": "Manage your organization and its members.",
     "planLabel": "Current plan",
-    "roleLabel": "Role",
-    "comingSoonTitle": "Member management coming soon",
-    "comingSoonBody": "Inviting users, managing roles and permissions is coming in the next sprint."
+    "members": {
+      "title": "Members",
+      "empty": "No other members in your organization.",
+      "you": "you"
+    },
+    "invitations": {
+      "title": "Pending invitations",
+      "empty": "No pending invitations.",
+      "cancel": "Cancel invitation",
+      "cancelled": "Invitation cancelled"
+    },
+    "invite": {
+      "title": "Invite a new member",
+      "subtitle": "They will receive an email with a link to join your organization.",
+      "emailPlaceholder": "email@example.com",
+      "send": "Send invitation",
+      "sending": "Sending...",
+      "success": "Invitation sent",
+      "errors": {
+        "invalidEmail": "Enter a valid email",
+        "alreadyExists": "A pending invitation already exists for that email",
+        "forbidden": "You don't have permission to invite",
+        "generic": "Could not send the invitation"
+      }
+    }
   },
   "preferences": {
     "title": "Preferences",

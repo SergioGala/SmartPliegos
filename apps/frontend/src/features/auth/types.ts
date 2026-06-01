@@ -4,10 +4,14 @@
  */
 
 // Roles del sistema (del enum Role del backend)
-export type UserRole = 'PUBLIC_USER' | 'ADMIN' | 'SUPER_ADMIN';
+// export type UserRole = 'PUBLIC_USER' | 'ADMIN' | 'SUPER_ADMIN'; nuevos : 'ORG_OWNER' | 'ORG_MEMBER'
+export type UserRole = 'PUBLIC_USER' | 'ORG_OWNER' | 'ORG_MEMBER' | 'ADMIN' | 'SUPER_ADMIN';
 
 // Planes (del enum Plan del backend, solo expuesto en /me)
-export type UserPlan = 'FREE' | 'STARTER' | 'PRO' | 'ENTERPRISE';
+export type UserPlan = 'FREE' | 'STARTER' | 'PRO' | 'ENTERPRISE'; //PLANES DE MOMENTO
+//REMPLAZAR POR  EN AUDITORIA VERIFICAR:
+// export type UserPlan = 'FREE' | 'PRO' | 'ADVANCED' | 'STARTER' | 'PROFESSIONAL' | 'ENTERPRISE';
+
 
 /**
  * Usuario básico devuelto en login/signup.
@@ -32,6 +36,7 @@ export interface AuthUser extends AuthUserBase {
   userPlan?: UserPlan;
   updatedAt?: string;
   timezone?: string;
+  organizationId?: string;  // AÑADIDO
 }
 
 /**
