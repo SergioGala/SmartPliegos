@@ -15,6 +15,7 @@ import { HttpModule } from '@nestjs/axios';
 import { LicitacionesModule } from './modules/licitaciones/licitaciones.module';
 import { InvitationsModule } from './modules/invitations/invitations.module';
 import { AlertsModule } from './modules/alerts/alerts.module';
+import { FavoritosModule } from './modules/favoritos/favoritos.module';
 import { SearchModule } from './modules/search/search.module';
 import { OrganosModule } from './modules/organos/organos.module';
 import { RedisModule } from './infrastructure/redis';
@@ -40,6 +41,7 @@ import { AiModule } from './modules/ai/ai.module';
     LicitacionesModule,
     InvitationsModule,
     AlertsModule,
+    FavoritosModule,
     SearchModule,
     OrganosModule,
     RedisModule,
