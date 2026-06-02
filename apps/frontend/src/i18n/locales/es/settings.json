@@ -46,6 +46,19 @@
       "wrongOldPassword": "La contraseña actual no es correcta",
       "rateLimit": "Demasiados intentos. Espera un momento.",
       "generic": "Error al cambiar la contraseña"
+    },
+    "deleteAccount": {
+      "success": "Tu cuenta se ha borrado",
+      "error": "No se pudo borrar la cuenta"
+    },
+    "dangerZone": {
+      "title": "Zona peligrosa",
+      "subtitle": "Borrar tu cuenta es permanente. Se eliminarán tus alertas, favoritos y datos asociados.",
+      "button": "Borrar mi cuenta",
+      "deleting": "Borrando...",
+      "confirmTitle": "¿Borrar tu cuenta?",
+      "confirmDescription": "Esta acción no se puede deshacer. Tu cuenta y todos sus datos se eliminarán permanentemente.",
+      "confirmButton": "Sí, borrar mi cuenta"
     }
   },
   "notifications": {
@@ -81,11 +94,33 @@
   },
   "organization": {
     "title": "Organización",
-    "subtitle": "Datos de tu organización y miembros",
+    "subtitle": "Gestiona tu organización y sus miembros.",
     "planLabel": "Plan actual",
-    "roleLabel": "Rol",
-    "comingSoonTitle": "Gestión de miembros próximamente",
-    "comingSoonBody": "Invitar usuarios, gestionar roles y permisos llegará en el próximo sprint."
+    "members": {
+      "title": "Miembros",
+      "empty": "No hay otros miembros en tu organización.",
+      "you": "tú"
+    },
+    "invitations": {
+      "title": "Invitaciones pendientes",
+      "empty": "No hay invitaciones pendientes.",
+      "cancel": "Cancelar invitación",
+      "cancelled": "Invitación cancelada"
+    },
+    "invite": {
+      "title": "Invitar a un nuevo miembro",
+      "subtitle": "Le llegará un email con un enlace para unirse a tu organización.",
+      "emailPlaceholder": "email@ejemplo.com",
+      "send": "Enviar invitación",
+      "sending": "Enviando...",
+      "success": "Invitación enviada",
+      "errors": {
+        "invalidEmail": "Introduce un email válido",
+        "alreadyExists": "Ya existe una invitación pendiente para ese email",
+        "forbidden": "No tienes permiso para invitar",
+        "generic": "No se pudo enviar la invitación"
+      }
+    }
   },
   "preferences": {
     "title": "Preferencias",
