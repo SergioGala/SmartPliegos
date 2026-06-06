@@ -23,103 +23,103 @@ export interface LicitacionDocumento {
 
 export class Licitacion {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ type: 'varchar' })
-  externalId: string;
+  externalId!: string;
 
   @Column({ type: 'varchar', default: 'PLACE' })
-  source: string;
+  source!: string;
 
   @Column({ type: 'text' })
-  title: string;
+  title!: string;
 
   @Column({ type: 'text', nullable: true })
-  description: string | null;
+  description!: string | null;
 
   @Column('text', { array: true, default: '{}' })
-  cpvCodes: string[];
+  cpvCodes!: string[];
 
   @Column({ type: 'bigint', nullable: true })
-  presupuestoBase: string | null;
+  presupuestoBase!: string | null;
 
   @Column({ type: 'bigint', nullable: true })
-  presupuestoConIva: string | null;
+  presupuestoConIva!: string | null;
 
   @Column({ type: 'varchar', nullable: true })
-  tipoContrato: string | null;
+  tipoContrato!: string | null;
 
   @Column({ type: 'varchar', nullable: true })
-  procedimiento: string | null;
+  procedimiento!: string | null;
 
   @Column({ type: 'varchar', default: 'DESCONOCIDO' })
-  estado: string;
+  estado!: string;
 
   @Column({ type: 'varchar', nullable: true })
-  tramitacion: string | null;
+  tramitacion!: string | null;
 
   @Column({ type: 'varchar', nullable: true })
-  ccaa: string | null;
+  ccaa!: string | null;
 
   @Column({ type: 'varchar', nullable: true })
-  provincia: string | null;
+  provincia!: string | null;
 
   @Column({ type: 'varchar', nullable: true })
-  municipio: string | null;
+  municipio!: string | null;
 
   @Column({ type: 'timestamptz', nullable: true })
-  fechaPublicacion: Date | null;
+  fechaPublicacion!: Date | null;
 
   @Column({ type: 'timestamptz', nullable: true })
-  fechaPresentacion: Date | null;
+  fechaPresentacion!: Date | null;
 
   @Column({ type: 'timestamptz', nullable: true })
-  fechaAdjudicacion: Date | null;
+  fechaAdjudicacion!: Date | null;
 
   @Column({ type: 'timestamptz', nullable: true })
-  fechaFormalizacion: Date | null;
+  fechaFormalizacion!: Date | null;
 
   @Column({ type: 'varchar', nullable: true })
-  adjudicatarioNombre: string | null;
+  adjudicatarioNombre!: string | null;
 
   @Column({ type: 'varchar', nullable: true })
-  adjudicatarioNif: string | null;
+  adjudicatarioNif!: string | null;
 
   @Column({ type: 'bigint', nullable: true })
-  importeAdjudicacion: string | null;
+  importeAdjudicacion!: string | null;
 
   @Column({ type: 'decimal', precision: 6, scale: 2, nullable: true })
-  porcentajeBaja: number | null;
+  porcentajeBaja!: number | null;
 
   @Column({ type: 'int', nullable: true })
-  numLicitadores: number | null;
+  numLicitadores!: number | null;
 
- @Column({ type: 'jsonb', default: [] }) 
- documentos: LicitacionDocumento[]; 
+ @Column({ type: 'jsonb', default: [] })
+  documentos!: LicitacionDocumento[]; 
 
   @Column({ type: 'boolean', default: false })
-  tieneLotes: boolean;
+  tieneLotes!: boolean;
 
   @Column({ type: 'text', nullable: true })
-  resumenIA: string | null;
+  resumenIA!: string | null;
 
   @Column({ type: 'boolean', default: false })
-  pliegosProcesados: boolean;
+  pliegosProcesados!: boolean;
 
   @Column({ type: 'uuid', nullable: true })
-  organoId: string | null;
+  organoId!: string | null;
 
   @ManyToOne(() => OrganoContratacion, { nullable: true, eager: false })
   @JoinColumn({ name: 'organoId' })
-  organo: OrganoContratacion | null;
+  organo!: OrganoContratacion | null;
 
   @Column({ type: 'tsvector', nullable: true, select: false })
   @Index('idx_licitaciones_search', { synchronize: false }) // Lo creamos manual
   searchVector: any;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }
