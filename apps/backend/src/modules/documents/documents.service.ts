@@ -1,6 +1,6 @@
 import {
   Injectable, Inject, Logger, NotFoundException,
-  BadRequestException, PayloadTooLargeException, ForbiddenException,
+  BadRequestException, PayloadTooLargeException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

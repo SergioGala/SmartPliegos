@@ -11,7 +11,7 @@ import { LocalDiskStorageProvider } from './providers/local-disk.storage.provide
       provide: STORAGE_PROVIDER,
       inject: [LocalDiskStorageProvider],
       useFactory: (local: LocalDiskStorageProvider /*, s3 */) => {
-        const type = process.env.STORAGE_PROVIDER_TYPE ?? 'local';
+        //const type = process.env.STORAGE_PROVIDER_TYPE ?? 'local';
         // return type === 's3' ? s3 : local;
         return local;
       },

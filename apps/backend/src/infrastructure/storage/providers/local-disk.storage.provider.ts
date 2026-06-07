@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { createReadStream, existsSync } from 'fs';
+import { createReadStream } from 'fs';
 import { mkdir, writeFile, unlink, access } from 'fs/promises';
 import { join, extname, resolve, sep } from 'path';
 import { randomUUID } from 'crypto';
@@ -24,10 +24,12 @@ export class LocalDiskStorageProvider implements IStorageProvider {
   }
 
   async getStream(key: string): Promise<Readable> {
-    const fullPath = this.resolveKey(key);
-    if (!existsSync(fullPath)) throw new NotFoundException('Archivo no encontrado');
-    return createReadStream(fullPath);
+  const fullPath = this.resolveKey(key);
+  if (!(await this.exists(key))) {
+    throw new NotFoundException('Archivo no encontrado');
   }
+  return createReadStream(fullPath);
+}
 
   async delete(key: string): Promise<void> {
     try {

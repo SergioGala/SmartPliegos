@@ -1,65 +1,124 @@
+import { Test } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import {
-  BadRequestException, NotFoundException, PayloadTooLargeException,
+  BadRequestException,
+  NotFoundException,
+  PayloadTooLargeException,
 } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
+import { DocumentEntity } from './document.entity';
+import { STORAGE_PROVIDER } from '../../infrastructure/storage';
 
-const makeQb = (raw: unknown) => ({
-  select: jest.fn().mockReturnThis(),
-  where: jest.fn().mockReturnThis(),
-  andWhere: jest.fn().mockReturnThis(),
-  orderBy: jest.fn().mockReturnThis(),
-  skip: jest.fn().mockReturnThis(),
-  take: jest.fn().mockReturnThis(),
-  getRawOne: jest.fn().mockResolvedValue(raw),
-  getManyAndCount: jest.fn().mockResolvedValue([[], 0]),
-});
+interface QbMock {
+  select: jest.Mock;
+  where: jest.Mock;
+  andWhere: jest.Mock;
+  orderBy: jest.Mock;
+  skip: jest.Mock;
+  take: jest.Mock;
+  getRawOne: jest.Mock;
+  getManyAndCount: jest.Mock;
+}
+
+/** QueryBuilder mock: los métodos encadenables devuelven el propio qb. */
+function makeQb(sum: string): QbMock {
+  const qb: QbMock = {
+    select: jest.fn(),
+    where: jest.fn(),
+    andWhere: jest.fn(),
+    orderBy: jest.fn(),
+    skip: jest.fn(),
+    take: jest.fn(),
+    getRawOne: jest.fn().mockResolvedValue({ sum }),
+    getManyAndCount: jest.fn().mockResolvedValue([[], 0]),
+  };
+  qb.select.mockReturnValue(qb);
+  qb.where.mockReturnValue(qb);
+  qb.andWhere.mockReturnValue(qb);
+  qb.orderBy.mockReturnValue(qb);
+  qb.skip.mockReturnValue(qb);
+  qb.take.mockReturnValue(qb);
+  return qb;
+}
 
 describe('DocumentsService', () => {
   let service: DocumentsService;
-  let repo: any;
-  let storage: any;
+  let repo: {
+    create: jest.Mock;
+    save: jest.Mock;
+    findOne: jest.Mock;
+    count: jest.Mock;
+    softRemove: jest.Mock;
+    createQueryBuilder: jest.Mock;
+  };
+  let storage: {
+    providerName: string;
+    save: jest.Mock;
+    getStream: jest.Mock;
+    delete: jest.Mock;
+    exists: jest.Mock;
+  };
 
-  const file = (over: Record<string, unknown> = {}) => ({
-    originalname: 'a.pdf', mimetype: 'application/pdf',
-    buffer: Buffer.from('contenido'), size: 9, ...over,
+  const fileInput = (
+    over: Partial<{ originalname: string; mimetype: string; buffer: Buffer; size: number }> = {},
+  ) => ({
+    originalname: 'a.pdf',
+    mimetype: 'application/pdf',
+    buffer: Buffer.from('contenido'),
+    size: 9,
+    ...over,
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     repo = {
-      create: jest.fn((x) => x),
-      save: jest.fn((x) => Promise.resolve({ id: 'doc-1', ...x })),
+      create: jest.fn().mockImplementation((d: Partial<DocumentEntity>) => d),
+      save: jest.fn().mockResolvedValue({ id: 'doc-1' } as DocumentEntity),
       findOne: jest.fn(),
       count: jest.fn().mockResolvedValue(0),
       softRemove: jest.fn().mockResolvedValue(undefined),
-      createQueryBuilder: jest.fn(() => makeQb({ sum: '0' })),
+      createQueryBuilder: jest.fn().mockReturnValue(makeQb('0')),
     };
     storage = {
+      providerName: 'mock',
       save: jest.fn().mockResolvedValue({ key: 'user/u1/uuid.pdf', sizeBytes: 9 }),
       getStream: jest.fn(),
       delete: jest.fn().mockResolvedValue(undefined),
       exists: jest.fn(),
     };
-    service = new DocumentsService(repo, storage);
+
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        DocumentsService,
+        { provide: getRepositoryToken(DocumentEntity), useValue: repo },
+        { provide: STORAGE_PROVIDER, useValue: storage },
+      ],
+    }).compile();
+
+    service = moduleRef.get(DocumentsService);
   });
 
   it('sube un PDF válido', async () => {
-    const doc = await service.upload({ ownerUserId: 'u1', organizationId: null, file: file() as any });
+    const doc = await service.upload({ ownerUserId: 'u1', organizationId: null, file: fileInput() });
     expect(storage.save).toHaveBeenCalled();
     expect(repo.save).toHaveBeenCalled();
-    expect(doc.id).toBe('doc-1');
+    expect(doc).toEqual({ id: 'doc-1' });
   });
 
   it('rechaza un MIME no permitido', async () => {
     await expect(
-      service.upload({ ownerUserId: 'u1', organizationId: null, file: file({ mimetype: 'application/x-msdownload' }) as any }),
+      service.upload({
+        ownerUserId: 'u1',
+        organizationId: null,
+        file: fileInput({ mimetype: 'application/x-msdownload' }),
+      }),
     ).rejects.toBeInstanceOf(BadRequestException);
     expect(storage.save).not.toHaveBeenCalled();
   });
 
   it('rechaza si supera la cuota', async () => {
-    repo.createQueryBuilder = jest.fn(() => makeQb({ sum: String(999_999_999_999) }));
+    repo.createQueryBuilder.mockReturnValue(makeQb(String(999_999_999_999)));
     await expect(
-      service.upload({ ownerUserId: 'u1', organizationId: null, file: file() as any }),
+      service.upload({ ownerUserId: 'u1', organizationId: null, file: fileInput() }),
     ).rejects.toBeInstanceOf(PayloadTooLargeException);
   });
 
