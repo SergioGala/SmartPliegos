@@ -21,6 +21,8 @@ import { RedisModule } from './infrastructure/redis';
 import { RequestIdMiddleware } from './common/middleware';
 import { AiInfrastructureModule } from './infrastructure/ai';
 import { AiModule } from './modules/ai/ai.module';
+import { StorageModule } from './infrastructure/storage';
+import { DocumentsModule } from './modules/documents/documents.module';
 
 
 @Module({
@@ -45,6 +47,8 @@ import { AiModule } from './modules/ai/ai.module';
     RedisModule,
     AiInfrastructureModule,
     AiModule,
+    StorageModule, 
+    DocumentsModule
   ],
   controllers: [AppController],
   providers: [AppService],

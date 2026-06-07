@@ -1,0 +1,25 @@
+{
+  "title": "Os meus documentos",
+  "subtitle": "A túa caixa forte de documentos reutilizables para licitacións.",
+  "searchPlaceholder": "Buscar polo nome…",
+  "loading": "Cargando…",
+  "empty": "Aínda non subiches ningún documento.",
+  "usage": { "label": "{{count}} documentos" },
+  "upload": {
+    "cta": "Arrastra un ficheiro ou fai clic para subilo",
+    "hint": "PDF, Word, Excel, imaxes ou texto · máx. 5 MB",
+    "success": "«{{name}}» subiuse correctamente"
+  },
+  "actions": { "download": "Descargar", "rename": "Renomear", "delete": "Eliminar" },
+  "delete": {
+    "title": "Eliminar o documento?",
+    "description": "«{{name}}» eliminarase de forma permanente."
+  },
+  "pagination": { "prev": "Anterior", "next": "Seguinte" },
+  "errors": {
+    "mime": "Tipo de ficheiro non permitido",
+    "size": "O ficheiro supera o máximo de 5 MB",
+    "download": "Non se puido descargar o ficheiro",
+    "generic": "Algo foi mal. Téntao de novo."
+  }
+}

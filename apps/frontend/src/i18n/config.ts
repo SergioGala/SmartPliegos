@@ -57,6 +57,14 @@ import enHome from './locales/en/home.json';
 import ptSearch from './locales/pt/search.json';
 import ptHome from './locales/pt/home.json';
 
+// ─── Documents (Vault) ───
+import esDocuments from './locales/es/documents.json';
+import caDocuments from './locales/ca/documents.json';
+import glDocuments from './locales/gl/documents.json';
+import euDocuments from './locales/eu/documents.json';
+import enDocuments from './locales/en/documents.json';
+import ptDocuments from './locales/pt/documents.json';
+
 /**
  * Idiomas soportados.
  * Los marcados con `needsReview: true` necesitan ser revisados por nativo
@@ -84,8 +92,9 @@ i18n
         settings: esSettings,
         alerts: esAlerts,
         landing: esLanding,
-        search: esSearch,    
+        search: esSearch,
         home: esHome,
+        documents: esDocuments,
       },
       ca: {
         common: caCommon,
@@ -93,8 +102,9 @@ i18n
         settings: caSettings,
         alerts: caAlerts,
         landing: caLanding,
-        search: caSearch,    
+        search: caSearch,
         home: caHome,
+        documents: caDocuments,
       },
       gl: {
         common: glCommon,
@@ -102,8 +112,9 @@ i18n
         settings: glSettings,
         alerts: glAlerts,
         landing: glLanding,
-        search: glSearch,    
+        search: glSearch,
         home: glHome,
+        documents: glDocuments,
       },
       eu: {
         common: euCommon,
@@ -111,8 +122,9 @@ i18n
         settings: euSettings,
         alerts: euAlerts,
         landing: euLanding,
-        search: euSearch,    
+        search: euSearch,
         home: euHome,
+        documents: euDocuments,
       },
       en: {
         common: enCommon,
@@ -120,8 +132,9 @@ i18n
         settings: enSettings,
         alerts: enAlerts,
         landing: enLanding,
-        search: enSearch,    
+        search: enSearch,
         home: enHome,
+        documents: enDocuments,
       },
       pt: {
         common: ptCommon,
@@ -129,15 +142,16 @@ i18n
         settings: ptSettings,
         alerts: ptAlerts,
         landing: ptLanding,
-        search: ptSearch,    
+        search: ptSearch,
         home: ptHome,
+        documents: ptDocuments,
       },
     },
     // Detecta del navegador si es un idioma que soportamos, fallback a ES
     fallbackLng: 'es',
     supportedLngs: SUPPORTED_LANGUAGES.map((l) => l.code),
     defaultNS: 'common',
-    ns: ['common', 'auth', 'settings', 'alerts', 'landing', 'search', 'home'],
+    ns: ['common', 'auth', 'settings', 'alerts', 'landing', 'search', 'home', 'documents'],
     interpolation: {
       escapeValue: false, // React ya escapa
     },

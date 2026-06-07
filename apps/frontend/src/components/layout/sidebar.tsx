@@ -10,6 +10,7 @@ import {
   LogOut,
   User as UserIcon,
   Settings as SettingsIcon,
+  FolderArchive
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -235,6 +236,7 @@ export function Sidebar() {
       badge: activeAlertsCount > 0 ? activeAlertsCount : undefined,
     },
     { path: '/guardadas', label: t('navigation.saved'), icon: Bookmark },
+    { path: '/documentos', label: t('navigation.documents'), icon: FolderArchive },
   ];
 
   const NAV_HERRAMIENTAS: NavItemDef[] = [

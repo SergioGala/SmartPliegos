@@ -1,0 +1,25 @@
+{
+  "title": "Els meus documents",
+  "subtitle": "La teva caixa forta de documents reutilitzables per a licitacions.",
+  "searchPlaceholder": "Cerca pel nom…",
+  "loading": "Carregant…",
+  "empty": "Encara no has pujat cap document.",
+  "usage": { "label": "{{count}} documents" },
+  "upload": {
+    "cta": "Arrossega un fitxer o fes clic per pujar-lo",
+    "hint": "PDF, Word, Excel, imatges o text · màx. 5 MB",
+    "success": "«{{name}}» s'ha pujat correctament"
+  },
+  "actions": { "download": "Descarrega", "rename": "Reanomena", "delete": "Elimina" },
+  "delete": {
+    "title": "Vols eliminar el document?",
+    "description": "«{{name}}» s'eliminarà de manera permanent."
+  },
+  "pagination": { "prev": "Anterior", "next": "Següent" },
+  "errors": {
+    "mime": "Tipus de fitxer no permès",
+    "size": "El fitxer supera el màxim de 5 MB",
+    "download": "No s'ha pogut descarregar el fitxer",
+    "generic": "Alguna cosa ha anat malament. Torna-ho a provar."
+  }
+}

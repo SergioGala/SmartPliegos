@@ -1,0 +1,25 @@
+{
+  "title": "Mis documentos",
+  "subtitle": "Tu caja fuerte de documentos reutilizables para licitaciones.",
+  "searchPlaceholder": "Buscar por nombre…",
+  "loading": "Cargando…",
+  "empty": "Aún no has subido ningún documento.",
+  "usage": { "label": "{{count}} documentos" },
+  "upload": {
+    "cta": "Arrastra un archivo o haz clic para subir",
+    "hint": "PDF, Word, Excel, imágenes o texto · máx. 5 MB",
+    "success": "«{{name}}» subido correctamente"
+  },
+  "actions": { "download": "Descargar", "rename": "Renombrar", "delete": "Eliminar" },
+  "delete": {
+    "title": "¿Eliminar documento?",
+    "description": "«{{name}}» se eliminará de forma permanente."
+  },
+  "pagination": { "prev": "Anterior", "next": "Siguiente" },
+  "errors": {
+    "mime": "Tipo de archivo no permitido",
+    "size": "El archivo supera el máximo de 5 MB",
+    "download": "No se pudo descargar el archivo",
+    "generic": "Algo salió mal. Inténtalo de nuevo."
+  }
+}
