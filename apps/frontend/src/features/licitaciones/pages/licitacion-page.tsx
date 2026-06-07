@@ -13,7 +13,8 @@ import {
 } from 'lucide-react'
 import type { LicitacionDocumento } from '../types';
 import { ResumenIaCard } from '../components/resumen-ia-card';
-
+import { FavoritoButton } from '../../favoritos/components/favorito-button';
+import { useFavoritoIds } from '../../favoritos/hooks/use-favoritos';
 import { useLicitacion } from '../hooks/use-licitaciones'
 import {
     formatMoney,
@@ -67,6 +68,7 @@ export function LicitacionPage() {
     const { t } = useTranslation('search')
     const { id } = useParams<{ id: string }>()
     const { data: lic, isLoading, error } = useLicitacion(id)
+    const { data: favoritoIds = [] } = useFavoritoIds()
 
     // Traduce un enum value con fallback a prettyEnum si la clave no existe
     const tEnum = (namespace: string, key: string | null | undefined) =>
@@ -95,11 +97,11 @@ export function LicitacionPage() {
                     {t('detail.notFoundBody')}
                 </p>
                 <Button asChild>
-  <Link to="/buscar">
-    <ArrowLeft size={14} />
-    {t('detail.backToSearch')}
-  </Link>
-</Button>
+                    <Link to="/buscar">
+                        <ArrowLeft size={14} />
+                        {t('detail.backToSearch')}
+                    </Link>
+                </Button>
             </div>
         )
     }
@@ -107,6 +109,7 @@ export function LicitacionPage() {
     const estado = getEstadoStyle(lic.estado)
     const deadline = daysUntil(lic.fechaPresentacion)
     const money = formatMoneyCompact(lic.presupuestoBase)
+    const isFavorite = favoritoIds.includes(lic.id)
 
     return (
         <div className="max-w-5xl mx-auto space-y-6">
@@ -117,7 +120,7 @@ export function LicitacionPage() {
                     className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
                 >
                     <ArrowLeft size={14} />
-                     {t('detail.backToSearch')}
+                    {t('detail.backToSearch')}
                 </Link>
                 {getExternalSourceUrl(lic.source, lic.externalId) && (
                     <Button asChild variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
@@ -154,7 +157,7 @@ export function LicitacionPage() {
                                         estado.pulse ? { boxShadow: '0 0 6px currentColor' } : undefined
                                     }
                                 />
-                                 {tEnum('estado', lic.estado)}
+                                {tEnum('estado', lic.estado)}
                             </span>
                             {lic.tipoContrato && (
                                 <Badge variant="outline" className="text-[11px]">
@@ -205,8 +208,11 @@ export function LicitacionPage() {
 
                     {/* Presupuesto destacado */}
                     <div className="text-right shrink-0">
+                        <div className="mb-3 flex justify-end">
+                            <FavoritoButton licitacionId={lic.id} isSaved={isFavorite} />
+                        </div>
                         <div className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mb-1">
-                           {t('detail.budgetLabel')}
+                            {t('detail.budgetLabel')}
                         </div>
                         <div className="flex items-baseline justify-end gap-1">
                             <span className="text-4xl font-extrabold font-mono tracking-tight text-gradient-primary leading-none">
@@ -223,8 +229,8 @@ export function LicitacionPage() {
                                     deadline.expired
                                         ? 'text-red-600 bg-red-500/10 border-red-500/20'
                                         : deadline.days <= 7
-                                        ? 'text-amber-600 bg-amber-500/10 border-amber-500/20'
-                                        : 'text-emerald-600 bg-emerald-500/10 border-emerald-500/20'
+                                            ? 'text-amber-600 bg-amber-500/10 border-amber-500/20'
+                                            : 'text-emerald-600 bg-emerald-500/10 border-emerald-500/20'
                                 )}
                             >
                                 <span
@@ -233,8 +239,8 @@ export function LicitacionPage() {
                                         deadline.urgent && !deadline.expired && 'animate-pulse'
                                     )}
                                 />
-                                 {deadlineLabel(deadline.days, t)}
-                                 {!deadline.expired && deadline.days > 0 && ` ${t('detail.deadlineSuffix')}`}
+                                {deadlineLabel(deadline.days, t)}
+                                {!deadline.expired && deadline.days > 0 && ` ${t('detail.deadlineSuffix')}`}
                             </div>
                         )}
                     </div>
@@ -246,7 +252,7 @@ export function LicitacionPage() {
                 {/* Datos económicos */}
                 <Card>
                     <CardHeader>
-                      <CardTitle className="text-sm flex items-center gap-2">
+                        <CardTitle className="text-sm flex items-center gap-2">
                             <Euro size={14} className="text-primary" />
                             {t('detail.economicTitle')}
                         </CardTitle>
@@ -297,7 +303,7 @@ export function LicitacionPage() {
                 {/* Fechas */}
                 <Card>
                     <CardHeader>
-                      <CardTitle className="text-sm flex items-center gap-2">
+                        <CardTitle className="text-sm flex items-center gap-2">
                             <Calendar size={14} className="text-primary" />
                             {t('detail.datesTitle')}
                         </CardTitle>
@@ -415,7 +421,7 @@ export function LicitacionPage() {
             )}
 
             {/* ═══ Resumen IA (placeholder) ═══ */}
-           <ResumenIaCard licitacionId={lic.id} resumenInicial={lic.resumenIA} />
+            <ResumenIaCard licitacionId={lic.id} resumenInicial={lic.resumenIA} />
         </div>
     )
 }
