@@ -1,0 +1,17 @@
+{
+  "title": "Saved",
+  "subtitle": "The tenders you've saved, with your notes.",
+  "empty": {
+    "title": "You haven't saved anything yet",
+    "hint": "Tap the heart on any tender to save it here.",
+    "cta": "Go to search"
+  },
+  "note": {
+    "label": "Note",
+    "placeholder": "Add a private note about this tender…"
+  },
+  "button": {
+    "save": "Save to favorites",
+    "remove": "Remove from favorites"
+  }
+}

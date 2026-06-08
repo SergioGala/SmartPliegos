@@ -7,6 +7,7 @@ import { ComingSoon } from '@/components/layout/coming-soon';
 import { HomePage } from '@/features/home/pages/home-page';
 import { BuscarPage } from '@/features/licitaciones/pages/buscar-page';
 import { LicitacionPage } from '@/features/licitaciones/pages/licitacion-page';
+import { GuardadasPage } from './features/favoritos/pages/guardadas-page';
 
 // ─── Auth ───
 import { LoginPage } from '@/features/auth/pages/login-page';
@@ -68,7 +69,7 @@ function App() {
 
           <Route path="/buscar" element={<BuscarPage />} />
           <Route path="/alertas" element={<AlertasPage />} />
-          <Route path="/guardadas" element={<ComingSoon name="Guardadas" />} />
+          <Route path="/guardadas" element={<GuardadasPage />} />
           <Route path="/analytics" element={<ComingSoon name="Analytics" />} />
           <Route path="/calendario" element={<ComingSoon name="Calendario" />} />
           <Route path="/documentos" element={<DocumentosPage />} />

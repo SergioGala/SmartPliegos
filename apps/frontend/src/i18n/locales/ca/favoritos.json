@@ -1,0 +1,17 @@
+{
+  "title": "Desades",
+  "subtitle": "Les licitacions que has desat, amb les teves notes.",
+  "empty": {
+    "title": "Encara no has desat res",
+    "hint": "Prem el cor a qualsevol licitació per desar-la aquí.",
+    "cta": "Anar al cercador"
+  },
+  "note": {
+    "label": "Nota",
+    "placeholder": "Afegeix una nota privada sobre aquesta licitació…"
+  },
+  "button": {
+    "save": "Desar a preferits",
+    "remove": "Treure de preferits"
+  }
+}

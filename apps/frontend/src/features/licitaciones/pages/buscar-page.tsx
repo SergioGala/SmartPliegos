@@ -6,6 +6,7 @@ import { EstadoError } from '@/components/ui/estado-error';
 
 
 import { useLicitaciones, useFilterOptions } from '../hooks/use-licitaciones';
+import { useFavoritoIds } from '../../favoritos/hooks/use-favoritos';
 import { LicitacionCard } from '../components/licitacion-card';
 import { LicitacionCardSkeletonList } from '../components/licitacion-card-skeleton';
 import { LicitacionFilters } from '../components/licitacion-filters';
@@ -69,6 +70,7 @@ export function BuscarPage() {
 
   const { data, isLoading, isError, refetch } = useLicitaciones(params);
   const { data: filterOptions } = useFilterOptions();
+  const { data: favoritoIds = [] } = useFavoritoIds();
 
   const commit = (next: SearchParams, resetPage = true) => {
     const final = { ...next, page: resetPage ? 1 : next.page };
@@ -89,19 +91,25 @@ export function BuscarPage() {
       {/* HEADER */}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight">{t('page.title')}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            <span className="font-mono font-bold text-gradient-primary">
+          <p className="mb-2 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+            Licitaciones públicas · PLACE
+          </p>
+          <h1 className="font-display text-4xl sm:text-5xl font-bold tracking-tight">
+            {t('page.title')}
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            <span className="font-display text-lg font-bold text-foreground tabular-nums">
               {data?.total?.toLocaleString('es-ES') || '—'}
             </span>{' '}
             {t('page.indexedCount')}
           </p>
         </div>
-        <div className="inline-flex items-center gap-2 rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5">
+        <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5">
           <span
             className="h-2 w-2 animate-pulse rounded-full bg-emerald-500 dark:bg-emerald-400"
           />
-          <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
+          <span className="font-mono text-[11px] uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
             {t('page.scrapingActive')}
           </span>
         </div>
@@ -129,7 +137,7 @@ export function BuscarPage() {
             size={18}
             className={cn(
               'shrink-0 transition-colors',
-              focused ? 'text-primary' : 'text-muted-foreground/50',
+              focused ? 'text-foreground' : 'text-muted-foreground/50',
             )}
           />
           <input
@@ -170,7 +178,12 @@ export function BuscarPage() {
           <>
             <div className="space-y-2.5">
               {data.data.map((lic: LicitacionCardType, i: number) => (
-                <LicitacionCard key={lic.id} licitacion={lic} index={i} />
+                <LicitacionCard
+                  key={lic.id}
+                  licitacion={lic}
+                  index={i}
+                  isSaved={favoritoIds.includes(lic.id)}
+                />
               ))}
             </div>
 

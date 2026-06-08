@@ -12,12 +12,15 @@ import {
   prettyEnum,
 } from '../utils';
 import { cn } from '@/lib/utils';
+import { FavoritoButton } from '../../favoritos/components/favorito-button';
+
 interface LicitacionCardProps {
   licitacion: LicitacionCardType;
   index?: number;
+  isSaved?: boolean;
 }
 
-export function LicitacionCard({ licitacion, index = 0 }: LicitacionCardProps) {
+export function LicitacionCard({ licitacion, index = 0, isSaved = false }: LicitacionCardProps) {
   const { t } = useTranslation('search');
 
   // Traduce un enum value con fallback a prettyEnum si la clave no existe
@@ -157,8 +160,8 @@ export function LicitacionCard({ licitacion, index = 0 }: LicitacionCardProps) {
         {/* Línea 2: Título */}
         <h3
           className={cn(
-            'line-clamp-2 text-[15px] font-semibold leading-snug text-foreground',
-            'transition-colors group-hover:text-primary',
+            'line-clamp-2 text-[15px] font-semibold leading-snug text-foreground tracking-tight',
+            'transition-colors',
           )}
         >
           {licitacion.title}
@@ -186,8 +189,11 @@ export function LicitacionCard({ licitacion, index = 0 }: LicitacionCardProps) {
         </div>
       </div>
 
-      {/* ═══ Columna derecha: pill de plazo + importe ═══ */}
+      {/* ═══ Columna derecha: favorito + pill de plazo + importe ═══ */}
       <div className="flex shrink-0 flex-col items-end gap-2 pl-3">
+        {/* Corazón de favoritos (no navega: el botón hace preventDefault) */}
+        <FavoritoButton licitacionId={licitacion.id} isSaved={isSaved} />
+
         {/* Pill de plazo — mismo estilo que badge de estado pero con color propio */}
         {isOpen && deadline.days !== null && deadlineLevel && (
           <span
@@ -214,11 +220,11 @@ export function LicitacionCard({ licitacion, index = 0 }: LicitacionCardProps) {
 
         {/* Importe */}
         {money.num !== '—' ? (
-          <div className="flex items-baseline gap-0.5 font-mono tabular-nums">
-            <span className="text-2xl font-bold leading-none text-foreground">
+          <div className="flex items-baseline gap-0.5 tabular-nums">
+            <span className="font-display text-[1.7rem] font-bold leading-none text-foreground">
               {money.num}
             </span>
-            <span className="text-sm font-medium leading-none text-muted-foreground">
+            <span className="font-mono text-sm font-medium leading-none text-muted-foreground">
               {money.unit}
             </span>
           </div>
@@ -234,7 +240,7 @@ export function LicitacionCard({ licitacion, index = 0 }: LicitacionCardProps) {
         size={14}
         className={cn(
           'shrink-0 text-muted-foreground/30 transition-all duration-200',
-          'group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary',
+          'group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-foreground',
         )}
       />
     </Link>

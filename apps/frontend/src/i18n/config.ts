@@ -65,18 +65,29 @@ import euDocuments from './locales/eu/documents.json';
 import enDocuments from './locales/en/documents.json';
 import ptDocuments from './locales/pt/documents.json';
 
+// ─── Favoritos ───
+import esFavoritos from './locales/es/favoritos.json';
+import caFavoritos from './locales/ca/favoritos.json';
+import glFavoritos from './locales/gl/favoritos.json';
+import euFavoritos from './locales/eu/favoritos.json';
+import enFavoritos from './locales/en/favoritos.json';
+import ptFavoritos from './locales/pt/favoritos.json';
+
 /**
  * Idiomas soportados.
  * Los marcados con `needsReview: true` necesitan ser revisados por nativo
  * antes de marketing real en ese mercado.
  */
+/**
+ * Idiomas soportados por la app.
+ */
 export const SUPPORTED_LANGUAGES = [
-  { code: 'es', name: 'Español', flag: '🇪🇸', needsReview: false },
-  { code: 'ca', name: 'Català', flag: '🏴󠁥󠁳󠁣󠁴󠁿', needsReview: true },
-  { code: 'gl', name: 'Galego', flag: '🏴󠁥󠁳󠁧󠁡󠁿', needsReview: true },
-  { code: 'eu', name: 'Euskera', flag: '🏴󠁥󠁳󠁰󠁶󠁿', needsReview: true },
-  { code: 'en', name: 'English', flag: '🇬🇧', needsReview: false },
-  { code: 'pt', name: 'Português', flag: '🇵🇹', needsReview: true },
+  { code: 'es', name: 'Español', flag: '🇪🇸' },
+  { code: 'ca', name: 'Català', flag: '🇪🇸' },
+  { code: 'gl', name: 'Galego', flag: '🇪🇸' },
+  { code: 'eu', name: 'Euskera', flag: '🇪🇸' },
+  { code: 'en', name: 'English', flag: '🇬🇧' },
+  { code: 'pt', name: 'Português', flag: '🇵🇹' },
 ] as const;
 
 export type SupportedLanguage = typeof SUPPORTED_LANGUAGES[number]['code'];
@@ -95,6 +106,7 @@ i18n
         search: esSearch,
         home: esHome,
         documents: esDocuments,
+        favoritos: esFavoritos,
       },
       ca: {
         common: caCommon,
@@ -105,6 +117,7 @@ i18n
         search: caSearch,
         home: caHome,
         documents: caDocuments,
+        favoritos: caFavoritos,
       },
       gl: {
         common: glCommon,
@@ -115,6 +128,7 @@ i18n
         search: glSearch,
         home: glHome,
         documents: glDocuments,
+        favoritos: glFavoritos,
       },
       eu: {
         common: euCommon,
@@ -125,6 +139,7 @@ i18n
         search: euSearch,
         home: euHome,
         documents: euDocuments,
+        favoritos: euFavoritos,
       },
       en: {
         common: enCommon,
@@ -135,6 +150,7 @@ i18n
         search: enSearch,
         home: enHome,
         documents: enDocuments,
+        favoritos: enFavoritos,
       },
       pt: {
         common: ptCommon,
@@ -145,26 +161,24 @@ i18n
         search: ptSearch,
         home: ptHome,
         documents: ptDocuments,
+        favoritos: ptFavoritos,
       },
     },
     // Detecta del navegador si es un idioma que soportamos, fallback a ES
     fallbackLng: 'es',
     supportedLngs: SUPPORTED_LANGUAGES.map((l) => l.code),
     defaultNS: 'common',
-    ns: ['common', 'auth', 'settings', 'alerts', 'landing', 'search', 'home', 'documents'],
+    ns: ['common', 'auth', 'settings', 'alerts', 'landing', 'search', 'home', 'documents', 'favoritos'],
     interpolation: {
       escapeValue: false, // React ya escapa
     },
     detection: {
-      // Orden de detección
       order: ['localStorage', 'navigator', 'htmlTag'],
-      // Qué claves usar en localStorage
       lookupLocalStorage: 'licitapp-language',
-      // Dónde guardar la elección del user
       caches: ['localStorage'],
     },
     react: {
-      useSuspense: false, // Evitamos suspense para simplificar
+      useSuspense: false,
     },
   });
 

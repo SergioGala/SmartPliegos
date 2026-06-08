@@ -40,3 +40,25 @@ export function useRemoveFavoritoByLicitacion() {
     },
   });
 }
+
+export function useUpdateNota() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, nota }: { id: string; nota: string | null }) =>
+      favoritosApi.updateNota(id, { nota }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['favoritos'] });
+    },
+  });
+}
+
+export function useRemoveFavoritoById() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => favoritosApi.remove(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['favoritos'] });
+      queryClient.invalidateQueries({ queryKey: ['favoritos-ids'] });
+    },
+  });
+}
