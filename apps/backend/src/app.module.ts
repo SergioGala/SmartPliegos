@@ -24,6 +24,7 @@ import { AiInfrastructureModule } from './infrastructure/ai';
 import { AiModule } from './modules/ai/ai.module';
 import { StorageModule } from './infrastructure/storage';
 import { DocumentsModule } from './modules/documents/documents.module';
+import { RecordatoriosModule } from './modules/recordatorios/recordatorios.module';
 
 
 @Module({
@@ -50,7 +51,8 @@ import { DocumentsModule } from './modules/documents/documents.module';
     AiInfrastructureModule,
     AiModule,
     StorageModule, 
-    DocumentsModule
+    DocumentsModule,
+    RecordatoriosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

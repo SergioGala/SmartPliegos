@@ -1,0 +1,21 @@
+{
+  "title": "Calendari",
+  "subtitle": "Els terminis de les teves licitacions desades. Prem-ne una per crear un recordatori.",
+  "loading": "Carregant…",
+  "empty": {
+    "title": "No hi ha terminis al calendari",
+    "hint": "Desa licitacions amb data de presentació per veure-les aquí."
+  },
+  "dialog": {
+    "deadline": "Data límit",
+    "remindLabel": "Avisa'm abans del termini",
+    "daysBefore_one": "{{count}} dia abans",
+    "daysBefore_other": "{{count}} dies abans",
+    "create": "Crear recordatori",
+    "update": "Actualitzar",
+    "remove": "Treure recordatori",
+    "saved": "Recordatori desat",
+    "removed": "Recordatori eliminat"
+  },
+  "errors": { "generic": "Alguna cosa ha anat malament. Torna-ho a provar." }
+}

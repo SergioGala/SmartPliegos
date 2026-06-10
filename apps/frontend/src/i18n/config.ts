@@ -73,6 +73,15 @@ import euFavoritos from './locales/eu/favoritos.json';
 import enFavoritos from './locales/en/favoritos.json';
 import ptFavoritos from './locales/pt/favoritos.json';
 
+// ─── Calendario ───
+import esCalendario from './locales/es/calendario.json';
+import caCalendario from './locales/ca/calendario.json';
+import glCalendario from './locales/gl/calendario.json';
+import euCalendario from './locales/eu/calendario.json';
+import enCalendario from './locales/en/calendario.json';
+import ptCalendario from './locales/pt/calendario.json';
+
+
 /**
  * Idiomas soportados.
  * Los marcados con `needsReview: true` necesitan ser revisados por nativo
@@ -107,6 +116,7 @@ i18n
         home: esHome,
         documents: esDocuments,
         favoritos: esFavoritos,
+        calendario: esCalendario,
       },
       ca: {
         common: caCommon,
@@ -118,6 +128,7 @@ i18n
         home: caHome,
         documents: caDocuments,
         favoritos: caFavoritos,
+        calendario: caCalendario,
       },
       gl: {
         common: glCommon,
@@ -129,6 +140,7 @@ i18n
         home: glHome,
         documents: glDocuments,
         favoritos: glFavoritos,
+        calendario: glCalendario,
       },
       eu: {
         common: euCommon,
@@ -140,6 +152,7 @@ i18n
         home: euHome,
         documents: euDocuments,
         favoritos: euFavoritos,
+        calendario: euCalendario,
       },
       en: {
         common: enCommon,
@@ -151,6 +164,7 @@ i18n
         home: enHome,
         documents: enDocuments,
         favoritos: enFavoritos,
+        calendario: enCalendario,
       },
       pt: {
         common: ptCommon,
@@ -162,13 +176,14 @@ i18n
         home: ptHome,
         documents: ptDocuments,
         favoritos: ptFavoritos,
+        calendario: ptCalendario,
       },
     },
     // Detecta del navegador si es un idioma que soportamos, fallback a ES
     fallbackLng: 'es',
     supportedLngs: SUPPORTED_LANGUAGES.map((l) => l.code),
     defaultNS: 'common',
-    ns: ['common', 'auth', 'settings', 'alerts', 'landing', 'search', 'home', 'documents', 'favoritos'],
+    ns: ['common', 'auth', 'settings', 'alerts', 'landing', 'search', 'home', 'documents', 'favoritos', 'calendario'],
     interpolation: {
       escapeValue: false, // React ya escapa
     },

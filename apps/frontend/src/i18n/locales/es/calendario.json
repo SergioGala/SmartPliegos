@@ -1,0 +1,21 @@
+{
+  "title": "Calendario",
+  "subtitle": "Los plazos de tus licitaciones guardadas. Pulsa una para crear un recordatorio.",
+  "loading": "Cargando…",
+  "empty": {
+    "title": "No hay plazos en el calendario",
+    "hint": "Guarda licitaciones con fecha de presentación para verlas aquí."
+  },
+  "dialog": {
+    "deadline": "Fecha límite",
+    "remindLabel": "Avísame antes del plazo",
+    "daysBefore_one": "{{count}} día antes",
+    "daysBefore_other": "{{count}} días antes",
+    "create": "Crear recordatorio",
+    "update": "Actualizar",
+    "remove": "Quitar recordatorio",
+    "saved": "Recordatorio guardado",
+    "removed": "Recordatorio eliminado"
+  },
+  "errors": { "generic": "Algo salió mal. Inténtalo de nuevo." }
+}

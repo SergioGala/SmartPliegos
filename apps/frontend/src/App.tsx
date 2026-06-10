@@ -8,6 +8,8 @@ import { HomePage } from '@/features/home/pages/home-page';
 import { BuscarPage } from '@/features/licitaciones/pages/buscar-page';
 import { LicitacionPage } from '@/features/licitaciones/pages/licitacion-page';
 import { GuardadasPage } from './features/favoritos/pages/guardadas-page';
+import { CalendarioPage } from '@/features/calendario/pages/calendario-page';
+
 
 // ─── Auth ───
 import { LoginPage } from '@/features/auth/pages/login-page';
@@ -71,7 +73,7 @@ function App() {
           <Route path="/alertas" element={<AlertasPage />} />
           <Route path="/guardadas" element={<GuardadasPage />} />
           <Route path="/analytics" element={<ComingSoon name="Analytics" />} />
-          <Route path="/calendario" element={<ComingSoon name="Calendario" />} />
+          <Route path="/calendario" element={<CalendarioPage />} />
           <Route path="/documentos" element={<DocumentosPage />} />
 
           <Route path="/licitaciones/:id" element={<LicitacionPage />} />
