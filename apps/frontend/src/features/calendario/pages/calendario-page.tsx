@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
-import { ChevronLeft, ChevronRight, CalendarDays, Sparkles, Clock } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CalendarDays } from 'lucide-react';
 import { useCalendario } from '../hooks/use-calendario';
 import { CalendarGrid } from '../components/calendar-grid';
 import { RecordatorioDialog } from '../components/recordatorio-dialog';
