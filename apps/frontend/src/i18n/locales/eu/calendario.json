@@ -1,0 +1,21 @@
+{
+  "title": "Egutegia",
+  "subtitle": "Gorde dituzun lizitazioen epeak. Sakatu bat oroigarri bat sortzeko.",
+  "loading": "Kargatzen…",
+  "empty": {
+    "title": "Ez dago eperik egutegian",
+    "hint": "Gorde aurkezpen-data duten lizitazioak hemen ikusteko."
+  },
+  "dialog": {
+    "deadline": "Azken eguna",
+    "remindLabel": "Abisatu epea baino lehen",
+    "daysBefore_one": "{{count}} egun lehenago",
+    "daysBefore_other": "{{count}} egun lehenago",
+    "create": "Sortu oroigarria",
+    "update": "Eguneratu",
+    "remove": "Kendu oroigarria",
+    "saved": "Oroigarria gordeta",
+    "removed": "Oroigarria ezabatuta"
+  },
+  "errors": { "generic": "Zerbait gaizki joan da. Saiatu berriro." }
+}

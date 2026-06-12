@@ -1,0 +1,21 @@
+{
+  "title": "Calendar",
+  "subtitle": "The deadlines of your saved tenders. Click one to set a reminder.",
+  "loading": "Loading…",
+  "empty": {
+    "title": "No deadlines in the calendar",
+    "hint": "Save tenders with a submission deadline to see them here."
+  },
+  "dialog": {
+    "deadline": "Deadline",
+    "remindLabel": "Remind me before the deadline",
+    "daysBefore_one": "{{count}} day before",
+    "daysBefore_other": "{{count}} days before",
+    "create": "Create reminder",
+    "update": "Update",
+    "remove": "Remove reminder",
+    "saved": "Reminder saved",
+    "removed": "Reminder removed"
+  },
+  "errors": { "generic": "Something went wrong. Try again." }
+}

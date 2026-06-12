@@ -1,0 +1,21 @@
+{
+  "title": "Calendário",
+  "subtitle": "Os prazos dos teus concursos guardados. Clica num para criar um lembrete.",
+  "loading": "A carregar…",
+  "empty": {
+    "title": "Não há prazos no calendário",
+    "hint": "Guarda concursos com data de submissão para os veres aqui."
+  },
+  "dialog": {
+    "deadline": "Data limite",
+    "remindLabel": "Avisa-me antes do prazo",
+    "daysBefore_one": "{{count}} dia antes",
+    "daysBefore_other": "{{count}} dias antes",
+    "create": "Criar lembrete",
+    "update": "Atualizar",
+    "remove": "Remover lembrete",
+    "saved": "Lembrete guardado",
+    "removed": "Lembrete removido"
+  },
+  "errors": { "generic": "Algo correu mal. Tenta novamente." }
+}
