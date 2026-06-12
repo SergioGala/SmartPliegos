@@ -1,95 +1,148 @@
 {
-  "header": {
-    "features": "Características",
-    "pricing": "Precios",
-    "contact": "Contacto",
+  "meta": {
+    "title": "SmartPliegos · Inteligencia en licitaciones públicas",
+    "description": "Búsqueda inteligente sobre 288.000 licitaciones de PLACE, alertas en tiempo real y resúmenes con IA de pliegos de 100+ páginas en segundos."
+  },
+  "nav": {
+    "producto": "Producto",
+    "ia": "IA",
+    "precios": "Precios",
+    "contacto": "Contacto",
     "login": "Iniciar sesión",
     "register": "Empezar gratis"
   },
   "hero": {
-    "badge": "Con IA integrada para resúmenes automáticos",
-    "titlePart1": "Gana más licitaciones públicas.",
-    "titlePart2": "Pierde menos tiempo.",
-    "subtitle": "Búsqueda inteligente sobre 288.000 licitaciones de PLACE, alertas en tiempo real y resúmenes con IA de pliegos de 100+ páginas en segundos.",
+    "kicker1": "Inteligencia en contratación pública · España",
+    "kicker2": "PLACE · 288.000+ licitaciones · datos oficiales",
+    "title": {
+      "l1": "Gana más",
+      "l2": "licitaciones",
+      "l3": "públicas.",
+      "l4": "Pierde menos tiempo."
+    },
+    "sub": "Búsqueda inteligente, <b>alertas a medida</b> en tiempo real y resúmenes con <b>IA</b> de pliegos de 100+ páginas en <b>15 segundos</b>. Todo sobre la Plataforma de Contratación del Sector Público.",
     "ctaStart": "Empezar gratis",
     "ctaSecondary": "Ver cómo funciona",
-    "disclaimer": "Gratis para siempre · Sin tarjeta · Datos actualizados cada 5 minutos"
+    "disclaimer": {
+      "forever": "Gratis para siempre",
+      "noCard": "Sin tarjeta",
+      "updated": "Actualizado cada 5 min"
+    }
+  },
+  "stats": {
+    "indexed": "Licitaciones indexadas",
+    "frequency": "Frecuencia de actualización",
+    "aiSummary": "Resumen IA de un pliego",
+    "regions": "Comunidades cubiertas"
   },
   "features": {
-    "title": "Todo lo que necesitas. Nada de lo que no.",
-    "subtitle": "Herramientas pensadas para empresas que se juegan contratos de verdad.",
-    "items": {
-      "search": {
-        "title": "Búsqueda inteligente",
-        "description": "Sobre 288.000 licitaciones de PLACE, con filtros por CPV, comunidad, órgano, importe, estado."
-      },
-      "alerts": {
-        "title": "Alertas a medida",
-        "description": "Define criterios y recibe emails cuando aparezcan licitaciones que te encajan. En tiempo real."
-      },
-      "ai": {
-        "title": "Resúmenes con IA",
-        "description": "Sube un pliego de 100 páginas y recibe en 15 segundos un resumen estructurado: objeto, importe, plazos, requisitos."
-      }
+    "head": {
+      "title1": "Todo lo que necesitas.",
+      "title2": "Nada de lo que no.",
+      "intro": "Herramientas pensadas para empresas que se juegan contratos de verdad. Sin ruido, sin paneles inútiles, sin curva de aprendizaje."
+    },
+    "search": {
+      "idx": "/ 01 — Búsqueda inteligente",
+      "h": "Encuentra tu próximo contrato entre 288.000.",
+      "p": "Filtra 288.000 licitaciones de PLACE por CPV, comunidad, órgano de contratación, importe y estado. Resultados al instante, relevancia real.",
+      "b1": "Filtros por CPV, CCAA, órgano e importe combinables",
+      "b2": "Búsqueda semántica que entiende lo que buscas",
+      "b3": "Guarda búsquedas y conviértelas en alertas"
+    },
+    "alerts": {
+      "idx": "/ 02 — Alertas a medida",
+      "h": "Que las licitaciones te busquen a ti.",
+      "p": "Define tus criterios una vez y recibe un email en el momento exacto en que aparece una licitación que encaja. Sin revisar portales cada mañana.",
+      "b1": "Alertas con criterios combinados",
+      "b2": "Notificación en tiempo real, no resúmenes diarios",
+      "b3": "Puntuación de afinidad en cada match"
+    },
+    "ai": {
+      "idx": "/ 03 — Lectura con IA",
+      "h": "100 páginas de pliego, leídas en 15 segundos.",
+      "p": "Sube un pliego y recibe un resumen estructurado: objeto, importe, plazos, criterios de adjudicación y requisitos de solvencia. Decide si presentarte en un minuto, no en una tarde.",
+      "b1": "Objeto, importe y plazos extraídos automáticamente",
+      "b2": "Criterios de adjudicación y solvencia destacados",
+      "b3": "Pregúntale al pliego en lenguaje natural"
+    }
+  },
+  "ai": {
+    "head": {
+      "title1": "Del pliego ilegible",
+      "title2": "al resumen accionable.",
+      "intro": "Los pliegos administrativos no están hechos para leerse rápido. La IA de SmartPliegos los digiere por ti y te da solo lo que importa para decidir."
     }
   },
   "pricing": {
-    "title": "Precios simples",
-    "subtitle": "Paga solo por lo que usas. Cambia de plan cuando quieras.",
-    "mostPopular": "Más popular",
-    "plans": {
-      "free": {
-        "name": "Free",
-        "price": "0€",
-        "cadence": "para siempre",
-        "description": "Para probarlo. Sin tarjeta.",
-        "features": {
-          "search": "Buscador completo",
-          "alerts": "1 alerta activa",
-          "ai": "5 resúmenes IA/mes",
-          "support": "Soporte por email"
-        },
-        "cta": "Empezar gratis"
-      },
-      "pro": {
-        "name": "Pro",
-        "price": "49€",
-        "cadence": "/mes",
-        "description": "Para empresas que van en serio.",
-        "features": {
-          "everything": "Todo lo de Free",
-          "alerts": "Alertas ilimitadas",
-          "ai": "100 resúmenes IA/mes",
-          "export": "Exportación a Excel/CSV",
-          "support": "Soporte prioritario"
-        },
-        "cta": "Empezar prueba de 14 días"
-      },
-      "enterprise": {
-        "name": "Enterprise",
-        "price": "A medida",
-        "description": "Para equipos grandes y consultoras.",
-        "features": {
-          "everything": "Todo lo de Pro",
-          "ai": "Resúmenes IA ilimitados",
-          "integrations": "Integraciones (API, Slack, Teams)",
-          "manager": "Manager de cuenta dedicado",
-          "sla": "SLA 99.9%"
-        },
-        "cta": "Hablar con ventas"
-      }
+    "head": {
+      "title1": "Precios simples.",
+      "title2": "Cambia cuando quieras.",
+      "intro": "Empieza gratis, sin tarjeta. Sube a Pro cuando lo necesites y recarga créditos de IA a la carta."
+    },
+    "free": {
+      "name": "Free",
+      "desc": "Para probarlo. Sin tarjeta.",
+      "cadence": "para siempre",
+      "f1": "Buscador completo",
+      "f2": "1 alerta activa",
+      "f3": "5 resúmenes IA / mes",
+      "f4": "Soporte por email",
+      "cta": "Empezar gratis"
+    },
+    "pro": {
+      "name": "Pro",
+      "pop": "Más popular",
+      "desc": "Para empresas que van en serio.",
+      "cadence": "/ mes",
+      "f1": "Todo lo de Free",
+      "f2": "Alertas ilimitadas",
+      "f3": "100 resúmenes IA / mes",
+      "f4": "Exportación a Excel / CSV",
+      "f5": "Soporte prioritario",
+      "cta": "Empezar prueba de 14 días"
+    },
+    "credits": {
+      "name": "Créditos IA",
+      "desc": "¿Se te acaban los del plan? Recarga cuando quieras.",
+      "cadence": "/ 100 créditos",
+      "f1": "Packs de créditos IA a la carta",
+      "f2": "Se suman a los de tu plan",
+      "f3": "Sin caducidad mensual",
+      "f4": "Pago único, sin suscripción",
+      "cta": "Comprar créditos"
     }
   },
-  "cta": {
-    "title": "¿Listo para dejar de perder licitaciones?",
-    "subtitle": "Crea tu cuenta gratis en 30 segundos. Sin tarjeta. Sin compromiso.",
-    "button": "Empezar gratis"
+  "final": {
+    "kicker": "Crea tu cuenta en 30 segundos",
+    "titleL1": "¿Listo para dejar",
+    "titlePre": "de",
+    "titleAccent": "perder",
+    "titlePost": "licitaciones?",
+    "sub": "Sin tarjeta. Sin compromiso. Datos oficiales de PLACE actualizados cada 5 minutos.",
+    "ctaStart": "Empezar gratis",
+    "ctaSales": "Hablar con ventas"
   },
   "footer": {
-    "copyright": "© {{year}} SmartPliegos. Todos los derechos reservados.",
-    "terms": "Términos",
-    "privacy": "Privacidad",
-    "cookies": "Cookies",
-    "contact": "Contacto"
+    "tag": "Inteligencia en licitaciones públicas. Sobre datos oficiales de la Plataforma de Contratación del Sector Público.",
+    "product": {
+      "title": "Producto",
+      "search": "Búsqueda",
+      "alerts": "Alertas",
+      "ai": "Resúmenes IA",
+      "pricing": "Precios"
+    },
+    "company": {
+      "title": "Empresa",
+      "about": "Sobre nosotros",
+      "contact": "Contacto",
+      "blog": "Blog"
+    },
+    "legal": {
+      "title": "Legal",
+      "terms": "Términos",
+      "privacy": "Privacidad",
+      "cookies": "Cookies"
+    },
+    "copyright": "© {{year}} SmartPliegos. Todos los derechos reservados."
   }
 }

@@ -1,6 +1,15 @@
+// 📍 DESTINO: apps/frontend/src/features/landing/pages/landing-page.tsx  (REEMPLAZAR ENTERO)
+//
+// Landing recableada a i18n (namespace 'landing'). El switcher de idioma ahora
+// SÍ cambia el copy. Se preservan TODOS los efectos (useLandingEffects, refs,
+// data-count, data-mag, reveal, ids heroField/heroSpot/heroScan…), SVGs, clases
+// y los mockups decorativos (navegador/email/PDF), que se dejan en español como
+// "captura de producto". El marquee de sectores se deja fijo para no romper su
+// animación. Las claves nuevas viven en locales/<lang>/landing.json.
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { useTranslation, Trans } from 'react-i18next';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { useLandingEffects } from '../use-landing-effects';
 import '../landing.css';
@@ -22,15 +31,13 @@ const LogoMark = () => (
 export function LandingPage() {
   const rootRef = useRef<HTMLDivElement>(null);
   useLandingEffects(rootRef);
+  const { t } = useTranslation('landing');
 
   return (
     <>
       <Helmet>
-        <title>SmartPliegos · Inteligencia en licitaciones públicas</title>
-        <meta
-          name="description"
-          content="Búsqueda inteligente sobre 288.000 licitaciones de PLACE, alertas en tiempo real y resúmenes con IA de pliegos de 100+ páginas en segundos."
-        />
+        <title>{t('meta.title')}</title>
+        <meta name="description" content={t('meta.description')} />
         <meta property="og:title" content="SmartPliegos" />
         <meta property="og:type" content="website" />
       </Helmet>
@@ -45,17 +52,17 @@ export function LandingPage() {
             </a>
 
             <nav className="nav-links" aria-label="Principal">
-              <a href="#producto" className="nav-link">Producto</a>
-              <a href="#ia" className="nav-link">IA</a>
-              <a href="#precios" className="nav-link">Precios</a>
-              <a href="#contacto" className="nav-link">Contacto</a>
+              <a href="#producto" className="nav-link">{t('nav.producto')}</a>
+              <a href="#ia" className="nav-link">{t('nav.ia')}</a>
+              <a href="#precios" className="nav-link">{t('nav.precios')}</a>
+              <a href="#contacto" className="nav-link">{t('nav.contacto')}</a>
             </nav>
 
             <div className="nav-right">
               <LanguageSwitcher variant="icon" />
-              <Link to="/login" className="nav-login">Iniciar sesión</Link>
+              <Link to="/login" className="nav-login">{t('nav.login')}</Link>
               <span className="mag" data-mag="0.25">
-                <Link to="/register" className="btn btn-primary btn-sm" data-hot><span>Empezar gratis</span></Link>
+                <Link to="/register" className="btn btn-primary btn-sm" data-hot><span>{t('nav.register')}</span></Link>
               </span>
             </div>
           </div>
@@ -76,42 +83,42 @@ export function LandingPage() {
 
             <div className="wrap hero-inner">
               <div className="hero-top">
-                <span className="kicker reveal"><span className="dot" />Inteligencia en contratación pública · España</span>
-                <span className="kicker reveal reveal-d1" style={{ textAlign: 'right' }}>PLACE · 288.000+ licitaciones · datos oficiales</span>
+                <span className="kicker reveal"><span className="dot" />{t('hero.kicker1')}</span>
+                <span className="kicker reveal reveal-d1" style={{ textAlign: 'right' }}>{t('hero.kicker2')}</span>
               </div>
 
               <h1 className="hero-h1 display">
-                <span className="l"><span>Gana más</span></span>
-                <span className="l"><span className="accent">licitaciones</span></span>
-                <span className="l"><span>públicas.</span></span>
-                <span className="l"><span className="outline-text">Pierde menos tiempo.</span></span>
+                <span className="l"><span>{t('hero.title.l1')}</span></span>
+                <span className="l"><span className="accent">{t('hero.title.l2')}</span></span>
+                <span className="l"><span>{t('hero.title.l3')}</span></span>
+                <span className="l"><span className="outline-text">{t('hero.title.l4')}</span></span>
               </h1>
 
               <div className="hero-bottom">
                 <p className="hero-sub reveal reveal-d2">
-                  Búsqueda inteligente, <b>alertas a medida</b> en tiempo real y resúmenes con <b>IA</b> de pliegos de 100+ páginas en <b>15 segundos</b>. Todo sobre la Plataforma de Contratación del Sector Público.
+                  <Trans i18nKey="landing:hero.sub" components={{ b: <b /> }} />
                 </p>
 
                 <div className="hero-cta-row reveal reveal-d3">
                   <div className="hero-ctas">
                     <span className="mag" data-mag="0.3">
-                      <Link to="/register" className="btn btn-primary" data-hot><span>Empezar gratis</span><Arrow /></Link>
+                      <Link to="/register" className="btn btn-primary" data-hot><span>{t('hero.ctaStart')}</span><Arrow /></Link>
                     </span>
                     <span className="mag" data-mag="0.2">
-                      <a href="#ia" className="btn btn-ghost"><span>Ver cómo funciona</span><span className="arrow"><Arrow /></span></a>
+                      <a href="#ia" className="btn btn-ghost"><span>{t('hero.ctaSecondary')}</span><span className="arrow"><Arrow /></span></a>
                     </span>
                   </div>
                   <div className="hero-disclaimer">
-                    <span>Gratis para siempre</span><span className="sep" />
-                    <span>Sin tarjeta</span><span className="sep" />
-                    <span>Actualizado cada 5 min</span>
+                    <span>{t('hero.disclaimer.forever')}</span><span className="sep" />
+                    <span>{t('hero.disclaimer.noCard')}</span><span className="sep" />
+                    <span>{t('hero.disclaimer.updated')}</span>
                   </div>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* ░░░ MARQUEE ░░░ */}
+          {/* ░░░ MARQUEE ░░░ (decorativo, se deja fijo) */}
           <div className="marquee">
             <div className="marquee-track">
               {[0, 1].map((k) => (
@@ -127,19 +134,19 @@ export function LandingPage() {
             <div className="stats-grid">
               <div className="stat reveal">
                 <div className="stat-num"><span data-count="288000">0</span><span className="u">+</span></div>
-                <div className="stat-label">Licitaciones indexadas</div>
+                <div className="stat-label">{t('stats.indexed')}</div>
               </div>
               <div className="stat reveal reveal-d1">
                 <div className="stat-num"><span data-count="5">0</span><span className="u">min</span></div>
-                <div className="stat-label">Frecuencia de actualización</div>
+                <div className="stat-label">{t('stats.frequency')}</div>
               </div>
               <div className="stat reveal reveal-d2">
                 <div className="stat-num"><span data-count="15">0</span><span className="u">s</span></div>
-                <div className="stat-label">Resumen IA de un pliego</div>
+                <div className="stat-label">{t('stats.aiSummary')}</div>
               </div>
               <div className="stat reveal reveal-d3">
                 <div className="stat-num"><span data-count="19">0</span><span className="u">CCAA</span></div>
-                <div className="stat-label">Comunidades cubiertas</div>
+                <div className="stat-label">{t('stats.regions')}</div>
               </div>
             </div>
           </section>
@@ -150,21 +157,21 @@ export function LandingPage() {
               <div className="sec-head reveal">
                 <span className="sec-num">01 — 03</span>
                 <div>
-                  <h2 className="sec-title display">Todo lo que necesitas.<br /><span className="outline-text">Nada de lo que no.</span></h2>
-                  <p className="sec-intro">Herramientas pensadas para empresas que se juegan contratos de verdad. Sin ruido, sin paneles inútiles, sin curva de aprendizaje.</p>
+                  <h2 className="sec-title display">{t('features.head.title1')}<br /><span className="outline-text">{t('features.head.title2')}</span></h2>
+                  <p className="sec-intro">{t('features.head.intro')}</p>
                 </div>
               </div>
 
               {/* 01 — Búsqueda */}
               <div className="feature">
                 <div className="feature-text reveal">
-                  <div className="feature-idx">/ 01 — Búsqueda inteligente</div>
-                  <h3 className="feature-h">Encuentra tu próximo contrato entre 288.000.</h3>
-                  <p className="feature-p">Filtra 288.000 licitaciones de PLACE por CPV, comunidad, órgano de contratación, importe y estado. Resultados al instante, relevancia real.</p>
+                  <div className="feature-idx">{t('features.search.idx')}</div>
+                  <h3 className="feature-h">{t('features.search.h')}</h3>
+                  <p className="feature-p">{t('features.search.p')}</p>
                   <div className="feature-list">
-                    <div className="feature-li"><span className="tick">→</span> Filtros por CPV, CCAA, órgano e importe combinables</div>
-                    <div className="feature-li"><span className="tick">→</span> Búsqueda semántica que entiende lo que buscas</div>
-                    <div className="feature-li"><span className="tick">→</span> Guarda búsquedas y conviértelas en alertas</div>
+                    <div className="feature-li"><span className="tick">→</span> {t('features.search.b1')}</div>
+                    <div className="feature-li"><span className="tick">→</span> {t('features.search.b2')}</div>
+                    <div className="feature-li"><span className="tick">→</span> {t('features.search.b3')}</div>
                   </div>
                 </div>
                 <div className="feature-media reveal reveal-d1">
@@ -195,13 +202,13 @@ export function LandingPage() {
               {/* 02 — Alertas */}
               <div className="feature flip">
                 <div className="feature-text reveal">
-                  <div className="feature-idx">/ 02 — Alertas a medida</div>
-                  <h3 className="feature-h">Que las licitaciones te busquen a ti.</h3>
-                  <p className="feature-p">Define tus criterios una vez y recibe un email en el momento exacto en que aparece una licitación que encaja. Sin revisar portales cada mañana.</p>
+                  <div className="feature-idx">{t('features.alerts.idx')}</div>
+                  <h3 className="feature-h">{t('features.alerts.h')}</h3>
+                  <p className="feature-p">{t('features.alerts.p')}</p>
                   <div className="feature-list">
-                    <div className="feature-li"><span className="tick">→</span> Alertas con criterios combinados</div>
-                    <div className="feature-li"><span className="tick">→</span> Notificación en tiempo real, no resúmenes diarios</div>
-                    <div className="feature-li"><span className="tick">→</span> Puntuación de afinidad en cada match</div>
+                    <div className="feature-li"><span className="tick">→</span> {t('features.alerts.b1')}</div>
+                    <div className="feature-li"><span className="tick">→</span> {t('features.alerts.b2')}</div>
+                    <div className="feature-li"><span className="tick">→</span> {t('features.alerts.b3')}</div>
                   </div>
                 </div>
                 <div className="feature-media reveal reveal-d1">
@@ -219,16 +226,16 @@ export function LandingPage() {
                 </div>
               </div>
 
-              {/* 03 — IA (placeholder de captura) */}
+              {/* 03 — IA */}
               <div className="feature">
                 <div className="feature-text reveal">
-                  <div className="feature-idx">/ 03 — Lectura con IA</div>
-                  <h3 className="feature-h">100 páginas de pliego, leídas en 15 segundos.</h3>
-                  <p className="feature-p">Sube un pliego y recibe un resumen estructurado: objeto, importe, plazos, criterios de adjudicación y requisitos de solvencia. Decide si presentarte en un minuto, no en una tarde.</p>
+                  <div className="feature-idx">{t('features.ai.idx')}</div>
+                  <h3 className="feature-h">{t('features.ai.h')}</h3>
+                  <p className="feature-p">{t('features.ai.p')}</p>
                   <div className="feature-list">
-                    <div className="feature-li"><span className="tick">→</span> Objeto, importe y plazos extraídos automáticamente</div>
-                    <div className="feature-li"><span className="tick">→</span> Criterios de adjudicación y solvencia destacados</div>
-                    <div className="feature-li"><span className="tick">→</span> Pregúntale al pliego en lenguaje natural</div>
+                    <div className="feature-li"><span className="tick">→</span> {t('features.ai.b1')}</div>
+                    <div className="feature-li"><span className="tick">→</span> {t('features.ai.b2')}</div>
+                    <div className="feature-li"><span className="tick">→</span> {t('features.ai.b3')}</div>
                   </div>
                 </div>
                 <div className="feature-media reveal reveal-d1">
@@ -246,8 +253,8 @@ export function LandingPage() {
               <div className="sec-head reveal">
                 <span className="sec-num">IA</span>
                 <div>
-                  <h2 className="sec-title display">Del pliego ilegible<br />al resumen accionable.</h2>
-                  <p className="sec-intro">Los pliegos administrativos no están hechos para leerse rápido. La IA de SmartPliegos los digiere por ti y te da solo lo que importa para decidir.</p>
+                  <h2 className="sec-title display">{t('ai.head.title1')}<br />{t('ai.head.title2')}</h2>
+                  <p className="sec-intro">{t('ai.head.intro')}</p>
                 </div>
               </div>
 
@@ -287,56 +294,56 @@ export function LandingPage() {
               <div className="sec-head reveal">
                 <span className="sec-num">$</span>
                 <div>
-                  <h2 className="sec-title display">Precios simples.<br /><span className="outline-text">Cambia cuando quieras.</span></h2>
-                  <p className="sec-intro">Empieza gratis, sin tarjeta. Sube a Pro cuando lo necesites y recarga créditos de IA a la carta.</p>
+                  <h2 className="sec-title display">{t('pricing.head.title1')}<br /><span className="outline-text">{t('pricing.head.title2')}</span></h2>
+                  <p className="sec-intro">{t('pricing.head.intro')}</p>
                 </div>
               </div>
 
               <div className="price-grid">
                 {/* Free */}
                 <div className="price-card reveal">
-                  <div className="price-top"><span className="price-name">Free</span></div>
-                  <p className="price-desc">Para probarlo. Sin tarjeta.</p>
-                  <div className="price-val"><span className="price-amount">0€</span><span className="price-cad">para siempre</span></div>
+                  <div className="price-top"><span className="price-name">{t('pricing.free.name')}</span></div>
+                  <p className="price-desc">{t('pricing.free.desc')}</p>
+                  <div className="price-val"><span className="price-amount">0€</span><span className="price-cad">{t('pricing.free.cadence')}</span></div>
                   <div className="price-rule" />
                   <div className="price-feats">
-                    <div className="price-feat"><span className="tick">✓</span> Buscador completo</div>
-                    <div className="price-feat"><span className="tick">✓</span> 1 alerta activa</div>
-                    <div className="price-feat"><span className="tick">✓</span> 5 resúmenes IA / mes</div>
-                    <div className="price-feat"><span className="tick">✓</span> Soporte por email</div>
+                    <div className="price-feat"><span className="tick">✓</span> {t('pricing.free.f1')}</div>
+                    <div className="price-feat"><span className="tick">✓</span> {t('pricing.free.f2')}</div>
+                    <div className="price-feat"><span className="tick">✓</span> {t('pricing.free.f3')}</div>
+                    <div className="price-feat"><span className="tick">✓</span> {t('pricing.free.f4')}</div>
                   </div>
-                  <Link to="/register" className="price-cta">Empezar gratis</Link>
+                  <Link to="/register" className="price-cta">{t('pricing.free.cta')}</Link>
                 </div>
 
                 {/* Pro */}
                 <div className="price-card feat reveal reveal-d1">
-                  <div className="price-top"><span className="price-name">Pro</span><span className="price-pop">Más popular</span></div>
-                  <p className="price-desc">Para empresas que van en serio.</p>
-                  <div className="price-val"><span className="price-amount">50€</span><span className="price-cad">/ mes</span></div>
+                  <div className="price-top"><span className="price-name">{t('pricing.pro.name')}</span><span className="price-pop">{t('pricing.pro.pop')}</span></div>
+                  <p className="price-desc">{t('pricing.pro.desc')}</p>
+                  <div className="price-val"><span className="price-amount">50€</span><span className="price-cad">{t('pricing.pro.cadence')}</span></div>
                   <div className="price-rule" />
                   <div className="price-feats">
-                    <div className="price-feat"><span className="tick">✓</span> Todo lo de Free</div>
-                    <div className="price-feat"><span className="tick">✓</span> Alertas ilimitadas</div>
-                    <div className="price-feat"><span className="tick">✓</span> 100 resúmenes IA / mes</div>
-                    <div className="price-feat"><span className="tick">✓</span> Exportación a Excel / CSV</div>
-                    <div className="price-feat"><span className="tick">✓</span> Soporte prioritario</div>
+                    <div className="price-feat"><span className="tick">✓</span> {t('pricing.pro.f1')}</div>
+                    <div className="price-feat"><span className="tick">✓</span> {t('pricing.pro.f2')}</div>
+                    <div className="price-feat"><span className="tick">✓</span> {t('pricing.pro.f3')}</div>
+                    <div className="price-feat"><span className="tick">✓</span> {t('pricing.pro.f4')}</div>
+                    <div className="price-feat"><span className="tick">✓</span> {t('pricing.pro.f5')}</div>
                   </div>
-                  <Link to="/register" className="price-cta" data-hot>Empezar prueba de 14 días</Link>
+                  <Link to="/register" className="price-cta" data-hot>{t('pricing.pro.cta')}</Link>
                 </div>
 
                 {/* Créditos IA */}
                 <div className="price-card reveal reveal-d2">
-                  <div className="price-top"><span className="price-name">Créditos IA</span></div>
-                  <p className="price-desc">¿Se te acaban los del plan? Recarga cuando quieras.</p>
-                  <div className="price-val"><span className="price-amount">5€</span><span className="price-cad">/ 100 créditos</span></div>
+                  <div className="price-top"><span className="price-name">{t('pricing.credits.name')}</span></div>
+                  <p className="price-desc">{t('pricing.credits.desc')}</p>
+                  <div className="price-val"><span className="price-amount">5€</span><span className="price-cad">{t('pricing.credits.cadence')}</span></div>
                   <div className="price-rule" />
                   <div className="price-feats">
-                    <div className="price-feat"><span className="tick">✓</span> Packs de créditos IA a la carta</div>
-                    <div className="price-feat"><span className="tick">✓</span> Se suman a los de tu plan</div>
-                    <div className="price-feat"><span className="tick">✓</span> Sin caducidad mensual</div>
-                    <div className="price-feat"><span className="tick">✓</span> Pago único, sin suscripción</div>
+                    <div className="price-feat"><span className="tick">✓</span> {t('pricing.credits.f1')}</div>
+                    <div className="price-feat"><span className="tick">✓</span> {t('pricing.credits.f2')}</div>
+                    <div className="price-feat"><span className="tick">✓</span> {t('pricing.credits.f3')}</div>
+                    <div className="price-feat"><span className="tick">✓</span> {t('pricing.credits.f4')}</div>
                   </div>
-                  <Link to="/register" className="price-cta">Comprar créditos</Link>
+                  <Link to="/register" className="price-cta">{t('pricing.credits.cta')}</Link>
                 </div>
               </div>
             </div>
@@ -346,14 +353,14 @@ export function LandingPage() {
           <section className="final section is-stage" id="contacto">
             <div className="final-glow" />
             <div className="wrap final-inner">
-              <span className="kicker reveal" style={{ justifyContent: 'center' }}><span className="dot" />Crea tu cuenta en 30 segundos</span>
-              <h2 className="display reveal reveal-d1" style={{ marginTop: '1.4rem' }}>¿Listo para dejar<br />de <span className="accent">perder</span> licitaciones?</h2>
-              <p className="final-sub reveal reveal-d2">Sin tarjeta. Sin compromiso. Datos oficiales de PLACE actualizados cada 5 minutos.</p>
+              <span className="kicker reveal" style={{ justifyContent: 'center' }}><span className="dot" />{t('final.kicker')}</span>
+              <h2 className="display reveal reveal-d1" style={{ marginTop: '1.4rem' }}>{t('final.titleL1')}<br />{t('final.titlePre')} <span className="accent">{t('final.titleAccent')}</span> {t('final.titlePost')}</h2>
+              <p className="final-sub reveal reveal-d2">{t('final.sub')}</p>
               <div className="reveal reveal-d3" style={{ display: 'flex', justifyContent: 'center', gap: '0.8rem', flexWrap: 'wrap' }}>
                 <span className="mag" data-mag="0.3">
-                  <Link to="/register" className="btn btn-primary" data-hot><span>Empezar gratis</span><Arrow /></Link>
+                  <Link to="/register" className="btn btn-primary" data-hot><span>{t('final.ctaStart')}</span><Arrow /></Link>
                 </span>
-                <a href="mailto:ventas@smartpliegos.com" className="btn btn-ghost"><span>Hablar con ventas</span></a>
+                <a href="mailto:ventas@smartpliegos.com" className="btn btn-ghost"><span>{t('final.ctaSales')}</span></a>
               </div>
             </div>
           </section>
@@ -368,36 +375,36 @@ export function LandingPage() {
                   <LogoMark />
                   <span className="logo-word">Smart<b>Pliegos</b></span>
                 </a>
-                <p className="footer-tag">Inteligencia en licitaciones públicas. Sobre datos oficiales de la Plataforma de Contratación del Sector Público.</p>
+                <p className="footer-tag">{t('footer.tag')}</p>
               </div>
               <div className="footer-col">
-                <h6>Producto</h6>
-                <a href="#producto">Búsqueda</a>
-                <a href="#producto">Alertas</a>
-                <a href="#ia">Resúmenes IA</a>
-                <a href="#precios">Precios</a>
+                <h6>{t('footer.product.title')}</h6>
+                <a href="#producto">{t('footer.product.search')}</a>
+                <a href="#producto">{t('footer.product.alerts')}</a>
+                <a href="#ia">{t('footer.product.ai')}</a>
+                <a href="#precios">{t('footer.product.pricing')}</a>
               </div>
               <div className="footer-col">
-                <h6>Empresa</h6>
-                <a href="#">Sobre nosotros</a>
-                <a href="#contacto">Contacto</a>
-                <a href="#">Blog</a>
+                <h6>{t('footer.company.title')}</h6>
+                <a href="#">{t('footer.company.about')}</a>
+                <a href="#contacto">{t('footer.company.contact')}</a>
+                <a href="#">{t('footer.company.blog')}</a>
               </div>
               <div className="footer-col">
-                <h6>Legal</h6>
-                <Link to="/legal/terms">Términos</Link>
-                <Link to="/legal/privacy">Privacidad</Link>
-                <Link to="/legal/cookies">Cookies</Link>
+                <h6>{t('footer.legal.title')}</h6>
+                <Link to="/legal/terms">{t('footer.legal.terms')}</Link>
+                <Link to="/legal/privacy">{t('footer.legal.privacy')}</Link>
+                <Link to="/legal/cookies">{t('footer.legal.cookies')}</Link>
               </div>
             </div>
 
             <div className="footer-word" aria-hidden="true">SmartPliegos</div>
 
             <div className="footer-bottom">
-              <span className="footer-copy">© <span id="lp-year">2026</span> SmartPliegos. Todos los derechos reservados.</span>
+              <span className="footer-copy">{t('footer.copyright', { year: new Date().getFullYear() })}</span>
               <div className="footer-legal">
-                <Link to="/legal/terms">Términos</Link>
-                <Link to="/legal/privacy">Privacidad</Link>
+                <Link to="/legal/terms">{t('footer.legal.terms')}</Link>
+                <Link to="/legal/privacy">{t('footer.legal.privacy')}</Link>
                 <a href="mailto:hola@smartpliegos.com">hola@smartpliegos.com</a>
               </div>
             </div>

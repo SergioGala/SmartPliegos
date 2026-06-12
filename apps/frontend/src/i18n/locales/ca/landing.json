@@ -1,95 +1,148 @@
 {
-  "header": {
-    "features": "Característiques",
-    "pricing": "Preus",
-    "contact": "Contacte",
-    "login": "Iniciar sessió",
-    "register": "Començar gratis"
+  "meta": {
+    "title": "SmartPliegos · Intel·ligència en licitacions públiques",
+    "description": "Cerca intel·ligent sobre 288.000 licitacions de PLACE, alertes en temps real i resums amb IA de plecs de més de 100 pàgines en segons."
+  },
+  "nav": {
+    "producto": "Producte",
+    "ia": "IA",
+    "precios": "Preus",
+    "contacto": "Contacte",
+    "login": "Inicia sessió",
+    "register": "Comença gratis"
   },
   "hero": {
-    "badge": "Amb IA integrada per a resums automàtics",
-    "titlePart1": "Guanya més licitacions públiques.",
-    "titlePart2": "Perd menys temps.",
-    "subtitle": "Cerca intel·ligent sobre 288.000 licitacions de PLACE, alertes en temps real i resums amb IA de plecs de 100+ pàgines en segons.",
-    "ctaStart": "Començar gratis",
-    "ctaSecondary": "Veure com funciona",
-    "disclaimer": "Gratis per sempre · Sense targeta · Dades actualitzades cada 5 minuts"
+    "kicker1": "Intel·ligència en contractació pública · Espanya",
+    "kicker2": "PLACE · 288.000+ licitacions · dades oficials",
+    "title": {
+      "l1": "Guanya més",
+      "l2": "licitacions",
+      "l3": "públiques.",
+      "l4": "Perd menys temps."
+    },
+    "sub": "Cerca intel·ligent, <b>alertes a mida</b> en temps real i resums amb <b>IA</b> de plecs de més de 100 pàgines en <b>15 segons</b>. Tot sobre la plataforma de contractació pública (PLACE).",
+    "ctaStart": "Comença gratis",
+    "ctaSecondary": "Mira com funciona",
+    "disclaimer": {
+      "forever": "Gratis per sempre",
+      "noCard": "Sense targeta",
+      "updated": "Actualitzat cada 5 min"
+    }
+  },
+  "stats": {
+    "indexed": "Licitacions indexades",
+    "frequency": "Freqüència d'actualització",
+    "aiSummary": "Resum IA d'un plec",
+    "regions": "Comunitats cobertes"
   },
   "features": {
-    "title": "Tot el que necessites. Res del que no.",
-    "subtitle": "Eines pensades per a empreses que es juguen contractes de veritat.",
-    "items": {
-      "search": {
-        "title": "Cerca intel·ligent",
-        "description": "Sobre 288.000 licitacions de PLACE, amb filtres per CPV, comunitat, òrgan, import, estat."
-      },
-      "alerts": {
-        "title": "Alertes a mida",
-        "description": "Defineix criteris i rep emails quan apareguin licitacions que t'encaixin. En temps real."
-      },
-      "ai": {
-        "title": "Resums amb IA",
-        "description": "Puja un plec de 100 pàgines i rep en 15 segons un resum estructurat: objecte, import, terminis, requisits."
-      }
+    "head": {
+      "title1": "Tot el que necessites.",
+      "title2": "Res del que no.",
+      "intro": "Eines pensades per a empreses que es juguen contractes de debò. Sense soroll, sense panells inútils, sense corba d'aprenentatge."
+    },
+    "search": {
+      "idx": "/ 01 — Cerca intel·ligent",
+      "h": "Troba el teu pròxim contracte entre 288.000.",
+      "p": "Filtra 288.000 licitacions de PLACE per CPV, comunitat, òrgan de contractació, import i estat. Resultats a l'instant, rellevància real.",
+      "b1": "Filtres per CPV, comunitat, òrgan i import combinables",
+      "b2": "Cerca semàntica que entén el que busques",
+      "b3": "Desa cerques i converteix-les en alertes"
+    },
+    "alerts": {
+      "idx": "/ 02 — Alertes a mida",
+      "h": "Que les licitacions et busquin a tu.",
+      "p": "Defineix els teus criteris un cop i rep un email en el moment exacte en què apareix una licitació que encaixa. Sense revisar portals cada matí.",
+      "b1": "Alertes amb criteris combinats",
+      "b2": "Notificació en temps real, no resums diaris",
+      "b3": "Puntuació d'afinitat a cada resultat"
+    },
+    "ai": {
+      "idx": "/ 03 — Lectura amb IA",
+      "h": "100 pàgines de plec, llegides en 15 segons.",
+      "p": "Puja un plec i rep un resum estructurat: objecte, import, terminis, criteris d'adjudicació i requisits de solvència. Decideix si t'hi presentes en un minut, no en una tarda.",
+      "b1": "Objecte, import i terminis extrets automàticament",
+      "b2": "Criteris d'adjudicació i solvència destacats",
+      "b3": "Pregunta-li al plec en llenguatge natural"
+    }
+  },
+  "ai": {
+    "head": {
+      "title1": "Del plec il·legible",
+      "title2": "al resum accionable.",
+      "intro": "Els plecs administratius no estan fets per llegir-se ràpid. La IA de SmartPliegos els digereix per tu i et dóna només el que importa per decidir."
     }
   },
   "pricing": {
-    "title": "Preus senzills",
-    "subtitle": "Paga només pel que fas servir. Canvia de pla quan vulguis.",
-    "mostPopular": "Més popular",
-    "plans": {
-      "free": {
-        "name": "Free",
-        "price": "0€",
-        "cadence": "per sempre",
-        "description": "Per provar-ho. Sense targeta.",
-        "features": {
-          "search": "Cercador complet",
-          "alerts": "1 alerta activa",
-          "ai": "5 resums IA/mes",
-          "support": "Suport per email"
-        },
-        "cta": "Començar gratis"
-      },
-      "pro": {
-        "name": "Pro",
-        "price": "49€",
-        "cadence": "/mes",
-        "description": "Per a empreses que van de debò.",
-        "features": {
-          "everything": "Tot el de Free",
-          "alerts": "Alertes il·limitades",
-          "ai": "100 resums IA/mes",
-          "export": "Exportació a Excel/CSV",
-          "support": "Suport prioritari"
-        },
-        "cta": "Començar prova de 14 dies"
-      },
-      "enterprise": {
-        "name": "Enterprise",
-        "price": "A mida",
-        "description": "Per a equips grans i consultories.",
-        "features": {
-          "everything": "Tot el de Pro",
-          "ai": "Resums IA il·limitats",
-          "integrations": "Integracions (API, Slack, Teams)",
-          "manager": "Manager de compte dedicat",
-          "sla": "SLA 99.9%"
-        },
-        "cta": "Parlar amb vendes"
-      }
+    "head": {
+      "title1": "Preus simples.",
+      "title2": "Canvia quan vulguis.",
+      "intro": "Comença gratis, sense targeta. Puja a Pro quan ho necessitis i recarrega crèdits d'IA a la carta."
+    },
+    "free": {
+      "name": "Free",
+      "desc": "Per provar-ho. Sense targeta.",
+      "cadence": "per sempre",
+      "f1": "Cercador complet",
+      "f2": "1 alerta activa",
+      "f3": "5 resums IA / mes",
+      "f4": "Suport per email",
+      "cta": "Comença gratis"
+    },
+    "pro": {
+      "name": "Pro",
+      "pop": "Més popular",
+      "desc": "Per a empreses que van de debò.",
+      "cadence": "/ mes",
+      "f1": "Tot el de Free",
+      "f2": "Alertes il·limitades",
+      "f3": "100 resums IA / mes",
+      "f4": "Exportació a Excel / CSV",
+      "f5": "Suport prioritari",
+      "cta": "Comença prova de 14 dies"
+    },
+    "credits": {
+      "name": "Crèdits IA",
+      "desc": "S'acaben els del pla? Recarrega quan vulguis.",
+      "cadence": "/ 100 crèdits",
+      "f1": "Packs de crèdits IA a la carta",
+      "f2": "Se sumen als del teu pla",
+      "f3": "Sense caducitat mensual",
+      "f4": "Pagament únic, sense subscripció",
+      "cta": "Comprar crèdits"
     }
   },
-  "cta": {
-    "title": "Llest per deixar de perdre licitacions?",
-    "subtitle": "Crea el teu compte gratis en 30 segons. Sense targeta. Sense compromís.",
-    "button": "Començar gratis"
+  "final": {
+    "kicker": "Crea el teu compte en 30 segons",
+    "titleL1": "A punt per deixar",
+    "titlePre": "de",
+    "titleAccent": "perdre",
+    "titlePost": "licitacions?",
+    "sub": "Sense targeta. Sense compromís. Dades oficials de PLACE actualitzades cada 5 minuts.",
+    "ctaStart": "Comença gratis",
+    "ctaSales": "Parla amb vendes"
   },
   "footer": {
-    "copyright": "© {{year}} SmartPliegos. Tots els drets reservats.",
-    "terms": "Termes",
-    "privacy": "Privacitat",
-    "cookies": "Galetes",
-    "contact": "Contacte"
+    "tag": "Intel·ligència en licitacions públiques. Sobre dades oficials de la plataforma de contractació pública (PLACE).",
+    "product": {
+      "title": "Producte",
+      "search": "Cerca",
+      "alerts": "Alertes",
+      "ai": "Resums IA",
+      "pricing": "Preus"
+    },
+    "company": {
+      "title": "Empresa",
+      "about": "Sobre nosaltres",
+      "contact": "Contacte",
+      "blog": "Blog"
+    },
+    "legal": {
+      "title": "Legal",
+      "terms": "Termes",
+      "privacy": "Privacitat",
+      "cookies": "Cookies"
+    },
+    "copyright": "© {{year}} SmartPliegos. Tots els drets reservats."
   }
 }

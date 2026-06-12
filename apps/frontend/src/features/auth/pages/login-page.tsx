@@ -1,3 +1,4 @@
+// 📍 DESTINO: apps/frontend/src/features/auth/pages/login-page.tsx  (REEMPLAZAR ENTERO)
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -13,6 +14,15 @@ import { authApi } from '../api/auth.api';
 import { loginSchema, type LoginFormData } from '../schemas/auth.schemas';
 import { useAuthStore } from '@/stores/auth-store';
 import { cn } from '@/lib/utils';
+
+const inputCls = (hasError?: boolean) =>
+  cn(
+    'h-11 w-full rounded-xl border bg-card px-3.5 text-sm text-foreground outline-none transition-colors',
+    'placeholder:text-muted-foreground/40 focus:border-primary/50 focus:ring-2 focus:ring-primary/20',
+    hasError
+      ? 'border-destructive focus:border-destructive focus:ring-destructive/20'
+      : 'border-border',
+  );
 
 export function LoginPage() {
   const { t } = useTranslation('auth');
@@ -71,18 +81,28 @@ export function LoginPage() {
       footer={
         <span className="text-muted-foreground">
           {t('login.noAccount')}{' '}
-          <Link
-            to="/register"
-            className="text-primary font-medium hover:underline"
-          >
+          <Link to="/register" className="font-medium text-primary hover:underline">
             {t('login.createAccount')}
           </Link>
         </span>
       }
     >
+      <GoogleButton onClick={handleGoogleLogin} />
+
+      <div className="relative my-6">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-border" />
+        </div>
+        <div className="relative flex justify-center">
+          <span className="bg-background px-3 font-mono text-[0.66rem] uppercase tracking-[0.08em] text-muted-foreground/60">
+            {t('divider.email', { defaultValue: 'o con tu email' })}
+          </span>
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium mb-1.5">
+          <label htmlFor="email" className="mb-1.5 block text-sm font-medium">
             {t('login.emailLabel')}
           </label>
           <input
@@ -90,24 +110,17 @@ export function LoginPage() {
             type="email"
             autoComplete="email"
             autoFocus
+            placeholder="tu@empresa.es"
             {...register('email')}
-            className={cn(
-              'w-full h-10 px-3 rounded-md border bg-background text-sm',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-              errors.email
-                ? 'border-destructive focus-visible:ring-destructive'
-                : 'border-input'
-            )}
+            className={inputCls(!!errors.email)}
           />
           {errors.email && (
-            <p className="mt-1 text-xs text-destructive">
-              {errors.email.message}
-            </p>
+            <p className="mt-1 text-xs text-destructive">{errors.email.message}</p>
           )}
         </div>
 
         <div>
-          <div className="flex items-center justify-between mb-1.5">
+          <div className="mb-1.5 flex items-center justify-between">
             <label htmlFor="password" className="block text-sm font-medium">
               {t('login.passwordLabel')}
             </label>
@@ -125,37 +138,18 @@ export function LoginPage() {
             error={!!errors.password}
           />
           {errors.password && (
-            <p className="mt-1 text-xs text-destructive">
-              {errors.password.message}
-            </p>
+            <p className="mt-1 text-xs text-destructive">{errors.password.message}</p>
           )}
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className={cn(
-            'w-full h-10 rounded-md bg-primary text-primary-foreground',
-            'font-medium text-sm hover:bg-primary/90',
-            'disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
-          )}
+          className="h-12 w-full rounded-xl bg-primary text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isSubmitting ? t('login.submittingButton') : t('login.submitButton')}
         </button>
       </form>
-
-      <div className="relative my-6">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-border" />
-        </div>
-        <div className="relative flex justify-center text-xs">
-          <span className="bg-card px-2 text-muted-foreground">
-            {t('login.orDivider')}
-          </span>
-        </div>
-      </div>
-
-      <GoogleButton onClick={handleGoogleLogin} />
     </AuthLayout>
   );
 }

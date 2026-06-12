@@ -1,95 +1,148 @@
 {
-  "header": {
-    "features": "Ezaugarriak",
-    "pricing": "Prezioak",
-    "contact": "Kontaktua",
+  "meta": {
+    "title": "SmartPliegos · Lizitazio publikoetan adimena",
+    "description": "Bilaketa adimenduna PLACEko 288.000 lizitaziotan, denbora errealeko alertak eta 100 orrialdetik gorako pleguen IA bidezko laburpenak segundotan."
+  },
+  "nav": {
+    "producto": "Produktua",
+    "ia": "IA",
+    "precios": "Prezioak",
+    "contacto": "Kontaktua",
     "login": "Saioa hasi",
-    "register": "Doan hasi"
+    "register": "Hasi doan"
   },
   "hero": {
-    "badge": "IA integratuarekin laburpen automatikoetarako",
-    "titlePart1": "Irabazi lehiaketa publiko gehiago.",
-    "titlePart2": "Galdu denbora gutxiago.",
-    "subtitle": "PLACE-ko 288.000 lehiaketa adimendunaren bilaketa, denbora errealeko alertak eta 100+ orriko pleguen IA laburpenak segundotan.",
-    "ctaStart": "Doan hasi",
-    "ctaSecondary": "Nola funtzionatzen duen ikusi",
-    "disclaimer": "Betiko doan · Txartelik gabe · Datuak 5 minuturo eguneratuak"
+    "kicker1": "Kontratazio publikoan adimena · Espainia",
+    "kicker2": "PLACE · 288.000+ lizitazio · datu ofizialak",
+    "title": {
+      "l1": "Irabazi lizitazio",
+      "l2": "publiko",
+      "l3": "gehiago.",
+      "l4": "Galdu denbora gutxiago."
+    },
+    "sub": "Bilaketa adimenduna, denbora errealeko <b>neurrira egindako alertak</b> eta 100 orrialdetik gorako pleguen <b>IA</b> bidezko laburpenak <b>15 segundotan</b>. Dena kontratazio publikoaren plataformaren gainean (PLACE).",
+    "ctaStart": "Hasi doan",
+    "ctaSecondary": "Ikusi nola funtzionatzen duen",
+    "disclaimer": {
+      "forever": "Doan betiko",
+      "noCard": "Txartelik gabe",
+      "updated": "5 minutuoro eguneratua"
+    }
+  },
+  "stats": {
+    "indexed": "Indexatutako lizitazioak",
+    "frequency": "Eguneratze-maiztasuna",
+    "aiSummary": "Plegu baten IA laburpena",
+    "regions": "Estaltzen diren erkidegoak"
   },
   "features": {
-    "title": "Behar duzun guztia. Besterik ez.",
-    "subtitle": "Benetako kontratuetan jokatzen duten enpresentzat pentsatutako tresnak.",
-    "items": {
-      "search": {
-        "title": "Bilaketa adimenduna",
-        "description": "PLACE-ko 288.000 lehiaketaren gainean, CPV, erkidego, organo, zenbateko eta egoera araberako iragazkiekin."
-      },
-      "alerts": {
-        "title": "Neurrira egindako alertak",
-        "description": "Definitu irizpideak eta jaso emailak egokitzen zaizkizun lehiaketak agertzen direnean. Denbora errealean."
-      },
-      "ai": {
-        "title": "IA laburpenak",
-        "description": "Igo 100 orriko plegu bat eta jaso 15 segundotan laburpen egituratua: xedea, zenbatekoa, epeak, baldintzak."
-      }
+    "head": {
+      "title1": "Behar duzun guztia.",
+      "title2": "Behar ez duzunik ezer ez.",
+      "intro": "Benetako kontratuak jokatzen dituzten enpresentzat pentsatutako tresnak. Zaratarik gabe, panel alferrikakorik gabe, ikasketa-kurbarik gabe."
+    },
+    "search": {
+      "idx": "/ 01 — Bilaketa adimenduna",
+      "h": "Aurkitu zure hurrengo kontratua 288.000en artean.",
+      "p": "Iragazi PLACEko 288.000 lizitazio CPV, erkidego, kontratazio-organo, zenbateko eta egoeraren arabera. Berehalako emaitzak, benetako garrantzia.",
+      "b1": "CPV, erkidego, organo eta zenbatekoaren araberako iragazki konbinagarriak",
+      "b2": "Zer bilatzen duzun ulertzen duen bilaketa semantikoa",
+      "b3": "Gorde bilaketak eta bihurtu alerta"
+    },
+    "alerts": {
+      "idx": "/ 02 — Neurrira egindako alertak",
+      "h": "Lizitazioek zu bilatu zaitzatela.",
+      "p": "Zehaztu zure irizpideak behin eta jaso email bat bat datorren lizitazio bat agertzen den une zehatzean. Goizero atariak berrikusi gabe.",
+      "b1": "Irizpide konbinatuak dituzten alertak",
+      "b2": "Denbora errealeko jakinarazpena, ez eguneroko laburpenak",
+      "b3": "Afinitate-puntuazioa emaitza bakoitzean"
+    },
+    "ai": {
+      "idx": "/ 03 — IA bidezko irakurketa",
+      "h": "Pleguaren 100 orrialde, 15 segundotan irakurrita.",
+      "p": "Igo plegu bat eta jaso laburpen egituratua: objektua, zenbatekoa, epeak, esleitze-irizpideak eta kaudimen-baldintzak. Erabaki minutu batean aurkeztu nahi duzun, ez arratsalde batean.",
+      "b1": "Objektua, zenbatekoa eta epeak automatikoki ateratzen dira",
+      "b2": "Esleitze-irizpideak eta kaudimena nabarmenduta",
+      "b3": "Galdetu pleguari hizkuntza naturalean"
+    }
+  },
+  "ai": {
+    "head": {
+      "title1": "Plegu irakurtezinetik",
+      "title2": "laburpen baliagarrira.",
+      "intro": "Administrazioko pleguse ez daude azkar irakurtzeko eginak. SmartPliegosen IAk zuretzat digeritzen ditu eta erabakitzeko garrantzitsua dena soilik ematen dizu."
     }
   },
   "pricing": {
-    "title": "Prezio errazak",
-    "subtitle": "Erabiltzen duzunagatik bakarrik ordaindu. Aldatu plana nahi duzunean.",
-    "mostPopular": "Ezagunena",
-    "plans": {
-      "free": {
-        "name": "Free",
-        "price": "0€",
-        "cadence": "betiko",
-        "description": "Probatzeko. Txartelik gabe.",
-        "features": {
-          "search": "Bilatzaile osoa",
-          "alerts": "Alerta aktibo 1",
-          "ai": "Hileko 5 IA laburpen",
-          "support": "Emailezko laguntza"
-        },
-        "cta": "Doan hasi"
-      },
-      "pro": {
-        "name": "Pro",
-        "price": "49€",
-        "cadence": "/hileko",
-        "description": "Serio hartzen duten enpresentzat.",
-        "features": {
-          "everything": "Free-ren guztia",
-          "alerts": "Mugarik gabeko alertak",
-          "ai": "Hileko 100 IA laburpen",
-          "export": "Excel/CSV-ra esportatu",
-          "support": "Lehentasunezko laguntza"
-        },
-        "cta": "14 eguneko proba hasi"
-      },
-      "enterprise": {
-        "name": "Enterprise",
-        "price": "Neurrira",
-        "description": "Talde handi eta aholkularitzentzat.",
-        "features": {
-          "everything": "Pro-ren guztia",
-          "ai": "Mugarik gabeko IA laburpenak",
-          "integrations": "Integrazioak (API, Slack, Teams)",
-          "manager": "Kontu-kudeatzaile dedikatua",
-          "sla": "SLA %99.9"
-        },
-        "cta": "Salmentekin hitz egin"
-      }
+    "head": {
+      "title1": "Prezio sinpleak.",
+      "title2": "Aldatu nahi duzunean.",
+      "intro": "Hasi doan, txartelik gabe. Igo Prora behar duzunean eta kargatu IA kredituak nahieran."
+    },
+    "free": {
+      "name": "Free",
+      "desc": "Probatzeko. Txartelik gabe.",
+      "cadence": "betiko",
+      "f1": "Bilatzaile osoa",
+      "f2": "Alerta aktibo 1",
+      "f3": "5 IA laburpen / hilean",
+      "f4": "Laguntza emailez",
+      "cta": "Hasi doan"
+    },
+    "pro": {
+      "name": "Pro",
+      "pop": "Ezagunena",
+      "desc": "Benetan ari diren enpresentzat.",
+      "cadence": "/ hilean",
+      "f1": "Free-ren guztia",
+      "f2": "Alerta mugagabeak",
+      "f3": "100 IA laburpen / hilean",
+      "f4": "Excel / CSV-ra esportatzea",
+      "f5": "Lehentasunezko laguntza",
+      "cta": "Hasi 14 eguneko proba"
+    },
+    "credits": {
+      "name": "IA kredituak",
+      "desc": "Planekoak amaitzen ari zaizkizu? Kargatu nahi duzunean.",
+      "cadence": "/ 100 kreditu",
+      "f1": "IA kreditu-paketeak nahieran",
+      "f2": "Zure planekoei gehitzen zaizkie",
+      "f3": "Hilabeteko iraungitzerik gabe",
+      "f4": "Ordainketa bakarra, harpidetzarik gabe",
+      "cta": "Erosi kredituak"
     }
   },
-  "cta": {
-    "title": "Lehiaketak galtzeari uzteko prest?",
-    "subtitle": "Sortu zure kontua doan 30 segundotan. Txartelik gabe. Konpromisorik gabe.",
-    "button": "Doan hasi"
+  "final": {
+    "kicker": "Sortu zure kontua 30 segundotan",
+    "titleL1": "Prest lizitazioak",
+    "titlePre": "",
+    "titleAccent": "galtzeari",
+    "titlePost": "uzteko?",
+    "sub": "Txartelik gabe. Konpromisorik gabe. PLACEko datu ofizialak 5 minutuoro eguneratuta.",
+    "ctaStart": "Hasi doan",
+    "ctaSales": "Hitz egin salmentekin"
   },
   "footer": {
-    "copyright": "© {{year}} SmartPliegos. Eskubide guztiak erreserbatuta.",
-    "terms": "Baldintzak",
-    "privacy": "Pribatutasuna",
-    "cookies": "Cookieak",
-    "contact": "Kontaktua"
+    "tag": "Lizitazio publikoetan adimena. Kontratazio publikoaren plataformaren (PLACE) datu ofizialen gainean.",
+    "product": {
+      "title": "Produktua",
+      "search": "Bilaketa",
+      "alerts": "Alertak",
+      "ai": "IA laburpenak",
+      "pricing": "Prezioak"
+    },
+    "company": {
+      "title": "Enpresa",
+      "about": "Guri buruz",
+      "contact": "Kontaktua",
+      "blog": "Bloga"
+    },
+    "legal": {
+      "title": "Legala",
+      "terms": "Baldintzak",
+      "privacy": "Pribatutasuna",
+      "cookies": "Cookieak"
+    },
+    "copyright": "© {{year}} SmartPliegos. Eskubide guztiak erreserbatuta."
   }
 }

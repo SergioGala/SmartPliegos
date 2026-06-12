@@ -4,6 +4,34 @@
   "hintSuffix": "para navegar",
   "moduleLabel": "MÓDULO",
   "openModule": "Abrir módulo",
+  "status": {
+    "live": "En vivo",
+    "tenders": "licitaciones"
+  },
+  "hero": {
+    "eyebrow": "panel",
+    "headline": "licitaciones públicas en seguimiento.",
+    "lead": "{{saved}} guardadas · {{alerts}} alertas activas vigilando el BOE y PLACE en tiempo real.",
+    "cta": "Explorar licitaciones",
+    "cta2": "Mis alertas"
+  },
+  "featured": {
+    "label": "Destacada",
+    "cta": "Ver ficha"
+  },
+  "stats": {
+    "indexed": "Indexadas",
+    "alerts": "Alertas activas",
+    "saved": "Guardadas",
+    "closing": "Cierran pronto"
+  },
+  "feed": {
+    "title": "lo más reciente",
+    "all": "ver todo",
+    "error": "No se pudo cargar el feed.",
+    "retry": "Reintentar",
+    "empty": "Todavía no hay licitaciones."
+  },
   "modules": {
     "buscador": {
       "title": "Buscador",

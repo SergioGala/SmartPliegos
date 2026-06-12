@@ -1,95 +1,148 @@
 {
-  "header": {
-    "features": "Características",
-    "pricing": "Prezos",
-    "contact": "Contacto",
+  "meta": {
+    "title": "SmartPliegos · Intelixencia en licitacións públicas",
+    "description": "Busca intelixente sobre 288.000 licitacións de PLACE, alertas en tempo real e resumos con IA de pregos de máis de 100 páxinas en segundos."
+  },
+  "nav": {
+    "producto": "Produto",
+    "ia": "IA",
+    "precios": "Prezos",
+    "contacto": "Contacto",
     "login": "Iniciar sesión",
     "register": "Comezar gratis"
   },
   "hero": {
-    "badge": "Con IA integrada para resumos automáticos",
-    "titlePart1": "Gaña máis licitacións públicas.",
-    "titlePart2": "Perde menos tempo.",
-    "subtitle": "Busca intelixente sobre 288.000 licitacións de PLACE, alertas en tempo real e resumos con IA de pregos de 100+ páxinas en segundos.",
+    "kicker1": "Intelixencia en contratación pública · España",
+    "kicker2": "PLACE · 288.000+ licitacións · datos oficiais",
+    "title": {
+      "l1": "Gaña máis",
+      "l2": "licitacións",
+      "l3": "públicas.",
+      "l4": "Perde menos tempo."
+    },
+    "sub": "Busca intelixente, <b>alertas a medida</b> en tempo real e resumos con <b>IA</b> de pregos de máis de 100 páxinas en <b>15 segundos</b>. Todo sobre a plataforma de contratación pública (PLACE).",
     "ctaStart": "Comezar gratis",
     "ctaSecondary": "Ver como funciona",
-    "disclaimer": "Gratis para sempre · Sen tarxeta · Datos actualizados cada 5 minutos"
+    "disclaimer": {
+      "forever": "Gratis para sempre",
+      "noCard": "Sen tarxeta",
+      "updated": "Actualizado cada 5 min"
+    }
+  },
+  "stats": {
+    "indexed": "Licitacións indexadas",
+    "frequency": "Frecuencia de actualización",
+    "aiSummary": "Resumo IA dun prego",
+    "regions": "Comunidades cubertas"
   },
   "features": {
-    "title": "Todo o que necesitas. Nada do que non.",
-    "subtitle": "Ferramentas pensadas para empresas que se xogan contratos de verdade.",
-    "items": {
-      "search": {
-        "title": "Busca intelixente",
-        "description": "Sobre 288.000 licitacións de PLACE, con filtros por CPV, comunidade, órgano, importe, estado."
-      },
-      "alerts": {
-        "title": "Alertas á medida",
-        "description": "Define criterios e recibe emails cando aparezan licitacións que che encaixen. En tempo real."
-      },
-      "ai": {
-        "title": "Resumos con IA",
-        "description": "Sube un prego de 100 páxinas e recibe en 15 segundos un resumo estruturado: obxecto, importe, prazos, requisitos."
-      }
+    "head": {
+      "title1": "Todo o que necesitas.",
+      "title2": "Nada do que non.",
+      "intro": "Ferramentas pensadas para empresas que se xogan contratos de verdade. Sen ruído, sen paneis inútiles, sen curva de aprendizaxe."
+    },
+    "search": {
+      "idx": "/ 01 — Busca intelixente",
+      "h": "Atopa o teu próximo contrato entre 288.000.",
+      "p": "Filtra 288.000 licitacións de PLACE por CPV, comunidade, órgano de contratación, importe e estado. Resultados ao instante, relevancia real.",
+      "b1": "Filtros por CPV, comunidade, órgano e importe combinables",
+      "b2": "Busca semántica que entende o que buscas",
+      "b3": "Garda buscas e convérteas en alertas"
+    },
+    "alerts": {
+      "idx": "/ 02 — Alertas a medida",
+      "h": "Que as licitacións te busquen a ti.",
+      "p": "Define os teus criterios unha vez e recibe un email no momento exacto en que aparece unha licitación que encaixa. Sen revisar portais cada mañá.",
+      "b1": "Alertas con criterios combinados",
+      "b2": "Notificación en tempo real, non resumos diarios",
+      "b3": "Puntuación de afinidade en cada resultado"
+    },
+    "ai": {
+      "idx": "/ 03 — Lectura con IA",
+      "h": "100 páxinas de prego, lidas en 15 segundos.",
+      "p": "Sobe un prego e recibe un resumo estruturado: obxecto, importe, prazos, criterios de adxudicación e requisitos de solvencia. Decide se te presentas nun minuto, non nunha tarde.",
+      "b1": "Obxecto, importe e prazos extraídos automaticamente",
+      "b2": "Criterios de adxudicación e solvencia destacados",
+      "b3": "Pregúntalle ao prego en linguaxe natural"
+    }
+  },
+  "ai": {
+    "head": {
+      "title1": "Do prego ilexible",
+      "title2": "ao resumo accionable.",
+      "intro": "Os pregos administrativos non están feitos para lerse rápido. A IA de SmartPliegos dixíreos por ti e dáche só o que importa para decidir."
     }
   },
   "pricing": {
-    "title": "Prezos sinxelos",
-    "subtitle": "Paga só polo que usas. Cambia de plan cando queiras.",
-    "mostPopular": "Máis popular",
-    "plans": {
-      "free": {
-        "name": "Free",
-        "price": "0€",
-        "cadence": "para sempre",
-        "description": "Para probalo. Sen tarxeta.",
-        "features": {
-          "search": "Buscador completo",
-          "alerts": "1 alerta activa",
-          "ai": "5 resumos IA/mes",
-          "support": "Soporte por email"
-        },
-        "cta": "Comezar gratis"
-      },
-      "pro": {
-        "name": "Pro",
-        "price": "49€",
-        "cadence": "/mes",
-        "description": "Para empresas que van en serio.",
-        "features": {
-          "everything": "Todo o de Free",
-          "alerts": "Alertas ilimitadas",
-          "ai": "100 resumos IA/mes",
-          "export": "Exportación a Excel/CSV",
-          "support": "Soporte prioritario"
-        },
-        "cta": "Comezar proba de 14 días"
-      },
-      "enterprise": {
-        "name": "Enterprise",
-        "price": "A medida",
-        "description": "Para equipos grandes e consultorías.",
-        "features": {
-          "everything": "Todo o de Pro",
-          "ai": "Resumos IA ilimitados",
-          "integrations": "Integracións (API, Slack, Teams)",
-          "manager": "Manager de conta dedicado",
-          "sla": "SLA 99.9%"
-        },
-        "cta": "Falar con vendas"
-      }
+    "head": {
+      "title1": "Prezos simples.",
+      "title2": "Cambia cando queiras.",
+      "intro": "Comeza gratis, sen tarxeta. Sobe a Pro cando o necesites e recarga créditos de IA á carta."
+    },
+    "free": {
+      "name": "Free",
+      "desc": "Para probalo. Sen tarxeta.",
+      "cadence": "para sempre",
+      "f1": "Buscador completo",
+      "f2": "1 alerta activa",
+      "f3": "5 resumos IA / mes",
+      "f4": "Soporte por email",
+      "cta": "Comezar gratis"
+    },
+    "pro": {
+      "name": "Pro",
+      "pop": "Máis popular",
+      "desc": "Para empresas que van en serio.",
+      "cadence": "/ mes",
+      "f1": "Todo o de Free",
+      "f2": "Alertas ilimitadas",
+      "f3": "100 resumos IA / mes",
+      "f4": "Exportación a Excel / CSV",
+      "f5": "Soporte prioritario",
+      "cta": "Comezar proba de 14 días"
+    },
+    "credits": {
+      "name": "Créditos IA",
+      "desc": "Acábanseche os do plan? Recarga cando queiras.",
+      "cadence": "/ 100 créditos",
+      "f1": "Packs de créditos IA á carta",
+      "f2": "Súmanse aos do teu plan",
+      "f3": "Sen caducidade mensual",
+      "f4": "Pagamento único, sen subscrición",
+      "cta": "Comprar créditos"
     }
   },
-  "cta": {
-    "title": "Listo para deixar de perder licitacións?",
-    "subtitle": "Crea a túa conta gratis en 30 segundos. Sen tarxeta. Sen compromiso.",
-    "button": "Comezar gratis"
+  "final": {
+    "kicker": "Crea a túa conta en 30 segundos",
+    "titleL1": "Listo para deixar",
+    "titlePre": "de",
+    "titleAccent": "perder",
+    "titlePost": "licitacións?",
+    "sub": "Sen tarxeta. Sen compromiso. Datos oficiais de PLACE actualizados cada 5 minutos.",
+    "ctaStart": "Comezar gratis",
+    "ctaSales": "Falar con vendas"
   },
   "footer": {
-    "copyright": "© {{year}} SmartPliegos. Todos os dereitos reservados.",
-    "terms": "Termos",
-    "privacy": "Privacidade",
-    "cookies": "Cookies",
-    "contact": "Contacto"
+    "tag": "Intelixencia en licitacións públicas. Sobre datos oficiais da plataforma de contratación pública (PLACE).",
+    "product": {
+      "title": "Produto",
+      "search": "Busca",
+      "alerts": "Alertas",
+      "ai": "Resumos IA",
+      "pricing": "Prezos"
+    },
+    "company": {
+      "title": "Empresa",
+      "about": "Sobre nós",
+      "contact": "Contacto",
+      "blog": "Blog"
+    },
+    "legal": {
+      "title": "Legal",
+      "terms": "Termos",
+      "privacy": "Privacidade",
+      "cookies": "Cookies"
+    },
+    "copyright": "© {{year}} SmartPliegos. Todos os dereitos reservados."
   }
 }

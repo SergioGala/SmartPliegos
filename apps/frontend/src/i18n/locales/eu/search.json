@@ -2,7 +2,8 @@
   "page": {
     "title": "Bilatzailea",
     "indexedCount": "indexatutako lehiaketa publiko",
-    "scrapingActive": "Scraping aktibo"
+    "scrapingActive": "Scraping aktibo",
+    "searchHeading": "bilatu {{count}} lizitaziotan…"
   },
   "input": {
     "placeholder": "Hitz gakoaren, CPV-aren, kontratazio-organoaren arabera bilatu...",
@@ -10,7 +11,9 @@
   },
   "results": {
     "empty": "Emaitzarik ez",
-    "emptyHint": "Saiatu beste termino batzuekin edo doitu iragazkiak"
+    "emptyHint": "Saiatu beste termino batzuekin edo doitu iragazkiak",
+    "count": "emaitzak",
+    "errorTitle": "Ezin izan dira lizitazioak kargatu"
   },
   "pagination": {
     "previous": "Aurrekoa",
@@ -125,7 +128,19 @@
     "documentsTitle": "Dokumentuak",
     "aiSummaryTitle": "IA laburpena",
     "aiSummaryBadge": "Sprint 5",
-    "aiSummaryBody": "Pleguen analisi automatikoa laster egongo da erabilgarri."
+    "aiSummaryBody": "Pleguen analisi automatikoa laster egongo da erabilgarri.",
+    "backToTerminal": "Itzuli terminalera",
+    "remaining": "geratzen",
+    "publishedShort": "Argitaratua",
+    "hasLots": "Loteetan banatua",
+    "yes": "Bai",
+    "no": "Ez",
+    "documentFallback": "Dokumentua",
+    "ivaExcluded": "BEZ kanpo",
+    "deadlineWord": "Epea",
+    "presentationIn": "Aurkezpena:",
+    "day": "egun",
+    "days": "egun"
   },
   "sections": {
     "guardadas": "Gordeak",
@@ -134,5 +149,14 @@
     "terms": "Baldintzak",
     "privacy": "Pribatutasuna",
     "cookies": "Cookieak"
+  },
+  "source": {
+    "official": "Iturri ofiziala"
+  },
+  "sort": {
+    "label": "Ordenatu",
+    "fecha": "Data",
+    "importe": "Zenbatekoa",
+    "deadline": "Epea"
   }
 }

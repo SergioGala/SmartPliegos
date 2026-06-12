@@ -2,7 +2,8 @@
   "page": {
     "title": "Buscador",
     "indexedCount": "licitacións públicas indexadas",
-    "scrapingActive": "Scraping activo"
+    "scrapingActive": "Scraping activo",
+    "searchHeading": "busca entre {{count}} licitacións…"
   },
   "input": {
     "placeholder": "Buscar por palabra clave, CPV, órgano de contratación...",
@@ -10,7 +11,9 @@
   },
   "results": {
     "empty": "Sen resultados",
-    "emptyHint": "Proba con outros termos ou axusta os filtros"
+    "emptyHint": "Proba con outros termos ou axusta os filtros",
+    "count": "resultados",
+    "errorTitle": "Non se puideron cargar as licitacións"
   },
   "pagination": {
     "previous": "Anterior",
@@ -125,7 +128,19 @@
     "documentsTitle": "Documentos",
     "aiSummaryTitle": "Resumo IA",
     "aiSummaryBadge": "Sprint 5",
-    "aiSummaryBody": "A análise automática de pregos estará dispoñible proximamente."
+    "aiSummaryBody": "A análise automática de pregos estará dispoñible proximamente.",
+    "backToTerminal": "Volver á terminal",
+    "remaining": "restantes",
+    "publishedShort": "Publicada",
+    "hasLots": "División en lotes",
+    "yes": "Si",
+    "no": "Non",
+    "documentFallback": "Documento",
+    "ivaExcluded": "IVE excluído",
+    "deadlineWord": "Prazo",
+    "presentationIn": "Presentación en",
+    "day": "día",
+    "days": "días"
   },
   "sections": {
     "guardadas": "Gardadas",
@@ -134,5 +149,14 @@
     "terms": "Termos",
     "privacy": "Privacidade",
     "cookies": "Cookies"
+  },
+  "source": {
+    "official": "Fonte oficial"
+  },
+  "sort": {
+    "label": "Orde",
+    "fecha": "Data",
+    "importe": "Importe",
+    "deadline": "Prazo"
   }
 }

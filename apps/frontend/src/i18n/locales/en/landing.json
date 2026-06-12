@@ -1,95 +1,148 @@
 {
-  "header": {
-    "features": "Features",
-    "pricing": "Pricing",
-    "contact": "Contact",
-    "login": "Sign in",
+  "meta": {
+    "title": "SmartPliegos · Intelligence for public tenders",
+    "description": "Smart search across 288,000 PLACE tenders, real-time alerts and AI summaries of 100+ page tender documents in seconds."
+  },
+  "nav": {
+    "producto": "Product",
+    "ia": "AI",
+    "precios": "Pricing",
+    "contacto": "Contact",
+    "login": "Log in",
     "register": "Start free"
   },
   "hero": {
-    "badge": "With built-in AI for automatic summaries",
-    "titlePart1": "Win more public tenders.",
-    "titlePart2": "Waste less time.",
-    "subtitle": "Smart search over 288,000 PLACE tenders, real-time alerts, and AI summaries of 100+ page briefs in seconds.",
+    "kicker1": "Intelligence for public procurement · Spain",
+    "kicker2": "PLACE · 288,000+ tenders · official data",
+    "title": {
+      "l1": "Win more",
+      "l2": "public",
+      "l3": "tenders.",
+      "l4": "Waste less time."
+    },
+    "sub": "Smart search, <b>tailored alerts</b> in real time and <b>AI</b> summaries of 100+ page tender documents in <b>15 seconds</b>. All on Spain's public procurement platform (PLACE).",
     "ctaStart": "Start free",
     "ctaSecondary": "See how it works",
-    "disclaimer": "Free forever · No credit card · Data refreshed every 5 minutes"
+    "disclaimer": {
+      "forever": "Free forever",
+      "noCard": "No card",
+      "updated": "Updated every 5 min"
+    }
+  },
+  "stats": {
+    "indexed": "Indexed tenders",
+    "frequency": "Update frequency",
+    "aiSummary": "AI summary of a tender",
+    "regions": "Regions covered"
   },
   "features": {
-    "title": "Everything you need. Nothing you don't.",
-    "subtitle": "Tools built for companies competing for real contracts.",
-    "items": {
-      "search": {
-        "title": "Smart search",
-        "description": "Across 288,000 PLACE tenders, with filters by CPV, region, agency, amount, status."
-      },
-      "alerts": {
-        "title": "Tailored alerts",
-        "description": "Define criteria and receive emails when matching tenders appear. In real time."
-      },
-      "ai": {
-        "title": "AI summaries",
-        "description": "Upload a 100-page brief and get a structured summary in 15 seconds: scope, amount, deadlines, requirements."
-      }
+    "head": {
+      "title1": "Everything you need.",
+      "title2": "Nothing you don't.",
+      "intro": "Tools built for companies that compete for real contracts. No noise, no useless dashboards, no learning curve."
+    },
+    "search": {
+      "idx": "/ 01 — Smart search",
+      "h": "Find your next contract among 288,000.",
+      "p": "Filter 288,000 PLACE tenders by CPV, region, contracting body, amount and status. Instant results, real relevance.",
+      "b1": "Combinable filters by CPV, region, body and amount",
+      "b2": "Semantic search that understands what you mean",
+      "b3": "Save searches and turn them into alerts"
+    },
+    "alerts": {
+      "idx": "/ 02 — Tailored alerts",
+      "h": "Let the tenders come to you.",
+      "p": "Set your criteria once and get an email the moment a matching tender appears. No checking portals every morning.",
+      "b1": "Alerts with combined criteria",
+      "b2": "Real-time notifications, not daily digests",
+      "b3": "Match score on every result"
+    },
+    "ai": {
+      "idx": "/ 03 — AI reading",
+      "h": "100 pages of tender docs, read in 15 seconds.",
+      "p": "Upload a tender document and get a structured summary: scope, amount, deadlines, award criteria and solvency requirements. Decide whether to bid in a minute, not an afternoon.",
+      "b1": "Scope, amount and deadlines extracted automatically",
+      "b2": "Award criteria and solvency highlighted",
+      "b3": "Ask the document questions in plain language"
+    }
+  },
+  "ai": {
+    "head": {
+      "title1": "From the unreadable tender",
+      "title2": "to the actionable summary.",
+      "intro": "Administrative tender documents aren't made to be read fast. SmartPliegos' AI digests them for you and gives you only what matters to decide."
     }
   },
   "pricing": {
-    "title": "Simple pricing",
-    "subtitle": "Pay only for what you use. Change plans anytime.",
-    "mostPopular": "Most popular",
-    "plans": {
-      "free": {
-        "name": "Free",
-        "price": "€0",
-        "cadence": "forever",
-        "description": "To try it out. No credit card.",
-        "features": {
-          "search": "Full search",
-          "alerts": "1 active alert",
-          "ai": "5 AI summaries/month",
-          "support": "Email support"
-        },
-        "cta": "Start free"
-      },
-      "pro": {
-        "name": "Pro",
-        "price": "€49",
-        "cadence": "/month",
-        "description": "For companies that mean business.",
-        "features": {
-          "everything": "Everything in Free",
-          "alerts": "Unlimited alerts",
-          "ai": "100 AI summaries/month",
-          "export": "Export to Excel/CSV",
-          "support": "Priority support"
-        },
-        "cta": "Start 14-day trial"
-      },
-      "enterprise": {
-        "name": "Enterprise",
-        "price": "Custom",
-        "description": "For large teams and consultancies.",
-        "features": {
-          "everything": "Everything in Pro",
-          "ai": "Unlimited AI summaries",
-          "integrations": "Integrations (API, Slack, Teams)",
-          "manager": "Dedicated account manager",
-          "sla": "99.9% SLA"
-        },
-        "cta": "Talk to sales"
-      }
+    "head": {
+      "title1": "Simple pricing.",
+      "title2": "Change whenever you want.",
+      "intro": "Start free, no card. Move up to Pro when you need it and top up AI credits on demand."
+    },
+    "free": {
+      "name": "Free",
+      "desc": "To try it out. No card.",
+      "cadence": "forever",
+      "f1": "Full search",
+      "f2": "1 active alert",
+      "f3": "5 AI summaries / month",
+      "f4": "Email support",
+      "cta": "Start free"
+    },
+    "pro": {
+      "name": "Pro",
+      "pop": "Most popular",
+      "desc": "For companies that mean business.",
+      "cadence": "/ month",
+      "f1": "Everything in Free",
+      "f2": "Unlimited alerts",
+      "f3": "100 AI summaries / month",
+      "f4": "Export to Excel / CSV",
+      "f5": "Priority support",
+      "cta": "Start 14-day trial"
+    },
+    "credits": {
+      "name": "AI credits",
+      "desc": "Running out of your plan's? Top up anytime.",
+      "cadence": "/ 100 credits",
+      "f1": "On-demand AI credit packs",
+      "f2": "Added on top of your plan's",
+      "f3": "No monthly expiry",
+      "f4": "One-off payment, no subscription",
+      "cta": "Buy credits"
     }
   },
-  "cta": {
-    "title": "Ready to stop losing tenders?",
-    "subtitle": "Create your free account in 30 seconds. No card. No commitment.",
-    "button": "Start free"
+  "final": {
+    "kicker": "Create your account in 30 seconds",
+    "titleL1": "Ready to stop",
+    "titlePre": "",
+    "titleAccent": "losing",
+    "titlePost": "tenders?",
+    "sub": "No card. No commitment. Official PLACE data updated every 5 minutes.",
+    "ctaStart": "Start free",
+    "ctaSales": "Talk to sales"
   },
   "footer": {
-    "copyright": "© {{year}} SmartPliegos. All rights reserved.",
-    "terms": "Terms",
-    "privacy": "Privacy",
-    "cookies": "Cookies",
-    "contact": "Contact"
+    "tag": "Intelligence for public tenders. Built on official data from Spain's public procurement platform (PLACE).",
+    "product": {
+      "title": "Product",
+      "search": "Search",
+      "alerts": "Alerts",
+      "ai": "AI summaries",
+      "pricing": "Pricing"
+    },
+    "company": {
+      "title": "Company",
+      "about": "About us",
+      "contact": "Contact",
+      "blog": "Blog"
+    },
+    "legal": {
+      "title": "Legal",
+      "terms": "Terms",
+      "privacy": "Privacy",
+      "cookies": "Cookies"
+    },
+    "copyright": "© {{year}} SmartPliegos. All rights reserved."
   }
 }

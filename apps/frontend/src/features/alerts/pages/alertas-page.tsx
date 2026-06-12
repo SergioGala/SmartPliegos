@@ -1,8 +1,9 @@
+// 📍 DESTINO: apps/frontend/src/features/alerts/pages/alertas-page.tsx  (REEMPLAZAR ENTERO)
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
-import { Plus, Bell } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { alertsApi } from '../api/alerts.api';
 import { AlertCard } from '../components/alert-card';
 import { AlertFormDialog } from '../components/alert-form-dialog';
@@ -17,7 +18,7 @@ export function AlertasPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
- const { data: alerts = [], isLoading, isError, refetch }  = useQuery({
+  const { data: alerts = [], isLoading, isError, refetch } = useQuery({
     queryKey: ['alerts'],
     queryFn: () => alertsApi.list(),
   });
@@ -44,18 +45,21 @@ export function AlertasPage() {
         <title>{t('page.title')} · SmartPliegos</title>
       </Helmet>
 
-      <div className="max-w-5xl mx-auto py-6 px-4 sm:px-6">
-        <header className="mb-6 flex items-start justify-between">
+      <div className="mx-auto max-w-[1180px] px-6 pb-24 pt-10 md:px-12">
+        <header className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">{t('page.title')}</h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              {t('page.subtitle')}
-            </p>
+            <div className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-primary">
+              / {t('page.title')}
+            </div>
+            <h1 className="mt-2 font-display text-[clamp(2rem,4.5vw,3rem)] font-bold tracking-[-0.025em] text-foreground">
+              {t('page.title')}
+            </h1>
+            <p className="mt-2 text-sm text-muted-foreground">{t('page.subtitle')}</p>
           </div>
           <button
             type="button"
             onClick={handleCreate}
-            className="h-9 px-4 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 flex items-center gap-2"
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 font-mono text-[0.72rem] font-semibold uppercase tracking-[0.06em] text-primary-foreground transition-transform hover:-translate-y-0.5"
           >
             <Plus size={14} />
             {t('page.createButton')}
@@ -64,17 +68,17 @@ export function AlertasPage() {
 
         {/* Filtros */}
         {alerts.length > 0 && (
-          <div className="flex items-center gap-1 mb-6 border-b border-border">
+          <div className="mt-8 flex items-center gap-5 border-b border-border">
             {(['all', 'active', 'inactive'] as const).map((tab) => (
               <button
                 key={tab}
                 type="button"
                 onClick={() => setFilter(tab)}
                 className={cn(
-                  'h-9 px-3 text-sm border-b-2 -mb-px transition-colors',
+                  '-mb-px border-b-2 pb-3 font-mono text-[0.7rem] uppercase tracking-[0.1em] transition-colors',
                   filter === tab
-                    ? 'border-primary text-foreground font-medium'
-                    : 'border-transparent text-muted-foreground hover:text-foreground'
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-muted-foreground/60 hover:text-foreground',
                 )}
               >
                 {t(`page.filters.${tab}`)}
@@ -83,59 +87,64 @@ export function AlertasPage() {
           </div>
         )}
 
-        {/* Empty state */}
-           {!isLoading && isError && (
-          <EstadoError
-            titulo="No se pudieron cargar tus alertas"
-            onReintentar={() => refetch()}
-          />
-        )}
-        {!isLoading && alerts.length === 0 && (
-          <div className="bg-card border border-border rounded-xl p-10 text-center">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-4">
-              <Bell size={24} className="text-primary" />
-            </div>
-            <h2 className="text-lg font-semibold">{t('page.empty.title')}</h2>
-            <p className="text-sm text-muted-foreground mt-1 max-w-md mx-auto">
-              {t('page.empty.subtitle')}
-            </p>
-            <button
-              type="button"
-              onClick={handleCreate}
-              className="mt-6 h-10 px-5 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90"
-            >
-              {t('page.empty.cta')}
-            </button>
-          </div>
-        )}
+        <div className="mt-8">
+          {/* Error */}
+          {!isLoading && isError && (
+            <EstadoError
+              titulo={t('page.errorTitle', {
+                defaultValue: 'No se pudieron cargar tus alertas',
+              })}
+              onReintentar={() => refetch()}
+            />
+          )}
 
-        {/* Loading */}
-        {isLoading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                className="bg-card border border-border rounded-lg p-5 animate-pulse"
-              >
-                <div className="h-5 w-3/4 bg-muted rounded mb-3" />
-                <div className="h-3 w-1/2 bg-muted rounded mb-4" />
-                <div className="flex gap-2">
-                  <div className="h-6 w-16 bg-muted rounded" />
-                  <div className="h-6 w-20 bg-muted rounded" />
-                </div>
+          {/* Empty */}
+          {!isLoading && !isError && alerts.length === 0 && (
+            <div className="rounded-2xl border border-border bg-card p-10 text-center">
+              <div className="font-mono text-[0.66rem] uppercase tracking-[0.14em] text-muted-foreground/50">
+                {t('page.empty.title')}
               </div>
-            ))}
-          </div>
-        )}
+              <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
+                {t('page.empty.subtitle')}
+              </p>
+              <button
+                type="button"
+                onClick={handleCreate}
+                className="mt-6 inline-flex items-center rounded-full bg-primary px-5 py-2.5 font-mono text-[0.72rem] font-semibold uppercase tracking-[0.06em] text-primary-foreground transition-transform hover:-translate-y-0.5"
+              >
+                {t('page.empty.cta')}
+              </button>
+            </div>
+          )}
 
-        {/* Lista */}
-        {!isLoading && filtered.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {filtered.map((alert) => (
-              <AlertCard key={alert.id} alert={alert} onEdit={handleEdit} />
-            ))}
-          </div>
-        )}
+          {/* Loading */}
+          {isLoading && (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {[1, 2, 3, 4].map((i) => (
+                <div
+                  key={i}
+                  className="animate-pulse rounded-2xl border border-border bg-card p-5"
+                >
+                  <div className="mb-3 h-5 w-3/4 rounded bg-muted" />
+                  <div className="mb-4 h-3 w-1/2 rounded bg-muted" />
+                  <div className="flex gap-2">
+                    <div className="h-6 w-16 rounded bg-muted" />
+                    <div className="h-6 w-20 rounded bg-muted" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Lista */}
+          {!isLoading && filtered.length > 0 && (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {filtered.map((alert) => (
+                <AlertCard key={alert.id} alert={alert} onEdit={handleEdit} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Dialog crear/editar */}

@@ -4,6 +4,34 @@
   "hintSuffix": "to navigate",
   "moduleLabel": "MODULE",
   "openModule": "Open module",
+  "status": {
+    "live": "Live",
+    "tenders": "tenders"
+  },
+  "hero": {
+    "eyebrow": "dashboard",
+    "headline": "public tenders under watch.",
+    "lead": "{{saved}} saved · {{alerts}} active alerts watching BOE and PLACE in real time.",
+    "cta": "Explore tenders",
+    "cta2": "My alerts"
+  },
+  "featured": {
+    "label": "Featured",
+    "cta": "View tender"
+  },
+  "stats": {
+    "indexed": "Indexed",
+    "alerts": "Active alerts",
+    "saved": "Saved",
+    "closing": "Closing soon"
+  },
+  "feed": {
+    "title": "latest",
+    "all": "view all",
+    "error": "Couldn't load the feed.",
+    "retry": "Retry",
+    "empty": "No tenders yet."
+  },
   "modules": {
     "buscador": {
       "title": "Search",

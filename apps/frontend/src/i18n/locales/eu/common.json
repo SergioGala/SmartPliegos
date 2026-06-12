@@ -120,5 +120,11 @@
   "error": {
     "unexpectedTitle": "Zerbait ustekabekoa gertatu da",
     "unexpectedBody": "Saiatu orria freskatzen edo hasierara itzultzen."
+  },
+  "authPanel": {
+    "eyebrow": "sarbidea",
+    "headline": "Aurkitu zure hurrengo kontratua 288.000 lizitazio publikoren artean.",
+    "lead": "Bilaketa adimenduna, denbora errealeko alertak eta IA bidezko laburpenak. PLACEko datu ofizialak.",
+    "footer": "Doan · txartelik gabe"
   }
 }

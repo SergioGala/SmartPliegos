@@ -59,7 +59,8 @@
       "inactive": "Paused"
     },
     "count_one": "{{count}} alert",
-    "count_other": "{{count}} alerts"
+    "count_other": "{{count}} alerts",
+    "errorTitle": "Couldn't load your alerts"
   },
   "card": {
     "matchesLabel_one": "{{count}} match",

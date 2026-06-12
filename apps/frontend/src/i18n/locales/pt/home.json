@@ -4,6 +4,34 @@
   "hintSuffix": "para navegar",
   "moduleLabel": "MÓDULO",
   "openModule": "Abrir módulo",
+  "status": {
+    "live": "Em direto",
+    "tenders": "concursos"
+  },
+  "hero": {
+    "eyebrow": "painel",
+    "headline": "concursos públicos em acompanhamento.",
+    "lead": "{{saved}} guardadas · {{alerts}} alertas ativos a vigiar o BOE e o PLACE em tempo real.",
+    "cta": "Explorar concursos",
+    "cta2": "Os meus alertas"
+  },
+  "featured": {
+    "label": "Destaque",
+    "cta": "Ver ficha"
+  },
+  "stats": {
+    "indexed": "Indexados",
+    "alerts": "Alertas ativos",
+    "saved": "Guardadas",
+    "closing": "Encerram em breve"
+  },
+  "feed": {
+    "title": "mais recente",
+    "all": "ver tudo",
+    "error": "Não foi possível carregar o feed.",
+    "retry": "Tentar de novo",
+    "empty": "Ainda não há concursos."
+  },
   "modules": {
     "buscador": {
       "title": "Pesquisa",

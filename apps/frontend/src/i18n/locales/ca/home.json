@@ -4,6 +4,34 @@
   "hintSuffix": "per navegar",
   "moduleLabel": "MÒDUL",
   "openModule": "Obrir mòdul",
+  "status": {
+    "live": "En directe",
+    "tenders": "licitacions"
+  },
+  "hero": {
+    "eyebrow": "tauler",
+    "headline": "licitacions públiques en seguiment.",
+    "lead": "{{saved}} desades · {{alerts}} alertes actives vigilant el BOE i PLACE en temps real.",
+    "cta": "Explorar licitacions",
+    "cta2": "Les meves alertes"
+  },
+  "featured": {
+    "label": "Destacada",
+    "cta": "Veure fitxa"
+  },
+  "stats": {
+    "indexed": "Indexades",
+    "alerts": "Alertes actives",
+    "saved": "Desades",
+    "closing": "Tanquen aviat"
+  },
+  "feed": {
+    "title": "el més recent",
+    "all": "veure-ho tot",
+    "error": "No s'ha pogut carregar el feed.",
+    "retry": "Reintentar",
+    "empty": "Encara no hi ha licitacions."
+  },
   "modules": {
     "buscador": {
       "title": "Cercador",

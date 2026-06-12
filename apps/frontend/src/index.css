@@ -1,7 +1,20 @@
+/* 📍 DESTINO: apps/frontend/src/index.css  (REEMPLAZAR ENTERO)
+   Fase 0 · Tokens del rediseño «Terminal» v2 (charcoal + papel, acento lima).
+   Cambios respecto al tuyo:
+   · Añadidos los @import de Bricolage Grotesque (tu --font-display ya la usaba).
+   · Sustituidos los bloques :root (claro) y .dark (oscuro) violeta por el sistema v2.
+   · Añadidos los tokens crudos de marca --sp-* y las texturas .sp-noise-row/.sp-scan/.sp-grain.
+   · CONSERVADO intacto: @theme inline, @layer base, scrollbar, selección, foco y tus utilidades.
+   El sistema de tema (ThemeProvider defaultTheme="dark") ya existe en tu repo: no se toca. */
+
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "@fontsource-variable/geist";
 @import "@fontsource-variable/geist-mono";
+@import "@fontsource/bricolage-grotesque/400.css";
+@import "@fontsource/bricolage-grotesque/600.css";
+@import "@fontsource/bricolage-grotesque/700.css";
+@import "@fontsource/bricolage-grotesque/800.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -58,136 +71,166 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* ═══════════════════════════════════════════════════════
-   LIGHT MODE — Clean Linear-inspired, white with violet accents
-   ═══════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════
+   TOKENS CRUDOS DE MARCA (--sp-*) · válidos en ambos modos
+   Fuente de verdad = HEX de los prototipos. WCAG AA sobre --background.
+   ════════════════════════════════════════════════════════════════════ */
 :root {
-    /* Surfaces */
-    --background: oklch(0.99 0 0);              /* Blanco casi puro */
-    --foreground: oklch(0.15 0.01 270);         /* Negro azulado sutil */
+    /* Lienzo oscuro (charcoal elevado — NO negro puro) */
+    --sp-ink:        #101215;
+    --sp-ink-2:      #161920;
+    --sp-ink-3:      #1e222a;
+    --sp-card:       #161a21;
+    --sp-sidebar:    #0c0e11;
 
-    --card: oklch(1 0 0);                       /* Blanco puro */
-    --card-foreground: oklch(0.15 0.01 270);
+    /* Tinta crema (texto en oscuro) */
+    --sp-fg:         #f4f1ea;
+    --sp-fg-dim:     #bdbbb7;   /* ≈8.5:1 */
+    --sp-fg-faint:   #94938f;   /* ≈5.9:1 AA */
+    --sp-fg-ghost:   #6c6b68;   /* deco */
 
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.15 0.01 270);
+    /* Líneas (oscuro) */
+    --sp-line:       rgba(244, 241, 234, 0.12);
+    --sp-line-2:     rgba(244, 241, 234, 0.07);
 
-    /* Primary — Lima eléctrica (marca · Feature 18) */
-    --primary: var(--lime);
-    --primary-foreground: var(--lime-ink);
+    /* Acento único — lima eléctrica */
+    --sp-lime:       #ccff1a;
+    --sp-lime-ink:   #101400;
+    --sp-lime-dim:   rgba(204, 255, 26, 0.10);
 
-    /* Secondary & muted */
-    --secondary: oklch(0.97 0.005 270);
-    --secondary-foreground: oklch(0.25 0.01 270);
+    /* Semánticos (solo estado) */
+    --sp-crit:       #ff8178;
+    --sp-warn:       #f7cf6a;
+    --sp-info:       #7fb4ff;
+    --sp-ok:         #8fecb1;
 
-    --muted: oklch(0.96 0.005 270);
-    --muted-foreground: oklch(0.50 0.01 270);
-
-    --accent: oklch(0.95 0.02 280);             /* Violet muy suave para hovers */
-    --accent-foreground: oklch(0.35 0.18 280);
-
-    /* Semantic */
-    --destructive: oklch(0.60 0.23 25);
-    --success: oklch(0.62 0.17 150);
-    --success-foreground: oklch(0.99 0 0);
-    --warning: oklch(0.75 0.16 75);
-    --warning-foreground: oklch(0.20 0.02 75);         /* Rojo coral */
-
-    /* Borders & inputs */
-    --border: oklch(0.92 0.005 270);
-    --input: oklch(0.94 0.005 270);
-    --ring: var(--lime);                        /* Mismo que primary para focus */
-
-    /* Charts — escala violet→azul→cyan para datos */
-    --chart-1: oklch(0.55 0.24 280);            /* Violet principal */
-    --chart-2: oklch(0.60 0.20 250);            /* Azul-violet */
-    --chart-3: oklch(0.65 0.18 220);            /* Azul */
-    --chart-4: oklch(0.70 0.15 190);            /* Cyan suave */
-    --chart-5: oklch(0.75 0.12 160);            /* Verde agua */
-
-    /* Brand accent — lima eléctrica (landing + rebrand Feature 18) */
-    --lime: #ccff1a;
-    --lime-deep: #b4e000;
-    --lime-ink: #131800;
-
-    --radius: 0.625rem;
-
-    /* Sidebar — siempre oscuro incluso en light mode (estilo dashboard premium) */
-    --sidebar: oklch(0.13 0.01 270);
-    --sidebar-foreground: oklch(0.90 0.005 270);
-    --sidebar-primary: oklch(0.60 0.26 280);
-    --sidebar-primary-foreground: oklch(0.99 0 0);
-    --sidebar-accent: oklch(0.20 0.02 275);
-    --sidebar-accent-foreground: oklch(0.75 0.15 280);
-    --sidebar-border: oklch(0.22 0.01 270);
-    --sidebar-ring: oklch(0.60 0.26 280);
+    /* Modo claro (papel editorial) */
+    --sp-paper:      #f4f1e8;
+    --sp-paper-card: #ffffff;
+    --sp-paper-2:    #ebe7db;
+    --sp-on-paper:        #1a1812;
+    --sp-on-paper-dim:    rgba(26, 24, 18, 0.70);
+    --sp-on-paper-faint:  rgba(26, 24, 18, 0.54);
+    --sp-on-paper-ghost:  rgba(26, 24, 18, 0.34);
+    --sp-olive:      #566400;   /* acento de TEXTO en claro (≈5:1 AA) */
+    --sp-lime-solid: #a4cc00;   /* relleno lima profundo (barras/arcos) */
+    --sp-line-l:     rgba(26, 24, 18, 0.14);
+    --sp-line-l-2:   rgba(26, 24, 18, 0.08);
+    --sp-crit-l:     #cc3b2e;
+    --sp-warn-l:     #9a6a00;
+    --sp-ok-l:       #1f8a4c;
 }
 
-/* ═══════════════════════════════════════════════════════
-   DARK MODE — Linear-inspired #0A0A0A with electric violet
-   ═══════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════
+   LIGHT (por defecto, sin .dark) — editorial sobre papel.
+   La lima SOLO como relleno; los acentos de TEXTO van en oliva.
+   ════════════════════════════════════════════════════════════════════ */
+:root {
+    --background:            var(--sp-paper);
+    --foreground:            var(--sp-on-paper);
+    --card:                  var(--sp-paper-card);
+    --card-foreground:       var(--sp-on-paper);
+    --popover:               var(--sp-paper-card);
+    --popover-foreground:    var(--sp-on-paper);
+
+    --primary:               var(--sp-lime);
+    --primary-foreground:    var(--sp-lime-ink);
+
+    --secondary:             var(--sp-paper-2);
+    --secondary-foreground:  var(--sp-on-paper);
+    --muted:                 #efebe0;
+    --muted-foreground:      #5b5952;
+
+    --accent:                #f1f4dd;
+    --accent-foreground:     var(--sp-olive);
+
+    --destructive:           var(--sp-crit-l);
+    --success:               var(--sp-ok-l);
+    --success-foreground:    #ffffff;
+    --warning:               var(--sp-warn-l);
+    --warning-foreground:    #ffffff;
+
+    --border:                var(--sp-line-l);
+    --input:                 var(--sp-line-l);
+    --ring:                  var(--sp-olive);
+
+    --chart-1:               var(--sp-lime-solid);
+    --chart-2:               #7d9a00;
+    --chart-3:               var(--sp-ok-l);
+    --chart-4:               #3f6ea8;
+    --chart-5:               var(--sp-on-paper-faint);
+
+    --lime:                  var(--sp-lime);
+    --lime-deep:             #b4e000;
+    --lime-ink:              var(--sp-lime-ink);
+
+    --radius: 0.625rem;   /* PRESERVADO de tu index.css (lo usa --radius-*) */
+
+    /* Rail/sidebar en claro = papel (sigue el tema, no se queda oscuro) */
+    --sidebar:               #efebe0;
+    --sidebar-foreground:    var(--sp-on-paper-dim);
+    --sidebar-primary:       var(--sp-lime-solid);
+    --sidebar-primary-foreground: var(--sp-lime-ink);
+    --sidebar-accent:        #f1f4dd;
+    --sidebar-accent-foreground: var(--sp-olive);
+    --sidebar-border:        var(--sp-line-l-2);
+    --sidebar-ring:          var(--sp-olive);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   DARK (la app arranca aquí) — charcoal + lima. Reemplaza el .dark violeta.
+   ════════════════════════════════════════════════════════════════════ */
 .dark {
-    /* Surfaces */
-    --background: oklch(0.12 0 0);              /* #0A0A0A-ish, gris muy oscuro */
-    --foreground: oklch(0.95 0.005 270);        /* Blanco cálido */
+    --background:            var(--sp-ink);
+    --foreground:            var(--sp-fg);
+    --card:                  var(--sp-card);
+    --card-foreground:       var(--sp-fg);
+    --popover:               var(--sp-ink-2);
+    --popover-foreground:    var(--sp-fg);
 
-    --card: oklch(0.15 0.005 270);              /* Gris oscuro ligeramente azulado */
-    --card-foreground: oklch(0.95 0.005 270);
+    --primary:               var(--sp-lime);
+    --primary-foreground:    var(--sp-lime-ink);
 
-    --popover: oklch(0.14 0.005 270);
-    --popover-foreground: oklch(0.95 0.005 270);
+    --secondary:             var(--sp-ink-3);
+    --secondary-foreground:  var(--sp-fg);
+    --muted:                 var(--sp-ink-2);
+    --muted-foreground:      var(--sp-fg-dim);
 
-    /* Primary — Lima eléctrica (marca) */
-    --primary: var(--lime);
-    --primary-foreground: var(--lime-ink);
+    --accent:                color-mix(in oklab, var(--sp-lime) 8%, var(--sp-ink));
+    --accent-foreground:     var(--sp-lime);
 
-    /* Secondary & muted */
-    --secondary: oklch(0.20 0.01 270);
-    --secondary-foreground: oklch(0.90 0.005 270);
+    --destructive:           var(--sp-crit);
+    --success:               var(--sp-ok);
+    --success-foreground:    var(--sp-lime-ink);
+    --warning:               var(--sp-warn);
+    --warning-foreground:    #2a2206;
 
-    --muted: oklch(0.18 0.005 270);
-    --muted-foreground: oklch(0.60 0.01 270);
+    --border:                var(--sp-line);
+    --input:                 var(--sp-line);
+    --ring:                  var(--sp-lime);
 
-    --accent: oklch(0.22 0.04 280);             /* Violet sutil para hovers */
-    --accent-foreground: oklch(0.80 0.18 280);
+    --chart-1:               var(--sp-lime);
+    --chart-2:               #a9d43a;
+    --chart-3:               var(--sp-ok);
+    --chart-4:               var(--sp-info);
+    --chart-5:               var(--sp-fg-faint);
 
-    /* Semantic */
-    --destructive: oklch(0.68 0.22 25);      /* Rojo coral más luminoso */
-    --success: oklch(0.70 0.16 150);
-    --success-foreground: oklch(0.99 0 0);
-    --warning: oklch(0.80 0.15 75);
-    --warning-foreground: oklch(0.20 0.02 75);         
+    --lime:                  var(--sp-lime);
+    --lime-deep:             #b4e000;
+    --lime-ink:              var(--sp-lime-ink);
 
-    /* Borders & inputs — muy sutiles, casi invisibles */
-    --border: oklch(1 0 0 / 0.08);              /* Blanco 8% opacidad */
-    --input: oklch(1 0 0 / 0.10);
-    --ring: var(--lime);                        /* Mismo que primary */
-
-    /* Charts — más luminosos en dark */
-    --chart-1: oklch(0.70 0.26 280);            /* Violet vivo */
-    --chart-2: oklch(0.72 0.22 250);            /* Azul-violet */
-    --chart-3: oklch(0.74 0.18 220);            /* Azul */
-    --chart-4: oklch(0.76 0.15 190);            /* Cyan */
-    --chart-5: oklch(0.78 0.13 160);            /* Verde agua */
-
-    /* Brand accent — lima eléctrica (misma en ambos modos) */
-    --lime: #ccff1a;
-    --lime-deep: #b4e000;
-    --lime-ink: #131800;
-
-    /* Sidebar — aún más oscuro que el fondo para crear profundidad */
-    --sidebar: oklch(0.09 0 0);                 /* Negro casi puro */
-    --sidebar-foreground: oklch(0.90 0.005 270);
-    --sidebar-primary: oklch(0.70 0.26 280);
-    --sidebar-primary-foreground: oklch(0.99 0 0);
-    --sidebar-accent: oklch(0.16 0.02 275);
-    --sidebar-accent-foreground: oklch(0.80 0.20 280);
-    --sidebar-border: oklch(1 0 0 / 0.06);
-    --sidebar-ring: oklch(0.70 0.26 280);
+    --sidebar:               var(--sp-sidebar);
+    --sidebar-foreground:    var(--sp-fg-dim);
+    --sidebar-primary:       var(--sp-lime);
+    --sidebar-primary-foreground: var(--sp-lime-ink);
+    --sidebar-accent:        color-mix(in oklab, var(--sp-lime) 8%, var(--sp-sidebar));
+    --sidebar-accent-foreground: var(--sp-lime);
+    --sidebar-border:        var(--sp-line-2);
+    --sidebar-ring:          var(--sp-lime);
 }
 
 /* ═══════════════════════════════════════════════════════
-   BASE LAYER
+   BASE LAYER  (sin cambios — fondo/tipografía vienen de tokens)
    ═══════════════════════════════════════════════════════ */
 @layer base {
     * {
@@ -209,7 +252,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   SCROLLBAR — Minimalista estilo Linear
+   SCROLLBAR — Minimalista
    ═══════════════════════════════════════════════════════ */
 ::-webkit-scrollbar {
     width: 6px;
@@ -241,7 +284,7 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   KEYBOARD FOCUS — Accesibilidad refinada
+   KEYBOARD FOCUS
    ═══════════════════════════════════════════════════════ */
 :focus-visible {
     outline: 2px solid var(--ring);
@@ -250,10 +293,10 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   UTILITIES — Clases extra útiles
+   UTILITIES (tuyas — conservadas)
    ═══════════════════════════════════════════════════════ */
 
-/* Gradient text — violet→azul para títulos premium */
+/* Gradient text (ahora lima→verde, ya sin violeta) */
 .text-gradient-primary {
     background: linear-gradient(
         135deg,
@@ -265,14 +308,14 @@
     background-clip: text;
 }
 
-/* Glow effect para elementos destacados */
+/* Glow para elementos destacados */
 .glow-primary {
     box-shadow:
         0 0 20px oklch(from var(--primary) l c h / 0.25),
         0 0 40px oklch(from var(--primary) l c h / 0.1);
 }
 
-/* Grain texture sutil para fondos premium */
+/* Grain sutil (tuyo) */
 .bg-grain {
     position: relative;
 }
@@ -283,4 +326,28 @@
     pointer-events: none;
     opacity: 0.015;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ═══════════════════════════════════════════════════════
+   TEXTURAS AMBIENTALES v2 (Inicio / Acceso / hero landing)
+   Decorativas y MUY tenues. El recorrido del escáner y el
+   encendido de filas se controla por JS (Fase 2).
+   ═══════════════════════════════════════════════════════ */
+.sp-noise-row        { color: rgba(244, 241, 234, 0.045); transition: color .6s cubic-bezier(0.22, 1, 0.36, 1); }
+.sp-noise-row.is-lit { color: rgba(244, 241, 234, 0.10); }
+
+.sp-scan {
+    background: linear-gradient(90deg, transparent, rgba(204,255,26,0.5) 40%, rgba(204,255,26,0.7) 50%, rgba(204,255,26,0.5) 60%, transparent);
+    box-shadow: 0 0 30px 4px rgba(204, 255, 26, 0.12);
+    opacity: 0.32;
+}
+@media (prefers-reduced-motion: reduce) {
+    .sp-scan { display: none; }
+}
+
+/* Grano global premium (usar en el shell de /app) */
+.sp-grain::after {
+    content: ""; position: fixed; inset: 0; z-index: 50; pointer-events: none;
+    opacity: 0.04; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }

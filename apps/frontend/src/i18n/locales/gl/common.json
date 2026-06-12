@@ -120,5 +120,11 @@
   "error": {
     "unexpectedTitle": "Ocorreu algo inesperado",
     "unexpectedBody": "Proba a refrescar a páxina ou volver ao inicio."
+  },
+  "authPanel": {
+    "eyebrow": "acceso",
+    "headline": "Atopa o teu próximo contrato entre 288.000 licitacións públicas.",
+    "lead": "Busca intelixente, alertas en tempo real e resumos con IA. Datos oficiais de PLACE.",
+    "footer": "Gratis · sen tarxeta"
   }
 }

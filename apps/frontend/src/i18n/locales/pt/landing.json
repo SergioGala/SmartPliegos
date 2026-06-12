@@ -1,95 +1,148 @@
 {
-  "header": {
-    "features": "Características",
-    "pricing": "Preços",
-    "contact": "Contacto",
+  "meta": {
+    "title": "SmartPliegos · Inteligência em concursos públicos",
+    "description": "Pesquisa inteligente sobre 288.000 concursos do PLACE, alertas em tempo real e resumos com IA de cadernos de encargos de mais de 100 páginas em segundos."
+  },
+  "nav": {
+    "producto": "Produto",
+    "ia": "IA",
+    "precios": "Preços",
+    "contacto": "Contacto",
     "login": "Iniciar sessão",
     "register": "Começar grátis"
   },
   "hero": {
-    "badge": "Com IA integrada para resumos automáticos",
-    "titlePart1": "Ganha mais concursos públicos.",
-    "titlePart2": "Perde menos tempo.",
-    "subtitle": "Pesquisa inteligente sobre 288.000 concursos da PLACE, alertas em tempo real e resumos com IA de cadernos de 100+ páginas em segundos.",
+    "kicker1": "Inteligência em contratação pública · Espanha",
+    "kicker2": "PLACE · 288.000+ concursos · dados oficiais",
+    "title": {
+      "l1": "Ganha mais",
+      "l2": "concursos",
+      "l3": "públicos.",
+      "l4": "Perde menos tempo."
+    },
+    "sub": "Pesquisa inteligente, <b>alertas à medida</b> em tempo real e resumos com <b>IA</b> de cadernos de encargos de mais de 100 páginas em <b>15 segundos</b>. Tudo sobre a plataforma de contratação pública (PLACE).",
     "ctaStart": "Começar grátis",
     "ctaSecondary": "Ver como funciona",
-    "disclaimer": "Grátis para sempre · Sem cartão · Dados atualizados a cada 5 minutos"
+    "disclaimer": {
+      "forever": "Grátis para sempre",
+      "noCard": "Sem cartão",
+      "updated": "Atualizado a cada 5 min"
+    }
+  },
+  "stats": {
+    "indexed": "Concursos indexados",
+    "frequency": "Frequência de atualização",
+    "aiSummary": "Resumo IA de um caderno",
+    "regions": "Comunidades cobertas"
   },
   "features": {
-    "title": "Tudo o que precisas. Nada do que não precisas.",
-    "subtitle": "Ferramentas pensadas para empresas que competem por contratos a sério.",
-    "items": {
-      "search": {
-        "title": "Pesquisa inteligente",
-        "description": "Sobre 288.000 concursos da PLACE, com filtros por CPV, comunidade, órgão, valor, estado."
-      },
-      "alerts": {
-        "title": "Alertas à medida",
-        "description": "Define critérios e recebe emails quando aparecerem concursos que te encaixem. Em tempo real."
-      },
-      "ai": {
-        "title": "Resumos com IA",
-        "description": "Carrega um caderno de 100 páginas e recebe em 15 segundos um resumo estruturado: objeto, valor, prazos, requisitos."
-      }
+    "head": {
+      "title1": "Tudo o que precisas.",
+      "title2": "Nada do que não precisas.",
+      "intro": "Ferramentas pensadas para empresas que disputam contratos a sério. Sem ruído, sem painéis inúteis, sem curva de aprendizagem."
+    },
+    "search": {
+      "idx": "/ 01 — Pesquisa inteligente",
+      "h": "Encontra o teu próximo contrato entre 288.000.",
+      "p": "Filtra 288.000 concursos do PLACE por CPV, comunidade, órgão de contratação, montante e estado. Resultados instantâneos, relevância real.",
+      "b1": "Filtros por CPV, comunidade, órgão e montante combináveis",
+      "b2": "Pesquisa semântica que percebe o que procuras",
+      "b3": "Guarda pesquisas e transforma-as em alertas"
+    },
+    "alerts": {
+      "idx": "/ 02 — Alertas à medida",
+      "h": "Que os concursos te procurem a ti.",
+      "p": "Define os teus critérios uma vez e recebe um email no momento exato em que surge um concurso que encaixa. Sem rever portais todas as manhãs.",
+      "b1": "Alertas com critérios combinados",
+      "b2": "Notificação em tempo real, não resumos diários",
+      "b3": "Pontuação de afinidade em cada resultado"
+    },
+    "ai": {
+      "idx": "/ 03 — Leitura com IA",
+      "h": "100 páginas de caderno, lidas em 15 segundos.",
+      "p": "Carrega um caderno de encargos e recebe um resumo estruturado: objeto, montante, prazos, critérios de adjudicação e requisitos de capacidade. Decide se concorres num minuto, não numa tarde.",
+      "b1": "Objeto, montante e prazos extraídos automaticamente",
+      "b2": "Critérios de adjudicação e capacidade em destaque",
+      "b3": "Pergunta ao caderno em linguagem natural"
+    }
+  },
+  "ai": {
+    "head": {
+      "title1": "Do caderno ilegível",
+      "title2": "ao resumo acionável.",
+      "intro": "Os cadernos de encargos não foram feitos para se lerem depressa. A IA da SmartPliegos digere-os por ti e dá-te só o que importa para decidir."
     }
   },
   "pricing": {
-    "title": "Preços simples",
-    "subtitle": "Paga apenas pelo que usas. Muda de plano quando quiseres.",
-    "mostPopular": "Mais popular",
-    "plans": {
-      "free": {
-        "name": "Free",
-        "price": "0€",
-        "cadence": "para sempre",
-        "description": "Para experimentar. Sem cartão.",
-        "features": {
-          "search": "Pesquisa completa",
-          "alerts": "1 alerta ativo",
-          "ai": "5 resumos IA/mês",
-          "support": "Suporte por email"
-        },
-        "cta": "Começar grátis"
-      },
-      "pro": {
-        "name": "Pro",
-        "price": "49€",
-        "cadence": "/mês",
-        "description": "Para empresas que vão a sério.",
-        "features": {
-          "everything": "Tudo o do Free",
-          "alerts": "Alertas ilimitados",
-          "ai": "100 resumos IA/mês",
-          "export": "Exportação para Excel/CSV",
-          "support": "Suporte prioritário"
-        },
-        "cta": "Começar teste de 14 dias"
-      },
-      "enterprise": {
-        "name": "Enterprise",
-        "price": "À medida",
-        "description": "Para equipas grandes e consultorias.",
-        "features": {
-          "everything": "Tudo o do Pro",
-          "ai": "Resumos IA ilimitados",
-          "integrations": "Integrações (API, Slack, Teams)",
-          "manager": "Gestor de conta dedicado",
-          "sla": "SLA 99,9%"
-        },
-        "cta": "Falar com vendas"
-      }
+    "head": {
+      "title1": "Preços simples.",
+      "title2": "Muda quando quiseres.",
+      "intro": "Começa grátis, sem cartão. Sobe para Pro quando precisares e recarrega créditos de IA à medida."
+    },
+    "free": {
+      "name": "Free",
+      "desc": "Para experimentar. Sem cartão.",
+      "cadence": "para sempre",
+      "f1": "Pesquisa completa",
+      "f2": "1 alerta ativo",
+      "f3": "5 resumos IA / mês",
+      "f4": "Suporte por email",
+      "cta": "Começar grátis"
+    },
+    "pro": {
+      "name": "Pro",
+      "pop": "Mais popular",
+      "desc": "Para empresas que vão a sério.",
+      "cadence": "/ mês",
+      "f1": "Tudo o do Free",
+      "f2": "Alertas ilimitados",
+      "f3": "100 resumos IA / mês",
+      "f4": "Exportação para Excel / CSV",
+      "f5": "Suporte prioritário",
+      "cta": "Começar período de 14 dias"
+    },
+    "credits": {
+      "name": "Créditos IA",
+      "desc": "Estão a acabar os do plano? Recarrega quando quiseres.",
+      "cadence": "/ 100 créditos",
+      "f1": "Packs de créditos IA à medida",
+      "f2": "Somam-se aos do teu plano",
+      "f3": "Sem validade mensal",
+      "f4": "Pagamento único, sem subscrição",
+      "cta": "Comprar créditos"
     }
   },
-  "cta": {
-    "title": "Pronto para deixar de perder concursos?",
-    "subtitle": "Cria a tua conta grátis em 30 segundos. Sem cartão. Sem compromisso.",
-    "button": "Começar grátis"
+  "final": {
+    "kicker": "Cria a tua conta em 30 segundos",
+    "titleL1": "Pronto para deixar",
+    "titlePre": "de",
+    "titleAccent": "perder",
+    "titlePost": "concursos?",
+    "sub": "Sem cartão. Sem compromisso. Dados oficiais do PLACE atualizados a cada 5 minutos.",
+    "ctaStart": "Começar grátis",
+    "ctaSales": "Falar com vendas"
   },
   "footer": {
-    "copyright": "© {{year}} SmartPliegos. Todos os direitos reservados.",
-    "terms": "Termos",
-    "privacy": "Privacidade",
-    "cookies": "Cookies",
-    "contact": "Contacto"
+    "tag": "Inteligência em concursos públicos. Sobre dados oficiais da plataforma de contratação pública (PLACE).",
+    "product": {
+      "title": "Produto",
+      "search": "Pesquisa",
+      "alerts": "Alertas",
+      "ai": "Resumos IA",
+      "pricing": "Preços"
+    },
+    "company": {
+      "title": "Empresa",
+      "about": "Sobre nós",
+      "contact": "Contacto",
+      "blog": "Blog"
+    },
+    "legal": {
+      "title": "Legal",
+      "terms": "Termos",
+      "privacy": "Privacidade",
+      "cookies": "Cookies"
+    },
+    "copyright": "© {{year}} SmartPliegos. Todos os direitos reservados."
   }
 }

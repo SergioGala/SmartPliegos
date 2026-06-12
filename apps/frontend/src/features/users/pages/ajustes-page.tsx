@@ -1,18 +1,21 @@
+// 📍 DESTINO: apps/frontend/src/features/users/pages/ajustes-page.tsx  (REEMPLAZAR ENTERO)
+//
+// Solo cambia el CASCARÓN (cabecera + nav de tabs). Los 5 tabs son rutas
+// aparte y heredan el tema (charcoal+lima) por sus tokens — no se tocan.
 import { Helmet } from 'react-helmet-async';
 import { NavLink, Outlet, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { User, Lock, Bell, Building2, Settings2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function AjustesPage() {
   const { t } = useTranslation('settings');
 
   const TABS = [
-    { path: 'perfil', labelKey: 'tabs.profile', icon: User },
-    { path: 'seguridad', labelKey: 'tabs.security', icon: Lock },
-    { path: 'notificaciones', labelKey: 'tabs.notifications', icon: Bell },
-    { path: 'organizacion', labelKey: 'tabs.organization', icon: Building2 },
-    { path: 'preferencias', labelKey: 'tabs.preferences', icon: Settings2 },
+    { path: 'perfil', labelKey: 'tabs.profile' },
+    { path: 'seguridad', labelKey: 'tabs.security' },
+    { path: 'notificaciones', labelKey: 'tabs.notifications' },
+    { path: 'organizacion', labelKey: 'tabs.organization' },
+    { path: 'preferencias', labelKey: 'tabs.preferences' },
   ] as const;
 
   return (
@@ -20,46 +23,50 @@ export function AjustesPage() {
       <Helmet>
         <title>{t('page.title')} · SmartPliegos</title>
       </Helmet>
-      <div className="max-w-4xl mx-auto py-6 px-4 sm:px-6">
-        <header className="mb-8">
-          <h1 className="text-2xl font-bold tracking-tight">
+
+      <div className="mx-auto max-w-[1100px] px-6 pb-24 pt-10 md:px-12">
+        <header>
+          <div className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-primary">
+            / {t('page.title')}
+          </div>
+          <h1 className="mt-2 font-display text-[clamp(2rem,4.5vw,3rem)] font-bold tracking-[-0.025em] text-foreground">
             {t('page.title')}
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {t('page.subtitle')}
-          </p>
+          <p className="mt-2 text-sm text-muted-foreground">{t('page.subtitle')}</p>
         </header>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar de tabs */}
-          <nav className="lg:w-48 shrink-0">
-            <ul className="space-y-1">
-              {TABS.map((tab) => {
-                const Icon = tab.icon;
-                return (
-                  <li key={tab.path}>
-                    <NavLink
-                      to={tab.path}
-                      className={({ isActive }) =>
-                        cn(
-                          'flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors',
-                          isActive
-                            ? 'bg-accent text-accent-foreground font-medium'
-                            : 'text-muted-foreground hover:text-foreground hover:bg-accent/40'
-                        )
-                      }
-                    >
-                      <Icon size={14} />
-                      {t(tab.labelKey)}
-                    </NavLink>
-                  </li>
-                );
-              })}
+        <div className="mt-10 flex flex-col gap-10 lg:flex-row">
+          {/* Nav de tabs (tipográfica) */}
+          <nav className="shrink-0 lg:w-52">
+            <ul className="flex gap-x-4 gap-y-1 overflow-x-auto border-b border-border pb-2 lg:flex-col lg:gap-0 lg:border-b-0 lg:pb-0">
+              {TABS.map((tab) => (
+                <li key={tab.path}>
+                  <NavLink to={tab.path} className="group relative block whitespace-nowrap py-2 lg:pl-4">
+                    {({ isActive }) => (
+                      <>
+                        {isActive && (
+                          <span className="absolute left-0 top-1/2 hidden h-4 w-[2px] -translate-y-1/2 bg-primary lg:block" />
+                        )}
+                        <span
+                          className={cn(
+                            'text-sm transition-colors',
+                            isActive
+                              ? 'font-medium text-primary'
+                              : 'text-muted-foreground group-hover:text-foreground',
+                          )}
+                        >
+                          {t(tab.labelKey)}
+                        </span>
+                      </>
+                    )}
+                  </NavLink>
+                </li>
+              ))}
             </ul>
           </nav>
 
           {/* Contenido del tab activo */}
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             <Outlet />
           </div>
         </div>
@@ -68,9 +75,7 @@ export function AjustesPage() {
   );
 }
 
-/**
- * Redirect por defecto: /ajustes → /ajustes/perfil
- */
+/** Redirect por defecto: /ajustes → /ajustes/perfil */
 export function AjustesIndexRedirect() {
   return <Navigate to="perfil" replace />;
 }
