@@ -44,7 +44,13 @@ export function LicitacionCard({
 
   // Anima la barra de afinidad de 0 → match% al montar.
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    // Diferir el setState fuera del cuerpo del efecto (evita render en cascada
+    // y satisface react-hooks/set-state-in-effect); además garantiza un frame
+    // pintado a 0% antes de transicionar a match%.
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   const tEnum = (namespace: string, key: string | null | undefined) =>
     key ? t(`${namespace}.${key}`, { defaultValue: prettyEnum(key) }) : '';
