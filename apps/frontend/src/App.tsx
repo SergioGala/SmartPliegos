@@ -7,6 +7,9 @@ import { ComingSoon } from '@/components/layout/coming-soon';
 import { HomePage } from '@/features/home/pages/home-page';
 import { BuscarPage } from '@/features/licitaciones/pages/buscar-page';
 import { LicitacionPage } from '@/features/licitaciones/pages/licitacion-page';
+import { GuardadasPage } from './features/favoritos/pages/guardadas-page';
+import { CalendarioPage } from '@/features/calendario/pages/calendario-page';
+
 
 // ─── Auth ───
 import { LoginPage } from '@/features/auth/pages/login-page';
@@ -17,7 +20,9 @@ import { ResetPasswordPage } from '@/features/auth/pages/reset-password-page';
 import { ResetPasswordConfirmPage } from '@/features/auth/pages/reset-password-confirm-page';
 import { ProtectedRoute } from '@/features/auth/components/protected-route';
 import { GuestRoute } from '@/features/auth/components/guest-route';
+
 import { AlertasPage } from '@/features/alerts/pages/alertas-page';
+import { DocumentosPage } from '@/features/documents/pages/documentos-page';
 // ─── Landing ───
 import { LandingPage } from '@/features/landing/pages/landing-page';
 
@@ -31,6 +36,8 @@ import { AjustesSeguridadTab } from '@/features/users/pages/ajustes-seguridad-ta
 import { AjustesNotificacionesTab } from '@/features/users/pages/ajustes-notificaciones-tab';
 import { AjustesOrganizacionTab } from '@/features/users/pages/ajustes-organizacion-tab';
 import { AjustesPreferenciasTab } from '@/features/users/pages/ajustes-preferencias-tab';
+
+
 
 function App() {
   return (
@@ -64,9 +71,10 @@ function App() {
 
           <Route path="/buscar" element={<BuscarPage />} />
           <Route path="/alertas" element={<AlertasPage />} />
-          <Route path="/guardadas" element={<ComingSoon name="Guardadas" />} />
+          <Route path="/guardadas" element={<GuardadasPage />} />
           <Route path="/analytics" element={<ComingSoon name="Analytics" />} />
-          <Route path="/calendario" element={<ComingSoon name="Calendario" />} />
+          <Route path="/calendario" element={<CalendarioPage />} />
+          <Route path="/documentos" element={<DocumentosPage />} />
 
           <Route path="/licitaciones/:id" element={<LicitacionPage />} />
 

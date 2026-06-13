@@ -2,7 +2,8 @@
   "page": {
     "title": "Search",
     "indexedCount": "public tenders indexed",
-    "scrapingActive": "Scraping active"
+    "scrapingActive": "Scraping active",
+    "searchHeading": "search across {{count}} tenders…"
   },
   "input": {
     "placeholder": "Search by keyword, CPV, contracting body...",
@@ -15,7 +16,9 @@
   },
   "results": {
     "empty": "No results",
-    "emptyHint": "Try other terms or adjust the filters"
+    "emptyHint": "Try other terms or adjust the filters",
+    "count": "results",
+    "errorTitle": "Couldn't load the tenders"
   },
   "pagination": {
     "previous": "Previous",
@@ -130,7 +133,19 @@
     "documentsTitle": "Documents",
     "aiSummaryTitle": "AI summary",
     "aiSummaryBadge": "Sprint 5",
-    "aiSummaryBody": "Automatic document analysis will be available soon."
+    "aiSummaryBody": "Automatic document analysis will be available soon.",
+    "backToTerminal": "Back to terminal",
+    "remaining": "remaining",
+    "publishedShort": "Published",
+    "hasLots": "Split into lots",
+    "yes": "Yes",
+    "no": "No",
+    "documentFallback": "Document",
+    "ivaExcluded": "VAT excluded",
+    "deadlineWord": "Deadline",
+    "presentationIn": "Submission in",
+    "day": "day",
+    "days": "days"
   },
   "sections": {
     "guardadas": "Saved",
@@ -139,5 +154,14 @@
     "terms": "Terms",
     "privacy": "Privacy",
     "cookies": "Cookies"
+  },
+  "source": {
+    "official": "Official source"
+  },
+  "sort": {
+    "label": "Sort",
+    "fecha": "Date",
+    "importe": "Amount",
+    "deadline": "Deadline"
   }
 }

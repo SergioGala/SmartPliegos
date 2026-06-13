@@ -80,6 +80,7 @@
     "saved": "Guardadas",
     "analytics": "Análises",
     "calendar": "Calendário",
+    "documents": "Documentos",
     "settings": "Definições",
     "profile": "Perfil",
     "logout": "Terminar sessão",
@@ -119,5 +120,11 @@
   "error": {
     "unexpectedTitle": "Algo inesperado aconteceu",
     "unexpectedBody": "Tenta refrescar a página ou voltar ao início."
+  },
+  "authPanel": {
+    "eyebrow": "acesso",
+    "headline": "Encontra o teu próximo contrato entre 288.000 concursos públicos.",
+    "lead": "Pesquisa inteligente, alertas em tempo real e resumos com IA. Dados oficiais do PLACE.",
+    "footer": "Grátis · sem cartão"
   }
 }

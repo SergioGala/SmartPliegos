@@ -1,0 +1,25 @@
+{
+  "title": "Os meus documentos",
+  "subtitle": "O teu cofre de documentos reutilizáveis para concursos.",
+  "searchPlaceholder": "Pesquisar por nome…",
+  "loading": "A carregar…",
+  "empty": "Ainda não carregaste nenhum documento.",
+  "usage": { "label": "{{count}} documentos" },
+  "upload": {
+    "cta": "Arrasta um ficheiro ou clica para carregar",
+    "hint": "PDF, Word, Excel, imagens ou texto · máx. 5 MB",
+    "success": "«{{name}}» carregado com sucesso"
+  },
+  "actions": { "download": "Descarregar", "rename": "Renomear", "delete": "Eliminar" },
+  "delete": {
+    "title": "Eliminar documento?",
+    "description": "«{{name}}» será eliminado permanentemente."
+  },
+  "pagination": { "prev": "Anterior", "next": "Seguinte" },
+  "errors": {
+    "mime": "Tipo de ficheiro não permitido",
+    "size": "O ficheiro excede o máximo de 5 MB",
+    "download": "Não foi possível descarregar o ficheiro",
+    "generic": "Algo correu mal. Tenta novamente."
+  }
+}

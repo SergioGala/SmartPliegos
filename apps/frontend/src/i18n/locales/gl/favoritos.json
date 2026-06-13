@@ -1,0 +1,17 @@
+{
+  "title": "Gardadas",
+  "subtitle": "As licitacións que gardaches, coas túas notas.",
+  "empty": {
+    "title": "Aínda non gardaches nada",
+    "hint": "Preme o corazón en calquera licitación para gardala aquí.",
+    "cta": "Ir ao buscador"
+  },
+  "note": {
+    "label": "Nota",
+    "placeholder": "Engade unha nota privada sobre esta licitación…"
+  },
+  "button": {
+    "save": "Gardar en favoritos",
+    "remove": "Quitar de favoritos"
+  }
+}

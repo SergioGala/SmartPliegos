@@ -15,6 +15,7 @@ import { HttpModule } from '@nestjs/axios';
 import { LicitacionesModule } from './modules/licitaciones/licitaciones.module';
 import { InvitationsModule } from './modules/invitations/invitations.module';
 import { AlertsModule } from './modules/alerts/alerts.module';
+import { FavoritosModule } from './modules/favoritos/favoritos.module';
 import { SearchModule } from './modules/search/search.module';
 import { OrganosModule } from './modules/organos/organos.module';
 import { RedisModule } from './infrastructure/redis';
@@ -22,8 +23,9 @@ import { RequestIdMiddleware } from './common/middleware';
 import { AiInfrastructureModule } from './infrastructure/ai';
 import { AiModule } from './modules/ai/ai.module';
 import { SemanticModule } from './modules/semantic/semantic.module';
-
-
+import { StorageModule } from './infrastructure/storage';
+import { DocumentsModule } from './modules/documents/documents.module';
+import { RecordatoriosModule } from './modules/recordatorios/recordatorios.module';
 
 @Module({
   imports: [
@@ -42,13 +44,16 @@ import { SemanticModule } from './modules/semantic/semantic.module';
     LicitacionesModule,
     InvitationsModule,
     AlertsModule,
+    FavoritosModule,
     SearchModule,
     OrganosModule,
     RedisModule,
     AiInfrastructureModule,
     AiModule,
-    LicitacionesModule,
     SemanticModule,
+    StorageModule,
+    DocumentsModule,
+    RecordatoriosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

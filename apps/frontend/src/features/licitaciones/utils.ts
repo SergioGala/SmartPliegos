@@ -263,10 +263,10 @@ export const ESTADO_CONFIG: Record<string, EstadoConfig> = {
   }),
   ADJUDICADA: make({
     label: 'Adjudicada',
-    bar: 'bg-primary',
-    dot: 'bg-primary',
-    text: 'text-primary',
-    badge: 'bg-primary/10 text-primary border-primary/20',
+    bar: 'bg-violet-500',
+    dot: 'bg-violet-500',
+    text: 'text-violet-600 dark:text-violet-400',
+    badge: 'bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/20',
     priority: 1,
   }),
   RESUELTA: make({

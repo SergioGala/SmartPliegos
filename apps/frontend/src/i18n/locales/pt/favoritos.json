@@ -1,0 +1,17 @@
+{
+  "title": "Guardadas",
+  "subtitle": "Os concursos que guardaste, com as tuas notas.",
+  "empty": {
+    "title": "Ainda não guardaste nada",
+    "hint": "Carrega no coração em qualquer concurso para o guardar aqui.",
+    "cta": "Ir para a pesquisa"
+  },
+  "note": {
+    "label": "Nota",
+    "placeholder": "Adiciona uma nota privada sobre este concurso…"
+  },
+  "button": {
+    "save": "Guardar nos favoritos",
+    "remove": "Remover dos favoritos"
+  }
+}

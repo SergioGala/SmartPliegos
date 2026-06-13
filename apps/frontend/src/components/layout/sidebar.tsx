@@ -1,18 +1,5 @@
+// 📍 DESTINO: apps/frontend/src/components/layout/sidebar.tsx  (REEMPLAZAR ENTERO)
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import {
-  LayoutDashboard,
-  Search,
-  Bell,
-  Bookmark,
-  BarChart3,
-  Calendar,
-  Settings,
-  LogOut,
-  User as UserIcon,
-  Settings as SettingsIcon,
-} from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
@@ -26,101 +13,97 @@ import { alertsApi } from '@/features/alerts/api/alerts.api';
 import { cn } from '@/lib/utils';
 
 // ═══════════════════════════════════════════════════════════
-//   Types
+//   Isotipo — 3 barras ascendentes (la 3ª en lima)
 // ═══════════════════════════════════════════════════════════
 
-interface NavItemDef {
+function Isotipo() {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+      className="shrink-0"
+    >
+      <rect x="2" y="13" width="5" height="9" rx="1.5" className="fill-sidebar-foreground/40" />
+      <rect x="9.5" y="8" width="5" height="14" rx="1.5" className="fill-sidebar-foreground/65" />
+      <rect x="17" y="3" width="5" height="19" rx="1.5" className="fill-primary" />
+    </svg>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════
+//   RailItem — índice mono + label Bricolage, sin iconos
+// ═══════════════════════════════════════════════════════════
+
+interface RailItemDef {
   path: string;
   label: string;
-  icon: LucideIcon;
   badge?: number;
 }
 
-// ═══════════════════════════════════════════════════════════
-//   NavItem
-// ═══════════════════════════════════════════════════════════
+function RailItem({ index, path, label, badge }: RailItemDef & { index: number }) {
+  const ix = String(index).padStart(2, '0');
 
-function NavItem({ path, label, icon: Icon, badge }: NavItemDef) {
   return (
-    <NavLink
-      to={path}
-      className={({ isActive }) =>
-        cn(
-          'group relative flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all',
-          isActive
-            ? 'bg-sidebar-accent text-sidebar-accent-foreground font-medium'
-            : 'text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/40'
-        )
-      }
-    >
-      {({ isActive }) => (
-        <>
-          {isActive && (
+    <li>
+      <NavLink
+        to={path}
+        end={path === '/app'}
+        className={({ isActive }) =>
+          cn(
+            'group/item relative flex items-center gap-3 py-2',
+            isActive
+              ? 'text-primary'
+              : 'text-sidebar-foreground/65 hover:text-sidebar-foreground',
+          )
+        }
+      >
+        {({ isActive }) => (
+          <>
+            {/* Tick lima que sobresale a la izquierda */}
+            {isActive && (
+              <span
+                className="absolute -left-6 top-1/2 h-[2px] w-[14px] -translate-y-1/2 bg-primary"
+                style={{ boxShadow: '0 0 8px var(--sp-lime, currentColor)' }}
+              />
+            )}
             <span
-              className="absolute left-0 top-[22%] h-[56%] w-[2px] rounded-r-full bg-sidebar-primary shadow-glow"
-            />
-          )}
-          <Icon size={16} strokeWidth={1.75} className="shrink-0" />
-          <span className="flex-1 truncate">{label}</span>
-          {badge !== undefined && (
-            <span className="min-w-5 h-5 px-1.5 rounded-full bg-sidebar-primary text-sidebar-primary-foreground text-[10px] font-bold flex items-center justify-center">
-              {badge}
+              className={cn(
+                'font-mono text-[0.62rem] tabular-nums',
+                isActive ? 'text-primary' : 'text-sidebar-foreground/40',
+              )}
+            >
+              {ix}
             </span>
-          )}
-        </>
-      )}
-    </NavLink>
+            <span className="font-display text-[1.18rem] font-semibold tracking-[-0.02em] transition-transform duration-200 group-hover/item:translate-x-1">
+              {label}
+            </span>
+            {badge !== undefined && (
+              <span className="ml-auto font-mono text-[0.72rem] tabular-nums text-primary">
+                {badge}
+              </span>
+            )}
+          </>
+        )}
+      </NavLink>
+    </li>
   );
 }
 
 // ═══════════════════════════════════════════════════════════
-//   NavSection
+//   RailUser — avatar + nombre + cerrar sesión + idioma/tema
 // ═══════════════════════════════════════════════════════════
 
-function NavSection({ title, items }: { title: string; items: NavItemDef[] }) {
-  return (
-    <div>
-      <h3 className="px-3 pb-2 text-[10px] font-semibold tracking-[0.15em] text-sidebar-foreground/40 uppercase">
-        {title}
-      </h3>
-      <div className="space-y-0.5">
-        {items.map((item) => (
-          <NavItem key={item.path} {...item} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ═══════════════════════════════════════════════════════════
-//   SidebarUserMenu
-// ═══════════════════════════════════════════════════════════
-
-function SidebarUserMenu() {
+function RailUser() {
   const { t } = useTranslation('common');
   const navigate = useNavigate();
   const user = useUser();
 
-  if (!user) {
-    // Estado de carga — no debería ocurrir dentro de ProtectedRoute
-    return (
-      <div className="border-t border-sidebar-border p-3">
-        <div className="flex items-center gap-2.5 px-2 py-1.5 opacity-50">
-          <div className="w-8 h-8 rounded-lg bg-sidebar-primary/15 border border-sidebar-primary/25" />
-          <div className="flex-1 min-w-0">
-            <div className="h-3 w-20 bg-sidebar-accent/30 rounded" />
-          </div>
-        </div>
-        <div className="mt-2 flex justify-end gap-1">
-          <LanguageSwitcher variant="icon" />
-          <ThemeToggle />
-        </div>
-      </div>
-    );
-  }
-
-  const initials =
-    `${user.firstName[0] || ''}${user.lastName[0] || ''}`.toUpperCase() || 'U';
+  const initials = user
+    ? `${user.firstName[0] || ''}${user.lastName[0] || ''}`.toUpperCase() || 'U'
+    : 'U';
 
   const handleLogout = async () => {
     const refreshToken = useAuthStore.getState().refreshToken;
@@ -138,86 +121,50 @@ function SidebarUserMenu() {
   };
 
   return (
-    <div className="border-t border-sidebar-border p-3">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button
-            className={cn(
-              'flex items-center gap-2.5 w-full px-2 py-1.5 rounded-lg',
-              'hover:bg-sidebar-accent/30 transition-colors text-left'
-            )}
-          >
-            <div className="w-8 h-8 rounded-lg bg-sidebar-primary/15 border border-sidebar-primary/25 flex items-center justify-center shrink-0">
-              <span className="text-[11px] font-bold text-sidebar-accent-foreground">
-                {initials}
-              </span>
+    <div className="border-t border-sidebar-border px-6 py-4">
+      <div className="flex items-center gap-2.5">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[7px] border border-primary/30 bg-primary/10">
+          <span className="font-mono text-[0.62rem] font-bold text-primary">
+            {initials}
+          </span>
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="truncate text-[0.8rem] font-medium text-sidebar-foreground">
+            {user ? `${user.firstName} ${user.lastName}` : '—'}
+          </div>
+          {user && (
+            <div className="truncate font-mono text-[0.6rem] text-sidebar-foreground/40">
+              {user.email}
             </div>
-
-            <div className="flex-1 min-w-0">
-              <div className="text-xs font-semibold truncate">
-                {user.firstName} {user.lastName}
-              </div>
-
-              <div className="text-[10px] text-sidebar-foreground/40 truncate">
-                {user.email}
-              </div>
-            </div>
-          </button>
-        </DropdownMenuTrigger>
-
-        <DropdownMenuContent
-          sideOffset={8}
-          align="end"
-          className={cn(
-            'min-w-[200px] rounded-md border border-border bg-popover',
-            'text-popover-foreground shadow-md p-1 text-sm'
           )}
+        </div>
+      </div>
+
+      <div className="mt-3 flex items-center justify-between">
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="font-mono text-[0.62rem] uppercase tracking-[0.08em] text-sidebar-foreground/50 transition-colors hover:text-destructive"
         >
-          <DropdownMenuItem
-            onClick={() => navigate('/ajustes/perfil')}
-            className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-accent hover:text-accent-foreground"
-          >
-            <UserIcon size={14} />
-            {t('navigation.profile')}
-          </DropdownMenuItem>
-
-          <DropdownMenuItem
-            onClick={() => navigate('/ajustes')}
-            className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-accent hover:text-accent-foreground"
-          >
-            <SettingsIcon size={14} />
-            {t('navigation.settings')}
-          </DropdownMenuItem>
-
-          <DropdownMenuSeparator className="my-1 h-px bg-border" />
-
-          <DropdownMenuItem
-            onClick={handleLogout}
-            className="flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer hover:bg-accent hover:text-accent-foreground text-destructive"
-          >
-            <LogOut size={14} />
-            {t('navigation.logout')}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-
-      {/* Controles de idioma y tema */}
-      <div className="mt-2 flex justify-end gap-1">
-        <LanguageSwitcher variant="icon" />
-        <ThemeToggle />
+          ↩ {t('navigation.logout')}
+        </button>
+        <div className="flex items-center gap-1">
+          <LanguageSwitcher variant="icon" />
+          <ThemeToggle />
+        </div>
       </div>
     </div>
   );
 }
 
 // ═══════════════════════════════════════════════════════════
-//   Sidebar (componente principal)
+//   Sidebar (Rail)
 // ═══════════════════════════════════════════════════════════
 
 export function Sidebar() {
   const { t } = useTranslation('common');
 
-  // Contador dinámico de alertas activas (del Sprint A3)
+  // Contador dinámico de alertas activas
   const { data: alerts = [] } = useQuery({
     queryKey: ['alerts'],
     queryFn: () => alertsApi.list(),
@@ -225,62 +172,46 @@ export function Sidebar() {
   });
   const activeAlertsCount = alerts.filter((a) => a.isActive).length;
 
-  const NAV_PRINCIPAL: NavItemDef[] = [
-    { path: '/app', label: t('navigation.dashboard'), icon: LayoutDashboard },
-    { path: '/buscar', label: t('navigation.search'), icon: Search },
+  // Navegación del diseño: 6 entradas tipográficas (01–06).
+  // Nota: Analytics y Calendario (ComingSoon) NO entran en el rail del
+  // rediseño; sus rutas siguen existiendo. Si los quieres en el rail, dímelo.
+  const NAV: RailItemDef[] = [
+    { path: '/app', label: t('navigation.dashboard') },
+    { path: '/buscar', label: t('navigation.search') },
     {
       path: '/alertas',
       label: t('navigation.alerts'),
-      icon: Bell,
       badge: activeAlertsCount > 0 ? activeAlertsCount : undefined,
     },
-    { path: '/guardadas', label: t('navigation.saved'), icon: Bookmark },
-  ];
-
-  const NAV_HERRAMIENTAS: NavItemDef[] = [
-    { path: '/analytics', label: t('navigation.analytics'), icon: BarChart3 },
-    { path: '/calendario', label: t('navigation.calendar'), icon: Calendar },
-    { path: '/ajustes', label: t('navigation.settings'), icon: Settings },
+    { path: '/guardadas', label: t('navigation.saved') },
+    { path: '/documentos', label: t('navigation.documents') },
+    { path: '/ajustes', label: t('navigation.settings') },
   ];
 
   return (
-    <aside className="flex flex-col w-60 h-screen bg-sidebar text-sidebar-foreground border-r border-sidebar-border shrink-0">
-      {/* ═══ LOGO (link al home orbital) ═══ */}
-      <Link
-        to="/app"
-        className="group flex items-center gap-2.5 px-5 py-5 border-b border-sidebar-border hover:bg-sidebar-accent/30 transition-colors"
-      >
-        <div
-           className="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center transition-shadow shadow-glow"
-        >
-          <span className="font-black text-base text-sidebar-primary-foreground leading-none">
-            L
-          </span>
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="text-sm font-bold tracking-tight truncate">
-            {t('app.name')}
-          </div>
-          <div className="text-[9px] font-bold tracking-[0.18em] text-sidebar-accent-foreground/70">
-            PRO · BETA
-          </div>
-        </div>
+    <aside className="flex h-screen w-full flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:w-[236px]">
+      {/* ═══ LOGO ═══ */}
+      <Link to="/app" className="flex items-center gap-2.5 px-6 py-6">
+        <Isotipo />
+        <span className="font-display text-[1.05rem] font-bold tracking-tight text-sidebar-foreground">
+          Smart<span className="text-primary">Pliegos</span>
+        </span>
       </Link>
 
       {/* ═══ NAV ═══ */}
-      <nav className="flex-1 px-3 py-4 space-y-6 overflow-y-auto">
-        <NavSection
-          title={t('navigation.sections.main')}
-          items={NAV_PRINCIPAL}
-        />
-        <NavSection
-          title={t('navigation.sections.tools')}
-          items={NAV_HERRAMIENTAS}
-        />
+      <nav className="flex-1 overflow-y-auto px-6 py-4">
+        <div className="mb-5 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-sidebar-foreground/40">
+          Terminal
+        </div>
+        <ul className="space-y-1">
+          {NAV.map((item, i) => (
+            <RailItem key={item.path} index={i + 1} {...item} />
+          ))}
+        </ul>
       </nav>
 
-      {/* ═══ FOOTER (user + language + theme) ═══ */}
-      <SidebarUserMenu />
+      {/* ═══ FOOTER ═══ */}
+      <RailUser />
     </aside>
   );
 }

@@ -1,0 +1,17 @@
+{
+  "title": "Guardadas",
+  "subtitle": "Las licitaciones que has guardado, con tus notas.",
+  "empty": {
+    "title": "Aún no has guardado nada",
+    "hint": "Pulsa el corazón en cualquier licitación para guardarla aquí.",
+    "cta": "Ir al buscador"
+  },
+  "note": {
+    "label": "Nota",
+    "placeholder": "Añade una nota privada sobre esta licitación…"
+  },
+  "button": {
+    "save": "Guardar en favoritos",
+    "remove": "Quitar de favoritos"
+  }
+}

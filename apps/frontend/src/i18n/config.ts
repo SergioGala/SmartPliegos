@@ -57,18 +57,46 @@ import enHome from './locales/en/home.json';
 import ptSearch from './locales/pt/search.json';
 import ptHome from './locales/pt/home.json';
 
+// ─── Documents (Vault) ───
+import esDocuments from './locales/es/documents.json';
+import caDocuments from './locales/ca/documents.json';
+import glDocuments from './locales/gl/documents.json';
+import euDocuments from './locales/eu/documents.json';
+import enDocuments from './locales/en/documents.json';
+import ptDocuments from './locales/pt/documents.json';
+
+// ─── Favoritos ───
+import esFavoritos from './locales/es/favoritos.json';
+import caFavoritos from './locales/ca/favoritos.json';
+import glFavoritos from './locales/gl/favoritos.json';
+import euFavoritos from './locales/eu/favoritos.json';
+import enFavoritos from './locales/en/favoritos.json';
+import ptFavoritos from './locales/pt/favoritos.json';
+
+// ─── Calendario ───
+import esCalendario from './locales/es/calendario.json';
+import caCalendario from './locales/ca/calendario.json';
+import glCalendario from './locales/gl/calendario.json';
+import euCalendario from './locales/eu/calendario.json';
+import enCalendario from './locales/en/calendario.json';
+import ptCalendario from './locales/pt/calendario.json';
+
+
 /**
  * Idiomas soportados.
  * Los marcados con `needsReview: true` necesitan ser revisados por nativo
  * antes de marketing real en ese mercado.
  */
+/**
+ * Idiomas soportados por la app.
+ */
 export const SUPPORTED_LANGUAGES = [
-  { code: 'es', name: 'Español', flag: '🇪🇸', needsReview: false },
-  { code: 'ca', name: 'Català', flag: '🏴󠁥󠁳󠁣󠁴󠁿', needsReview: true },
-  { code: 'gl', name: 'Galego', flag: '🏴󠁥󠁳󠁧󠁡󠁿', needsReview: true },
-  { code: 'eu', name: 'Euskera', flag: '🏴󠁥󠁳󠁰󠁶󠁿', needsReview: true },
-  { code: 'en', name: 'English', flag: '🇬🇧', needsReview: false },
-  { code: 'pt', name: 'Português', flag: '🇵🇹', needsReview: true },
+  { code: 'es', name: 'Español', flag: '🇪🇸' },
+  { code: 'ca', name: 'Català', flag: '🇪🇸' },
+  { code: 'gl', name: 'Galego', flag: '🇪🇸' },
+  { code: 'eu', name: 'Euskera', flag: '🇪🇸' },
+  { code: 'en', name: 'English', flag: '🇬🇧' },
+  { code: 'pt', name: 'Português', flag: '🇵🇹' },
 ] as const;
 
 export type SupportedLanguage = typeof SUPPORTED_LANGUAGES[number]['code'];
@@ -84,8 +112,11 @@ i18n
         settings: esSettings,
         alerts: esAlerts,
         landing: esLanding,
-        search: esSearch,    
+        search: esSearch,
         home: esHome,
+        documents: esDocuments,
+        favoritos: esFavoritos,
+        calendario: esCalendario,
       },
       ca: {
         common: caCommon,
@@ -93,8 +124,11 @@ i18n
         settings: caSettings,
         alerts: caAlerts,
         landing: caLanding,
-        search: caSearch,    
+        search: caSearch,
         home: caHome,
+        documents: caDocuments,
+        favoritos: caFavoritos,
+        calendario: caCalendario,
       },
       gl: {
         common: glCommon,
@@ -102,8 +136,11 @@ i18n
         settings: glSettings,
         alerts: glAlerts,
         landing: glLanding,
-        search: glSearch,    
+        search: glSearch,
         home: glHome,
+        documents: glDocuments,
+        favoritos: glFavoritos,
+        calendario: glCalendario,
       },
       eu: {
         common: euCommon,
@@ -111,8 +148,11 @@ i18n
         settings: euSettings,
         alerts: euAlerts,
         landing: euLanding,
-        search: euSearch,    
+        search: euSearch,
         home: euHome,
+        documents: euDocuments,
+        favoritos: euFavoritos,
+        calendario: euCalendario,
       },
       en: {
         common: enCommon,
@@ -120,8 +160,11 @@ i18n
         settings: enSettings,
         alerts: enAlerts,
         landing: enLanding,
-        search: enSearch,    
+        search: enSearch,
         home: enHome,
+        documents: enDocuments,
+        favoritos: enFavoritos,
+        calendario: enCalendario,
       },
       pt: {
         common: ptCommon,
@@ -129,28 +172,28 @@ i18n
         settings: ptSettings,
         alerts: ptAlerts,
         landing: ptLanding,
-        search: ptSearch,    
+        search: ptSearch,
         home: ptHome,
+        documents: ptDocuments,
+        favoritos: ptFavoritos,
+        calendario: ptCalendario,
       },
     },
     // Detecta del navegador si es un idioma que soportamos, fallback a ES
     fallbackLng: 'es',
     supportedLngs: SUPPORTED_LANGUAGES.map((l) => l.code),
     defaultNS: 'common',
-    ns: ['common', 'auth', 'settings', 'alerts', 'landing', 'search', 'home'],
+    ns: ['common', 'auth', 'settings', 'alerts', 'landing', 'search', 'home', 'documents', 'favoritos', 'calendario'],
     interpolation: {
       escapeValue: false, // React ya escapa
     },
     detection: {
-      // Orden de detección
       order: ['localStorage', 'navigator', 'htmlTag'],
-      // Qué claves usar en localStorage
       lookupLocalStorage: 'licitapp-language',
-      // Dónde guardar la elección del user
       caches: ['localStorage'],
     },
     react: {
-      useSuspense: false, // Evitamos suspense para simplificar
+      useSuspense: false,
     },
   });
 

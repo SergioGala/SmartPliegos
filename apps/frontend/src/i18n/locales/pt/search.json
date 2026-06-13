@@ -2,7 +2,8 @@
   "page": {
     "title": "Pesquisa",
     "indexedCount": "concursos públicos indexados",
-    "scrapingActive": "Scraping ativo"
+    "scrapingActive": "Scraping ativo",
+    "searchHeading": "pesquisar entre {{count}} concursos…"
   },
   "input": {
     "placeholder": "Pesquisar por palavra-chave, CPV, órgão de contratação...",
@@ -15,7 +16,9 @@
   },
   "results": {
     "empty": "Sem resultados",
-    "emptyHint": "Tenta com outros termos ou ajusta os filtros"
+    "emptyHint": "Tenta com outros termos ou ajusta os filtros",
+    "count": "resultados",
+    "errorTitle": "Não foi possível carregar os concursos"
   },
   "pagination": {
     "previous": "Anterior",
@@ -130,7 +133,19 @@
     "documentsTitle": "Documentos",
     "aiSummaryTitle": "Resumo IA",
     "aiSummaryBadge": "Sprint 5",
-    "aiSummaryBody": "A análise automática de cadernos estará disponível em breve."
+    "aiSummaryBody": "A análise automática de cadernos estará disponível em breve.",
+    "backToTerminal": "Voltar à terminal",
+    "remaining": "restantes",
+    "publishedShort": "Publicada",
+    "hasLots": "Divisão em lotes",
+    "yes": "Sim",
+    "no": "Não",
+    "documentFallback": "Documento",
+    "ivaExcluded": "IVA excluído",
+    "deadlineWord": "Prazo",
+    "presentationIn": "Apresentação em",
+    "day": "dia",
+    "days": "dias"
   },
   "sections": {
     "guardadas": "Guardadas",
@@ -139,5 +154,14 @@
     "terms": "Termos",
     "privacy": "Privacidade",
     "cookies": "Cookies"
+  },
+  "source": {
+    "official": "Fonte oficial"
+  },
+  "sort": {
+    "label": "Ordenar",
+    "fecha": "Data",
+    "importe": "Montante",
+    "deadline": "Prazo"
   }
 }

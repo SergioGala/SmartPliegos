@@ -1,0 +1,21 @@
+{
+  "title": "Calendario",
+  "subtitle": "Os prazos das túas licitacións gardadas. Preme nunha para crear un recordatorio.",
+  "loading": "Cargando…",
+  "empty": {
+    "title": "Non hai prazos no calendario",
+    "hint": "Garda licitacións con data de presentación para velas aquí."
+  },
+  "dialog": {
+    "deadline": "Data límite",
+    "remindLabel": "Avísame antes do prazo",
+    "daysBefore_one": "{{count}} día antes",
+    "daysBefore_other": "{{count}} días antes",
+    "create": "Crear recordatorio",
+    "update": "Actualizar",
+    "remove": "Quitar recordatorio",
+    "saved": "Recordatorio gardado",
+    "removed": "Recordatorio eliminado"
+  },
+  "errors": { "generic": "Algo foi mal. Téntao de novo." }
+}

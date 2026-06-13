@@ -1,0 +1,17 @@
+{
+  "title": "Gordeak",
+  "subtitle": "Gorde dituzun lizitazioak, zure oharrekin.",
+  "empty": {
+    "title": "Oraindik ez duzu ezer gorde",
+    "hint": "Sakatu bihotza edozein lizitaziotan hemen gordetzeko.",
+    "cta": "Joan bilatzailera"
+  },
+  "note": {
+    "label": "Oharra",
+    "placeholder": "Gehitu ohar pribatu bat lizitazio honi buruz…"
+  },
+  "button": {
+    "save": "Gorde gogokoetan",
+    "remove": "Kendu gogokoetatik"
+  }
+}

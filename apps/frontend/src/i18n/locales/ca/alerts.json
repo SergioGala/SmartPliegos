@@ -59,7 +59,8 @@
       "inactive": "Pausades"
     },
     "count_one": "{{count}} alerta",
-    "count_other": "{{count}} alertes"
+    "count_other": "{{count}} alertes",
+    "errorTitle": "No s'han pogut carregar les teves alertes"
   },
   "card": {
     "matchesLabel_one": "{{count}} match",

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { Flag } from '@/components/language-switcher';
-import { Check, AlertCircle } from 'lucide-react';
+import { Check} from 'lucide-react';
 import { useLanguage } from '@/i18n/use-language';
 import { useTheme } from '@/providers/use-theme';
 import { cn } from '@/lib/utils';
@@ -54,13 +54,6 @@ export function AjustesPreferenciasTab() {
             >
               <Flag code={lang.code} />
               <span className="flex-1 truncate">{lang.name}</span>
-              {lang.needsReview && (
-                <AlertCircle
-                  size={12}
-                  className="text-amber-500 shrink-0"
-                  aria-label={t('common:language.needsReview')}
-                />
-              )}
               {currentLang === lang.code && (
                 <Check size={14} className="text-primary shrink-0" />
               )}

@@ -80,6 +80,7 @@
     "saved": "Desades",
     "analytics": "Analítica",
     "calendar": "Calendari",
+    "documents": "Documents",
     "settings": "Configuració",
     "profile": "Perfil",
     "logout": "Tancar sessió",
@@ -119,5 +120,11 @@
   "error": {
     "unexpectedTitle": "Alguna cosa inesperada ha passat",
     "unexpectedBody": "Prova a refrescar la pàgina o tornar a l'inici."
+  },
+  "authPanel": {
+    "eyebrow": "accés",
+    "headline": "Troba el teu pròxim contracte entre 288.000 licitacions públiques.",
+    "lead": "Cerca intel·ligent, alertes en temps real i resums amb IA. Dades oficials de PLACE.",
+    "footer": "Gratis · sense targeta"
   }
 }

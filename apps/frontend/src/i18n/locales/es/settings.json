@@ -85,7 +85,7 @@
     },
     "alertsListTitle": "Tus alertas",
     "alertsListSubtitle": "Preferencias específicas por alerta",
-    "alertsListEmpty": "Aún no tienes alertas. <createLink>Crea la primera</createLink>.",
+    "alertsListEmpty": "Aún no tienes alertas.",
     "manageAlert": "Gestionar",
     "success": "Preferencias actualizadas",
     "errors": {

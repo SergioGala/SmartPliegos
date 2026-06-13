@@ -1,0 +1,25 @@
+{
+  "title": "Nire dokumentuak",
+  "subtitle": "Lizitazioetarako berrerabil daitezkeen dokumentuen kutxa gotorra.",
+  "searchPlaceholder": "Bilatu izenaren arabera…",
+  "loading": "Kargatzen…",
+  "empty": "Oraindik ez duzu dokumenturik igo.",
+  "usage": { "label": "{{count}} dokumentu" },
+  "upload": {
+    "cta": "Arrastatu fitxategi bat edo egin klik igotzeko",
+    "hint": "PDF, Word, Excel, irudiak edo testua · geh. 5 MB",
+    "success": "«{{name}}» ondo igo da"
+  },
+  "actions": { "download": "Deskargatu", "rename": "Berrizendatu", "delete": "Ezabatu" },
+  "delete": {
+    "title": "Dokumentua ezabatu?",
+    "description": "«{{name}}» betiko ezabatuko da."
+  },
+  "pagination": { "prev": "Aurrekoa", "next": "Hurrengoa" },
+  "errors": {
+    "mime": "Fitxategi mota ez da onartzen",
+    "size": "Fitxategiak 5 MBko muga gainditzen du",
+    "download": "Ezin izan da fitxategia deskargatu",
+    "generic": "Zerbait gaizki joan da. Saiatu berriro."
+  }
+}

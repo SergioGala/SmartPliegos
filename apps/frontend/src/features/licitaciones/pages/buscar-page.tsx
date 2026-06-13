@@ -1,21 +1,26 @@
+// 📍 DESTINO: apps/frontend/src/features/licitaciones/pages/buscar-page.tsx  (REEMPLAZAR ENTERO)
+//
+// Buscar «Terminal» v2. Mismo motor de antes (URL ↔ params, useLicitaciones,
+// useFilterOptions, paginación) — solo cambia el aspecto + se añade el control
+// de Orden. El componente <LicitacionFilters> se mantiene intacto (ya hereda
+// los tokens charcoal+lima de la Fase 0); su restyle a chips es un paso aparte.
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Search, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, Zap  } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { EstadoError } from '@/components/ui/estado-error';
 
-
 import { useLicitaciones, useFilterOptions } from '../hooks/use-licitaciones';
+import { useFavoritoIds } from '../../favoritos/hooks/use-favoritos';
 import { LicitacionCard } from '../components/licitacion-card';
 import { LicitacionCardSkeletonList } from '../components/licitacion-card-skeleton';
 import { LicitacionFilters } from '../components/licitacion-filters';
-
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { SearchParams, LicitacionCard as LicitacionCardType } from '../types';
 
 // ═══════════════════════════════════════════════
-// Helpers URL ↔ SearchParams
+// Helpers URL ↔ SearchParams  (sin cambios)
 // ═══════════════════════════════════════════════
 
 function parseUrlToParams(searchParams: URLSearchParams): SearchParams {
@@ -35,7 +40,7 @@ function parseUrlToParams(searchParams: URLSearchParams): SearchParams {
     tramitacion: getArr('tramitacion'),
     ccaa: getArr('ccaa'),
     provincia: getArr('provincia'),
-    organoId: getStr('organoId'), // ← ESTO FALTABA
+    organoId: getStr('organoId'),
     page: Number(searchParams.get('page') || 1),
     pageSize: 20,
     sortBy: (getStr('sortBy') as SearchParams['sortBy']) || 'fecha',
@@ -76,6 +81,7 @@ export function BuscarPage() {
 
   const { data, isLoading, isError, refetch } = useLicitaciones(params);
   const { data: filterOptions } = useFilterOptions();
+  const { data: favoritoIds = [] } = useFavoritoIds();
 
   const commit = (next: SearchParams, resetPage = true) => {
     const final = { ...next, page: resetPage ? 1 : next.page };
@@ -91,46 +97,49 @@ export function BuscarPage() {
     commit({ ...params, page: newPage }, false);
   };
 
+  const totalLabel = data?.total != null ? data.total.toLocaleString('es-ES') : '…';
+
+  const SORT_OPTIONS: { value: NonNullable<SearchParams['sortBy']>; label: string }[] = [
+    { value: 'fecha', label: t('sort.fecha', { defaultValue: 'Fecha' }) },
+    { value: 'importe', label: t('sort.importe', { defaultValue: 'Importe' }) },
+    { value: 'deadline', label: t('sort.deadline', { defaultValue: 'Plazo' }) },
+  ];
+
   return (
-    <div className="space-y-6">
-      {/* HEADER */}
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-extrabold tracking-tight">{t('page.title')}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            <span className="font-mono font-bold text-gradient-primary">
-              {data?.total?.toLocaleString('es-ES') || '—'}
-            </span>{' '}
-            {t('page.indexedCount')}
-          </p>
-        </div>
-        <div className="inline-flex items-center gap-2 rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5">
-          <span
-            className="h-2 w-2 animate-pulse rounded-full bg-emerald-500 dark:bg-emerald-400"
-          />
-          <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
-            {t('page.scrapingActive')}
-          </span>
-        </div>
+    <div className="mx-auto max-w-[1180px] px-6 pb-24 pt-10 md:px-12">
+      {/* ═══ Barra de estado ═══ */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[0.66rem] uppercase tracking-[0.1em] text-muted-foreground/70">
+        <span className="flex items-center gap-1.5 text-primary">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
+          {t('page.scrapingActive')}
+        </span>
+        <span className="text-muted-foreground/40">·</span>
+        <span>{t('source.official', { defaultValue: 'Fuente oficial' })}</span>
+        <span className="text-muted-foreground/40">·</span>
+        <span>
+          {totalLabel} {t('page.indexedCount')}
+        </span>
       </div>
 
-      {/* SEARCH BAR */}
-      <form onSubmit={handleSearch}>
+      {/* ═══ Titular ═══ */}
+      <div className="mt-7 font-mono text-[0.7rem] uppercase tracking-[0.16em] text-primary">
+        / 02
+      </div>
+      <h1 className="mt-2 font-display text-[clamp(2rem,4.5vw,3.2rem)] font-bold leading-[1.04] tracking-[-0.025em] text-foreground">
+        /{' '}
+        {t('page.searchHeading', {
+          defaultValue: 'buscar entre {{count}} licitaciones…',
+          count: totalLabel,
+        })}
+      </h1>
+
+      {/* ═══ Búsqueda ═══ */}
+      <form onSubmit={handleSearch} className="mt-6">
         <div
           className={cn(
-            'relative flex items-center gap-3 rounded-2xl border pl-5 pr-2 transition-all duration-200',
-            focused
-              ? 'border-primary/40 bg-primary/[0.02]'
-              : 'border-border bg-card',
+            'flex items-center gap-3 rounded-2xl border px-5 transition-all duration-200',
+            focused ? 'border-primary/50 bg-primary/[0.03]' : 'border-border bg-card',
           )}
-          style={
-            focused
-              ? {
-                  boxShadow:
-                    '0 0 0 4px oklch(from var(--primary) l c h / 0.06), 0 8px 32px oklch(from var(--primary) l c h / 0.08)',
-                }
-              : undefined
-          }
         >
           <Search
             size={18}
@@ -145,7 +154,7 @@ export function BuscarPage() {
             onFocus={() => setFocused(true)}
             onBlur={() => setFocused(false)}
             placeholder={t('input.placeholder')}
-            className="flex-1 bg-transparent py-4 text-sm text-foreground outline-none placeholder:text-muted-foreground/40"
+            className="flex-1 bg-transparent py-4 text-[0.95rem] text-foreground outline-none placeholder:text-muted-foreground/40"
           />
           <kbd className="hidden items-center rounded border border-border bg-muted px-2 py-1 font-mono text-[10px] text-muted-foreground sm:inline-flex">
             ⌘K
@@ -164,39 +173,72 @@ export function BuscarPage() {
             <Zap size={13} className={smartSearch ? 'fill-current' : ''} />
             {t('smartToggle.label')}
           </button>
-          <Button type="submit" size="sm" className="h-8">
-            <Zap size={14} />
-           {t('input.submitButton')}
+          <Button type="submit" size="sm" className="h-9 rounded-xl">
+            {t('input.submitButton')}
           </Button>
         </div>
       </form>
 
-      {/* FILTERS */}
-      <LicitacionFilters
-        filters={params}
-        options={filterOptions}
-        onChange={(next) => commit(next)}
-      />
+      {/* ═══ Filtros (componente existente, ya tematizado) ═══ */}
+      <div className="mt-5">
+        <LicitacionFilters
+          filters={params}
+          options={filterOptions}
+          onChange={(next) => commit(next)}
+        />
+      </div>
 
-      {/* RESULTS */}
-      <div>
+      {/* ═══ Meta de resultados + Orden ═══ */}
+      <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-5">
+        <span className="font-mono text-[0.7rem] uppercase tracking-[0.12em] text-muted-foreground/70">
+          <span className="font-semibold text-foreground tabular-nums">{totalLabel}</span>{' '}
+          {t('results.count', { defaultValue: 'resultados' })}
+        </span>
+
+        <label className="flex items-center gap-2 font-mono text-[0.66rem] uppercase tracking-[0.1em] text-muted-foreground/60">
+          {t('sort.label', { defaultValue: 'Orden' })} ·
+          <select
+            value={params.sortBy ?? 'fecha'}
+            onChange={(e) =>
+              commit({ ...params, sortBy: e.target.value as SearchParams['sortBy'] })
+            }
+            className="cursor-pointer rounded-md border border-border bg-card px-2 py-1 font-mono text-[0.7rem] text-foreground outline-none focus:border-primary/50"
+          >
+            {SORT_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      {/* ═══ Resultados ═══ */}
+      <div className="mt-2">
         {isError ? (
           <EstadoError
-            titulo="No se pudieron cargar las licitaciones"
+            titulo={t('results.errorTitle', {
+              defaultValue: 'No se pudieron cargar las licitaciones',
+            })}
             onReintentar={() => refetch()}
           />
         ) : isLoading ? (
           <LicitacionCardSkeletonList count={6} />
         ) : data && data.data.length > 0 ? (
           <>
-            <div className="space-y-2.5">
+            <div>
               {data.data.map((lic: LicitacionCardType, i: number) => (
-                <LicitacionCard key={lic.id} licitacion={lic} index={i} />
+                <LicitacionCard
+                  key={lic.id}
+                  licitacion={lic}
+                  index={(((data.page ?? 1) - 1) * (data.pageSize ?? 20)) + i}
+                  isSaved={favoritoIds.includes(lic.id)}
+                />
               ))}
             </div>
 
             {data.totalPages > 1 && (
-              <div className="mt-8 flex items-center justify-center gap-2 border-t border-border pt-6">
+              <div className="mt-8 flex items-center justify-center gap-3 border-t border-border pt-6">
                 <Button
                   variant="outline"
                   size="sm"
@@ -206,12 +248,11 @@ export function BuscarPage() {
                   <ChevronLeft size={14} />
                   {t('pagination.previous')}
                 </Button>
-                <span className="px-3 text-sm text-muted-foreground">
+                <span className="px-3 font-mono text-[0.75rem] uppercase tracking-[0.08em] text-muted-foreground">
                   {t('pagination.pageLabel')}{' '}
-                  <span className="font-mono font-bold text-foreground">
-                    {data.page}
-                  </span>{' '}{t('pagination.of')}{' '}
-                  <span className="font-mono font-bold text-foreground">
+                  <span className="font-bold text-foreground tabular-nums">{data.page}</span>{' '}
+                  {t('pagination.of')}{' '}
+                  <span className="font-bold text-foreground tabular-nums">
                     {data.totalPages}
                   </span>
                 </span>
@@ -228,14 +269,14 @@ export function BuscarPage() {
             )}
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center py-20">
-            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-muted">
-              <Search size={22} className="text-muted-foreground/40" />
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-border">
+              <Search size={20} className="text-muted-foreground/40" />
             </div>
-            <h3 className="mb-1 text-base font-semibold">{t('results.empty')}</h3>
-            <p className="text-sm text-muted-foreground">
-              {t('results.emptyHint')}
-            </p>
+            <h3 className="mb-1 font-display text-base font-semibold text-foreground">
+              {t('results.empty')}
+            </h3>
+            <p className="text-sm text-muted-foreground">{t('results.emptyHint')}</p>
           </div>
         )}
       </div>

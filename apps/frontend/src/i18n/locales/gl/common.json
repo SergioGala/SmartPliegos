@@ -80,6 +80,7 @@
     "saved": "Gardadas",
     "analytics": "Analíticas",
     "calendar": "Calendario",
+    "documents": "Documentos",
     "settings": "Axustes",
     "profile": "Perfil",
     "logout": "Pechar sesión",
@@ -119,5 +120,11 @@
   "error": {
     "unexpectedTitle": "Ocorreu algo inesperado",
     "unexpectedBody": "Proba a refrescar a páxina ou volver ao inicio."
+  },
+  "authPanel": {
+    "eyebrow": "acceso",
+    "headline": "Atopa o teu próximo contrato entre 288.000 licitacións públicas.",
+    "lead": "Busca intelixente, alertas en tempo real e resumos con IA. Datos oficiais de PLACE.",
+    "footer": "Gratis · sen tarxeta"
   }
 }

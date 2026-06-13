@@ -80,6 +80,7 @@
     "saved": "Saved",
     "analytics": "Analytics",
     "calendar": "Calendar",
+    "documents": "Documents",
     "settings": "Settings",
     "profile": "Profile",
     "logout": "Sign out",
@@ -119,5 +120,11 @@
   "error": {
     "unexpectedTitle": "Something unexpected happened",
     "unexpectedBody": "Try refreshing the page or go back home."
+  },
+  "authPanel": {
+    "eyebrow": "access",
+    "headline": "Find your next contract among 288,000 public tenders.",
+    "lead": "Smart search, real-time alerts and AI summaries. Official PLACE data.",
+    "footer": "Free · no card"
   }
 }

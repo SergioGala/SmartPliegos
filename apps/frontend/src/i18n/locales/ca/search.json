@@ -2,7 +2,8 @@
   "page": {
     "title": "Cercador",
     "indexedCount": "licitacions públiques indexades",
-    "scrapingActive": "Scraping actiu"
+    "scrapingActive": "Scraping actiu",
+    "searchHeading": "cerca entre {{count}} licitacions…"
   },
   "input": {
     "placeholder": "Cerca per paraula clau, CPV, òrgan de contractació...",
@@ -14,7 +15,9 @@
   },
   "results": {
     "empty": "Sense resultats",
-    "emptyHint": "Prova amb altres termes o ajusta els filtres"
+    "emptyHint": "Prova amb altres termes o ajusta els filtres",
+    "count": "resultats",
+    "errorTitle": "No s'han pogut carregar les licitacions"
   },
   "pagination": {
     "previous": "Anterior",
@@ -129,7 +132,19 @@
     "documentsTitle": "Documents",
     "aiSummaryTitle": "Resum IA",
     "aiSummaryBadge": "Sprint 5",
-    "aiSummaryBody": "L'anàlisi automàtica de plecs estarà disponible properament."
+    "aiSummaryBody": "L'anàlisi automàtica de plecs estarà disponible properament.",
+    "backToTerminal": "Torna a la terminal",
+    "remaining": "restants",
+    "publishedShort": "Publicada",
+    "hasLots": "Divisió en lots",
+    "yes": "Sí",
+    "no": "No",
+    "documentFallback": "Document",
+    "ivaExcluded": "IVA exclòs",
+    "deadlineWord": "Termini",
+    "presentationIn": "Presentació en",
+    "day": "dia",
+    "days": "dies"
   },
   "sections": {
     "guardadas": "Desades",
@@ -138,5 +153,14 @@
     "terms": "Termes",
     "privacy": "Privacitat",
     "cookies": "Galetes"
+  },
+  "source": {
+    "official": "Font oficial"
+  },
+  "sort": {
+    "label": "Ordena",
+    "fecha": "Data",
+    "importe": "Import",
+    "deadline": "Termini"
   }
 }

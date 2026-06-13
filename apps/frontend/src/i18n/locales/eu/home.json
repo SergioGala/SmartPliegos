@@ -4,6 +4,34 @@
   "hintSuffix": "nabigatzeko",
   "moduleLabel": "MODULUA",
   "openModule": "Modulua ireki",
+  "status": {
+    "live": "Zuzenean",
+    "tenders": "lehiaketak"
+  },
+  "hero": {
+    "eyebrow": "panela",
+    "headline": "lehiaketa publikoak jarraipenean.",
+    "lead": "{{saved}} gordeta · {{alerts}} alerta aktibo BOE eta PLACE denbora errealean zaintzen.",
+    "cta": "Lehiaketak arakatu",
+    "cta2": "Nire alertak"
+  },
+  "featured": {
+    "label": "Nabarmendua",
+    "cta": "Fitxa ikusi"
+  },
+  "stats": {
+    "indexed": "Indexatuak",
+    "alerts": "Alerta aktiboak",
+    "saved": "Gordeak",
+    "closing": "Laster ixten"
+  },
+  "feed": {
+    "title": "azkenak",
+    "all": "dena ikusi",
+    "error": "Ezin izan da feeda kargatu.",
+    "retry": "Berriro saiatu",
+    "empty": "Oraindik ez dago lehiaketarik."
+  },
   "modules": {
     "buscador": {
       "title": "Bilatzailea",

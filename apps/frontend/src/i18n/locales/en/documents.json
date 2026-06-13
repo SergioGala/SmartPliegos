@@ -1,0 +1,25 @@
+{
+  "title": "My documents",
+  "subtitle": "Your vault of reusable documents for tenders.",
+  "searchPlaceholder": "Search by name…",
+  "loading": "Loading…",
+  "empty": "You haven't uploaded any document yet.",
+  "usage": { "label": "{{count}} documents" },
+  "upload": {
+    "cta": "Drag a file or click to upload",
+    "hint": "PDF, Word, Excel, images or text · max 5 MB",
+    "success": "«{{name}}» uploaded successfully"
+  },
+  "actions": { "download": "Download", "rename": "Rename", "delete": "Delete" },
+  "delete": {
+    "title": "Delete document?",
+    "description": "«{{name}}» will be permanently deleted."
+  },
+  "pagination": { "prev": "Previous", "next": "Next" },
+  "errors": {
+    "mime": "File type not allowed",
+    "size": "File exceeds the 5 MB limit",
+    "download": "Couldn't download the file",
+    "generic": "Something went wrong. Try again."
+  }
+}

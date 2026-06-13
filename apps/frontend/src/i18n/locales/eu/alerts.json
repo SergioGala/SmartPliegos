@@ -59,7 +59,8 @@
       "inactive": "Pausatuak"
     },
     "count_one": "{{count}} alerta",
-    "count_other": "{{count}} alerta"
+    "count_other": "{{count}} alerta",
+    "errorTitle": "Ezin izan dira zure alertak kargatu"
   },
   "card": {
     "matchesLabel_one": "{{count}} match",
