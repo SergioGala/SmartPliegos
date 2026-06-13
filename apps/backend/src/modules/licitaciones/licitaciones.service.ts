@@ -1,14 +1,8 @@
- 
- 
- 
- 
- 
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Licitacion } from '../scraping/shared/entities/licitacion.entity';
 import { OrganoContratacion } from '../scraping/shared/entities/organo-contratacion.entity';
-import { SearchQueryBuilderService } from './services/search-query-builder.service';
 import { LicitacionFormatterService } from './services/licitacion-formatter.service';
 import { ISearchResponse } from './interfaces/search-response.interface';
 import { SearchLicitacionesDto } from './dto/search-licitaciones.dto';
@@ -19,6 +13,10 @@ import {
   CAMEL_CASE_FIELDS,
 } from './licitaciones.constants';
 
+import { SemanticSearchService } from '../semantic/semantic-search.service';
+
+
+
 @Injectable()
 export class LicitacionesService {
   private readonly logger = new Logger(LicitacionesService.name);
@@ -28,76 +26,24 @@ export class LicitacionesService {
     private readonly licRepo: Repository<Licitacion>,
     @InjectRepository(OrganoContratacion)
     private readonly orgRepo: Repository<OrganoContratacion>,
-    private readonly queryBuilder: SearchQueryBuilderService,
     private readonly formatter: LicitacionFormatterService,
+    private readonly semanticSearch: SemanticSearchService,
   ) {}
 
+
   /**
-   * Buscar licitaciones con filtros avanzados y paginación
+   * Buscar licitaciones con filtros avanzados y paginación.
    *
-   * Realiza búsqueda full-text sobre títulos/descripciones y aplica múltiples filtros
-   * en paralelo mediante QueryBuilder. Soporta ordenación por fecha, importe o deadline.
-   *
-   * **Filtros aplicados (todos opcionales):**
-   * - Full-text: 'q' busca en título y descripción
-   * - Estados: ABIERTA, CERRADA, ADJUDICADA, RESUELTA, DESIERTA, ANULADA, ANUNCIO_PREVIO
-   * - Tipos: OBRAS, SERVICIOS, SUMINISTROS, OTROS, MIXTO, CONCESIÓN, etc.
-   * - Procedimiento: ABIERTO, RESTRINGIDO, NEGOCIADO, SIMPLIFICADO, etc.
-   * - Tramitación: ORDINARIA, URGENTE, EMERGENCIA
-   * - Ubicación: CCAA, provincia
-   * - Importe: rango min-max en céntimos
-   * - Fechas: rango de fechas de publicación
-   * - Plazo abierto: solo licitaciones con plazo de presentación vigente
-   * - Órgano: filtrar por órgano de contratación específico
-   * - CPV: código de clasificación de productos
-   *
-   * **Paginación:** page (default 1) y pageSize (default 20, máx 100)
+   * Delega a SemanticSearchService, que soporta modo 'text' (default),
+   * 'semantic' y 'hybrid'. Ver Sprint 2 · Búsqueda semántica.
    *
    * @param dto - Objeto SearchLicitacionesDto con todos los filtros
    * @returns {Promise<ISearchResponse>} Respuesta paginada
-   * @throws Lanzar Error si falla la consulta a BD
    */
   async search(dto: SearchLicitacionesDto): Promise<ISearchResponse<any>> {
-    const page = Math.max(1, dto.page ?? SEARCH_PAGINATION_CONFIG.DEFAULT_PAGE);
-    const requestedPageSize = dto.pageSize ?? SEARCH_PAGINATION_CONFIG.DEFAULT_PAGE_SIZE;
-    const pageSize = Math.min(
-      Math.max(1, requestedPageSize),
-      SEARCH_PAGINATION_CONFIG.MAX_PAGE_SIZE,
-    );
-    const skip = (page - 1) * pageSize;
-
-    const qb = this.queryBuilder
-      .addFullTextSearch(dto.q)
-      .addStateFilter(dto.estado)
-      .addTypeFilter(dto.tipoContrato)
-      .addProcedureFilter(dto.procedimiento)
-      .addUrgencyFilter(dto.tramitacion)
-      .addLocationFilters(dto.ccaa, dto.provincia)
-      .addCpvFilter(dto.cpv)
-      .addPriceRange(dto.importeMin, dto.importeMax)
-      .addPublicationDateRange(
-        dto.fechaDesde ? new Date(dto.fechaDesde) : undefined,
-        dto.fechaHasta ? new Date(dto.fechaHasta) : undefined,
-      )
-      .addOpenDeadlineFilter(dto.soloConPlazo)
-      .addOrganoFilter(dto.organoId)
-      .applyOrderBy(
-        dto.sortBy,
-        dto.sortOrder,
-      )
-      .build();
-
-    const [data, total] = await qb.skip(skip).take(pageSize).getManyAndCount();
-
-    return {
-      data: data.map((l) => this.formatter.formatList(l)),
-      total,
-      page,
-      pageSize,
-      totalPages: Math.ceil(total / pageSize),
-      hasMore: page * pageSize < total,
-    };
+    return this.semanticSearch.search(dto);
   }
+
 
   /**
    * Obtener detalle completo de una licitación por ID

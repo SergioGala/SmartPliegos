@@ -8,6 +8,10 @@
     "placeholder": "Buscar por palabra clave, CPV, órgano de contratación...",
     "submitButton": "Buscar"
   },
+  "smartToggle": {
+    "label": "Busca intelixente",
+    "tooltip": "Activa a busca por significado ademais de por palabras clave"
+  },
   "results": {
     "empty": "Sen resultados",
     "emptyHint": "Proba con outros termos ou axusta os filtros"

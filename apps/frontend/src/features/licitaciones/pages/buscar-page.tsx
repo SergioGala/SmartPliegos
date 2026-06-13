@@ -39,6 +39,7 @@ function parseUrlToParams(searchParams: URLSearchParams): SearchParams {
     page: Number(searchParams.get('page') || 1),
     pageSize: 20,
     sortBy: (getStr('sortBy') as SearchParams['sortBy']) || 'fecha',
+    mode: getStr('mode') === 'hybrid' ? 'hybrid' : undefined,
   };
 }
 
@@ -66,6 +67,12 @@ export function BuscarPage() {
 
   const [searchText, setSearchText] = useState(params.q || '');
   const [focused, setFocused] = useState(false);
+
+  const smartSearch = params.mode === 'hybrid';
+
+  const toggleSmartSearch = () => {
+    commit({ ...params, mode: smartSearch ? undefined : 'hybrid' }, false);
+  };
 
   const { data, isLoading, isError, refetch } = useLicitaciones(params);
   const { data: filterOptions } = useFilterOptions();
@@ -143,6 +150,20 @@ export function BuscarPage() {
           <kbd className="hidden items-center rounded border border-border bg-muted px-2 py-1 font-mono text-[10px] text-muted-foreground sm:inline-flex">
             ⌘K
           </kbd>
+          <button
+            type="button"
+            onClick={toggleSmartSearch}
+            className={cn(
+              'flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors',
+              smartSearch
+                ? 'bg-primary/10 text-primary'
+                : 'text-muted-foreground hover:text-foreground',
+            )}
+            title={t('smartToggle.tooltip')}
+          >
+            <Zap size={13} className={smartSearch ? 'fill-current' : ''} />
+            {t('smartToggle.label')}
+          </button>
           <Button type="submit" size="sm" className="h-8">
             <Zap size={14} />
            {t('input.submitButton')}

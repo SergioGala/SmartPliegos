@@ -21,6 +21,8 @@ import { RedisModule } from './infrastructure/redis';
 import { RequestIdMiddleware } from './common/middleware';
 import { AiInfrastructureModule } from './infrastructure/ai';
 import { AiModule } from './modules/ai/ai.module';
+import { SemanticModule } from './modules/semantic/semantic.module';
+
 
 
 @Module({
@@ -45,6 +47,8 @@ import { AiModule } from './modules/ai/ai.module';
     RedisModule,
     AiInfrastructureModule,
     AiModule,
+    LicitacionesModule,
+    SemanticModule,
   ],
   controllers: [AppController],
   providers: [AppService],

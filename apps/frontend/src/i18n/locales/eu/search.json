@@ -8,6 +8,11 @@
     "placeholder": "Hitz gakoaren, CPV-aren, kontratazio-organoaren arabera bilatu...",
     "submitButton": "Bilatu"
   },
+  
+  "smartToggle": {
+    "label": "Bilaketa adimentsua",
+    "tooltip": "Aktibatu esanahiaren araberako bilaketa, gako-hitzez gain"
+  },
   "results": {
     "empty": "Emaitzarik ez",
     "emptyHint": "Saiatu beste termino batzuekin edo doitu iragazkiak"
