@@ -10,6 +10,7 @@ import type {
     DashboardSummary,
     Distribucion,
     DistribucionBucket,
+    SeriePunto,
     VencimientoItem,
 } from './interfaces/dashboard.interfaces';
 
@@ -126,7 +127,54 @@ export class DashboardService {
         };
     }
 
-    async series(userId: string) {
-        return [];
+    async series(userId: string): Promise<SeriePunto[]> {
+        const alertas = await this.alertRepo.find({
+            where: {
+                userId,
+                isActive: true,
+            },
+        });
+
+        const misCcaa = Array.from(
+            new Set(
+                alertas
+                    .flatMap((alerta) => alerta.ccaas ?? [])
+                    .filter(Boolean),
+            ),
+        );
+
+        const query = this.licitacionRepo
+            .createQueryBuilder('l')
+            .where('l."fechaPublicacion" IS NOT NULL')
+            .andWhere(
+                'l."fechaPublicacion" >= date_trunc(\'week\', now()) - interval \'7 weeks\'',
+            )
+            .select(
+                `to_char(date_trunc('week', l."fechaPublicacion"), 'YYYY-MM-DD')`,
+                'semana',
+            )
+            .addSelect('COUNT(*)', 'total');
+
+        if (misCcaa.length > 0) {
+            query
+                .addSelect(
+                    'COUNT(*) FILTER (WHERE l."ccaa" IN (:...misCcaa))',
+                    'enMisCcaa',
+                )
+                .setParameter('misCcaa', misCcaa);
+        } else {
+            query.addSelect('0', 'enMisCcaa');
+        }
+
+        const rows = await query
+            .groupBy(`date_trunc('week', l."fechaPublicacion")`)
+            .orderBy(`date_trunc('week', l."fechaPublicacion")`, 'ASC')
+            .getRawMany();
+
+        return rows.map((row) => ({
+            semana: row.semana,
+            total: Number(row.total),
+            enMisCcaa: Number(row.enMisCcaa),
+        }));
     }
 }
