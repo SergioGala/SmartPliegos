@@ -6,7 +6,10 @@ import { FavoritoEntity } from '../favoritos/entities';
 import { AlertEntity } from '../alerts/entities';
 import { Licitacion } from '../scraping/shared/entities/licitacion.entity';
 
-import type { DashboardSummary } from './interfaces/dashboard.interfaces';
+import type {
+    DashboardSummary,
+    VencimientoItem,
+} from './interfaces/dashboard.interfaces';
 
 @Injectable()
 export class DashboardService {
@@ -46,7 +49,7 @@ export class DashboardService {
         };
     }
 
-    async vencimientos(userId: string, days: number) {
+    async vencimientos(userId: string, days: number): Promise<VencimientoItem[]> {
         const rows = await this.favRepo
             .createQueryBuilder('f')
             .innerJoin('licitaciones', 'l', 'l.id = f."licitacionId"')
@@ -69,7 +72,17 @@ export class DashboardService {
             .getRawMany();
 
         return rows.map((row) => ({
-            ...row,
+            licitacionId: row.licitacionId,
+            title: row.title,
+            organo: row.organo ?? null,
+            fechaPresentacion:
+                row.fechaPresentacion instanceof Date
+                    ? row.fechaPresentacion.toISOString()
+                    : new Date(row.fechaPresentacion).toISOString(),
+            presupuestoBase:
+                row.presupuestoBase === null || row.presupuestoBase === undefined
+                    ? null
+                    : String(row.presupuestoBase),
             diasRestantes: Number(row.diasRestantes),
         }));
     }
