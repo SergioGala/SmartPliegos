@@ -8,6 +8,8 @@ import { Licitacion } from '../scraping/shared/entities/licitacion.entity';
 
 import type {
     DashboardSummary,
+    Distribucion,
+    DistribucionBucket,
     VencimientoItem,
 } from './interfaces/dashboard.interfaces';
 
@@ -87,10 +89,40 @@ export class DashboardService {
         }));
     }
 
-    async distribucion(userId: string) {
+    async distribucion(userId: string): Promise<Distribucion> {
+        const porTipoContratoRows = await this.favRepo
+            .createQueryBuilder('f')
+            .innerJoin('licitaciones', 'l', 'l.id = f."licitacionId"')
+            .where('f."userId" = :userId', { userId })
+            .select(`COALESCE(l."tipoContrato", 'Sin tipo')`, 'key')
+            .addSelect('COUNT(*)', 'count')
+            .groupBy(`COALESCE(l."tipoContrato", 'Sin tipo')`)
+            .orderBy('COUNT(*)', 'DESC')
+            .limit(8)
+            .getRawMany();
+
+        const porCcaaRows = await this.favRepo
+            .createQueryBuilder('f')
+            .innerJoin('licitaciones', 'l', 'l.id = f."licitacionId"')
+            .where('f."userId" = :userId', { userId })
+            .select(`COALESCE(l."ccaa", 'Sin CCAA')`, 'key')
+            .addSelect('COUNT(*)', 'count')
+            .groupBy(`COALESCE(l."ccaa", 'Sin CCAA')`)
+            .orderBy('COUNT(*)', 'DESC')
+            .limit(8)
+            .getRawMany();
+
+        const toBuckets = (
+            rows: Array<{ key: string | null; count: string | number }>,
+        ): DistribucionBucket[] =>
+            rows.map((row) => ({
+                key: row.key ?? 'Sin dato',
+                count: Number(row.count),
+            }));
+
         return {
-            porTipoContrato: [],
-            porCcaa: [],
+            porTipoContrato: toBuckets(porTipoContratoRows),
+            porCcaa: toBuckets(porCcaaRows),
         };
     }
 
