@@ -1,0 +1,1 @@
+export * from './vencimientos-query.dto';

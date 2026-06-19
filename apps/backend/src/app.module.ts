@@ -16,6 +16,7 @@ import { LicitacionesModule } from './modules/licitaciones/licitaciones.module';
 import { InvitationsModule } from './modules/invitations/invitations.module';
 import { AlertsModule } from './modules/alerts/alerts.module';
 import { FavoritosModule } from './modules/favoritos/favoritos.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { SearchModule } from './modules/search/search.module';
 import { OrganosModule } from './modules/organos/organos.module';
 import { RedisModule } from './infrastructure/redis';
@@ -46,6 +47,7 @@ import { KanbanModule } from './modules/kanban/kanban.module';
     InvitationsModule,
     AlertsModule,
     FavoritosModule,
+    DashboardModule,
     SearchModule,
     OrganosModule,
     RedisModule,
