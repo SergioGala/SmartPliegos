@@ -26,6 +26,7 @@ import { SemanticModule } from './modules/semantic/semantic.module';
 import { StorageModule } from './infrastructure/storage';
 import { DocumentsModule } from './modules/documents/documents.module';
 import { RecordatoriosModule } from './modules/recordatorios/recordatorios.module';
+import { KanbanModule } from './modules/kanban/kanban.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { RecordatoriosModule } from './modules/recordatorios/recordatorios.modul
     StorageModule,
     DocumentsModule,
     RecordatoriosModule,
+    KanbanModule,
   ],
   controllers: [AppController],
   providers: [AppService],

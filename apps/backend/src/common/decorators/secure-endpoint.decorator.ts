@@ -4,6 +4,7 @@ import { JwtAuthGuard } from '../guards/auth/jwt-auth.guard';
 import { OwnershipGuard } from '../guards/authorization/ownership.guard';
 import { ValidateOwnership } from './validate-ownership.decorator';
 import { RoleGuard } from '../guards/authorization/role.guard';
+import { OrgRequiredGuard } from '../guards/org-required.guard';
 
 /**
  * Decorador compuesto para endpoints seguros con validación de propiedad
@@ -71,3 +72,12 @@ export const SecureAuthEndpoint = () =>
     ApiForbiddenResponse({ description: 'Rol insuficiente (403)' }),
     UseGuards(JwtAuthGuard, RoleGuard),
   );
+
+/**
+ * Auth (JWT) + exige organización. El orden queda garantizado: los guards de
+ * SecureAuthEndpoint (JWT) corren primero y pueblan request.user, y luego
+ * OrgRequiredGuard lo valida.
+ */
+export function SecureOrgEndpoint() {
+  return applyDecorators(SecureAuthEndpoint(), UseGuards(OrgRequiredGuard));
+}

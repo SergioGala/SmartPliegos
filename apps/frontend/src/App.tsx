@@ -9,6 +9,7 @@ import { BuscarPage } from '@/features/licitaciones/pages/buscar-page';
 import { LicitacionPage } from '@/features/licitaciones/pages/licitacion-page';
 import { GuardadasPage } from './features/favoritos/pages/guardadas-page';
 import { CalendarioPage } from '@/features/calendario/pages/calendario-page';
+import { KanbanPage } from '@/features/kanban/pages/kanban-page';
 
 
 // ─── Auth ───
@@ -72,6 +73,7 @@ function App() {
           <Route path="/buscar" element={<BuscarPage />} />
           <Route path="/alertas" element={<AlertasPage />} />
           <Route path="/guardadas" element={<GuardadasPage />} />
+          <Route path="/kanban" element={<KanbanPage />} />
           <Route path="/analytics" element={<ComingSoon name="Analytics" />} />
           <Route path="/calendario" element={<CalendarioPage />} />
           <Route path="/documentos" element={<DocumentosPage />} />

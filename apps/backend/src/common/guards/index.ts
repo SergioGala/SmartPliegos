@@ -18,3 +18,5 @@ export * from './rate-limiting';
 
 // Business Logic Guards (Plans, Subscriptions, etc.)
 export * from './business';
+
+export { OrgRequiredGuard } from './org-required.guard';
