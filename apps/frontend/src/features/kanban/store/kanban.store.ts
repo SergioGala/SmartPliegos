@@ -38,6 +38,8 @@ export const useKanbanStore = create<KanbanState>()((set, get) => ({
 
     if (!movingCard) return previousBoard;
 
+    const cardToMove: KanbanCardDto = movingCard;
+
     // Insert movingCard into dest column
     const finalColumns = updatedColumns.map((col) => {
       if (col.id === destColumnId) {
@@ -45,7 +47,7 @@ export const useKanbanStore = create<KanbanState>()((set, get) => ({
         // Insert card at position
         let targetPos = position;
         if (targetPos > newCards.length) targetPos = newCards.length;
-        newCards.splice(targetPos, 0, movingCard);
+        newCards.splice(targetPos, 0, cardToMove);
         
         // Re-calculate positions in dest column
         return {
