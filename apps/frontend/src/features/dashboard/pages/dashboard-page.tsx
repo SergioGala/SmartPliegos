@@ -257,7 +257,7 @@ export function DashboardPage() {
         <CardHeader>
           <CardTitle>Publicaciones por semana</CardTitle>
           <CardDescription>
-            Base de datos preparada para la gráfica con Recharts.
+            Evolución semanal de publicaciones totales y coincidencias con tus CCAA.
           </CardDescription>
         </CardHeader>
         <CardContent>
