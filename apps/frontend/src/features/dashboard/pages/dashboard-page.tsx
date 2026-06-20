@@ -15,6 +15,8 @@ import {
   useDashboardVencimientos,
 } from '../hooks/use-dashboard';
 
+import { DashboardWeeklyChart } from '../components/dashboard-weekly-chart';
+
 const numberFormatter = new Intl.NumberFormat('es-ES');
 
 function formatNumber(value: number | undefined) {
@@ -272,26 +274,7 @@ export function DashboardPage() {
               No hay datos suficientes para mostrar la serie semanal.
             </p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[520px] text-sm">
-                <thead>
-                  <tr className="border-b text-left text-muted-foreground">
-                    <th className="py-2 font-medium">Semana</th>
-                    <th className="py-2 font-medium">Total</th>
-                    <th className="py-2 font-medium">En mis CCAA</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {series.map((item) => (
-                    <tr key={item.semana} className="border-b last:border-0">
-                      <td className="py-3">{formatDate(item.semana)}</td>
-                      <td className="py-3">{item.total}</td>
-                      <td className="py-3">{item.enMisCcaa}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <DashboardWeeklyChart data={series} />
           )}
         </CardContent>
       </Card>
