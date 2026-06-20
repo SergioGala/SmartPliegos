@@ -9,7 +9,6 @@ import { SearchLicitacionesDto } from './dto/search-licitaciones.dto';
 import {
   FILTER_WHITELISTS,
   ORGANOS_FILTER_CONFIG,
-  SEARCH_PAGINATION_CONFIG,
   CAMEL_CASE_FIELDS,
 } from './licitaciones.constants';
 
@@ -28,7 +27,7 @@ export class LicitacionesService {
     private readonly orgRepo: Repository<OrganoContratacion>,
     private readonly formatter: LicitacionFormatterService,
     private readonly semanticSearch: SemanticSearchService,
-  ) {}
+  ) { }
 
 
   /**

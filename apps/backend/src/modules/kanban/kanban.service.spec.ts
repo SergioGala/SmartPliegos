@@ -37,9 +37,15 @@ function makeQueryRunner() {
       id: 'generated-id',
       ...data,
     })),
-    save: jest.fn().mockImplementation((_entity, data) =>
-      Promise.resolve(Array.isArray(data) ? data : { ...data, id: data.id ?? 'saved-id' }),
-    ),
+    save: jest.fn().mockImplementation((_entity: unknown, data: Record<string, unknown> | Record<string, unknown>[]) => {
+      if (Array.isArray(data)) {
+        return Promise.resolve(data);
+      }
+      return Promise.resolve({
+        ...data,
+        id: (data['id'] as string | undefined) ?? 'saved-id',
+      });
+    }),
     find: jest.fn(),
     update: jest.fn().mockResolvedValue(undefined),
     delete: jest.fn().mockResolvedValue(undefined),
@@ -75,13 +81,13 @@ describe('KanbanService', () => {
       save: jest.fn(),
     };
     columnRepo = {
-      create: jest.fn().mockImplementation((d) => d),
-      save: jest.fn().mockImplementation((d) => Promise.resolve({ id: 'col-new', ...d })),
+      create: jest.fn().mockImplementation((d: Record<string, unknown>) => d),
+      save: jest.fn().mockImplementation((d: Record<string, unknown>) => Promise.resolve({ id: 'col-new', ...d })),
     };
     cardRepo = {
       findOne: jest.fn(),
-      create: jest.fn().mockImplementation((d) => d),
-      save: jest.fn().mockImplementation((d) => Promise.resolve({ id: CARD_ID, ...d })),
+      create: jest.fn().mockImplementation((d: Record<string, unknown>) => d),
+      save: jest.fn().mockImplementation((d: Record<string, unknown>) => Promise.resolve({ id: CARD_ID, ...d })),
     };
     licitacionRepo = { findOne: jest.fn() };
     queryRunner = makeQueryRunner();

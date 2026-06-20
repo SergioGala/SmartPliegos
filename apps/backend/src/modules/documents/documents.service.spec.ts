@@ -72,7 +72,7 @@ describe('DocumentsService', () => {
   beforeEach(async () => {
     repo = {
       create: jest.fn().mockImplementation((d: Partial<DocumentEntity>) => d),
-      save: jest.fn().mockResolvedValue({ id: 'doc-1' } as DocumentEntity),
+      save: jest.fn().mockResolvedValue({ id: 'doc-1' }),
       findOne: jest.fn(),
       count: jest.fn().mockResolvedValue(0),
       softRemove: jest.fn().mockResolvedValue(undefined),

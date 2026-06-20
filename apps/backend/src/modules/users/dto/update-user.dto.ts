@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { optionalPhoneSchema, optionalTimezoneSchema } from '../../../common/zod';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Role, Plan } from '../enums';
 
 export const updateUserSchema = z.object({
   firstName: z.string().trim().min(1, 'firstName cannot be empty').optional(),
