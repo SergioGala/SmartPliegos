@@ -14,6 +14,26 @@ import type {
     VencimientoItem,
 } from './interfaces/dashboard.interfaces';
 
+interface RawVencimientoRow {
+    licitacionId: string;
+    title: string;
+    organo: string | null;
+    fechaPresentacion: string | Date;
+    presupuestoBase: number | string | null;
+    diasRestantes: string | number;
+}
+
+interface RawDistribucionRow {
+    key: string | null;
+    count: string | number;
+}
+
+interface RawSerieRow {
+    semana: string;
+    total: string | number;
+    enMisCcaa: string | number;
+}
+
 @Injectable()
 export class DashboardService {
     constructor(
@@ -72,7 +92,7 @@ export class DashboardService {
                 'l."presupuestoBase" AS "presupuestoBase"',
                 `CEIL(EXTRACT(EPOCH FROM (l."fechaPresentacion" - now())) / 86400) AS "diasRestantes"`,
             ])
-            .getRawMany();
+            .getRawMany<RawVencimientoRow>();
 
         return rows.map((row) => ({
             licitacionId: row.licitacionId,
@@ -100,7 +120,7 @@ export class DashboardService {
             .groupBy(`COALESCE(l."tipoContrato", 'Sin tipo')`)
             .orderBy('COUNT(*)', 'DESC')
             .limit(8)
-            .getRawMany();
+            .getRawMany<RawDistribucionRow>();
 
         const porCcaaRows = await this.favRepo
             .createQueryBuilder('f')
@@ -111,10 +131,10 @@ export class DashboardService {
             .groupBy(`COALESCE(l."ccaa", 'Sin CCAA')`)
             .orderBy('COUNT(*)', 'DESC')
             .limit(8)
-            .getRawMany();
+            .getRawMany<RawDistribucionRow>();
 
         const toBuckets = (
-            rows: Array<{ key: string | null; count: string | number }>,
+            rows: RawDistribucionRow[],
         ): DistribucionBucket[] =>
             rows.map((row) => ({
                 key: row.key ?? 'Sin dato',
@@ -169,7 +189,7 @@ export class DashboardService {
         const rows = await query
             .groupBy(`date_trunc('week', l."fechaPublicacion")`)
             .orderBy(`date_trunc('week', l."fechaPublicacion")`, 'ASC')
-            .getRawMany();
+            .getRawMany<RawSerieRow>();
 
         return rows.map((row) => ({
             semana: row.semana,
