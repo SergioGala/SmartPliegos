@@ -176,7 +176,7 @@ export function Sidebar() {
   // Nota: Analytics y Calendario (ComingSoon) NO entran en el rail del
   // rediseño; sus rutas siguen existiendo. Si los quieres en el rail, dímelo.
   const NAV: RailItemDef[] = [
-    { path: '/app', label: t('navigation.dashboard') },
+    { path: '/dashboard', label: t('navigation.dashboard') },
     { path: '/buscar', label: t('navigation.search') },
     {
       path: '/alertas',
