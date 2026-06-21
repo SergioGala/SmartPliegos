@@ -29,6 +29,8 @@ import { DocumentsModule } from './modules/documents/documents.module';
 import { RecordatoriosModule } from './modules/recordatorios/recordatorios.module';
 import { KanbanModule } from './modules/kanban/kanban.module';
 
+import { MembersModule } from './modules/members/members.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -58,6 +60,7 @@ import { KanbanModule } from './modules/kanban/kanban.module';
     DocumentsModule,
     RecordatoriosModule,
     KanbanModule,
+    MembersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

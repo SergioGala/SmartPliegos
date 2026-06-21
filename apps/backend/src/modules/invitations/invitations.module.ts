@@ -8,6 +8,8 @@ import { UserEntity } from '../users/entities/user.entity';
 import { EmailModule } from '../../infrastructure/email/email.module';
 import { EmailTemplatesModule } from '../../common/email-templates';
 
+import { MembersModule } from '../members/members.module';
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -17,6 +19,7 @@ import { EmailTemplatesModule } from '../../common/email-templates';
     ]),
     EmailModule,
     EmailTemplatesModule,
+    MembersModule,
   ],
   controllers: [InvitationsController],
   providers: [InvitationsService],

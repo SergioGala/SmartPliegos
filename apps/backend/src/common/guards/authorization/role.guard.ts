@@ -48,6 +48,11 @@ export class RoleGuard implements CanActivate {
       throw new ForbiddenException('Usuario desactivado');
     }
 
+    // SUPER_ADMIN tiene acceso total
+    if (user.role === Role.SUPER_ADMIN) {
+      return true;
+    }
+
     // Verificar que el usuario tiene uno de los roles requeridos
     const hasRole = requiredRoles.includes(user.role);
 
