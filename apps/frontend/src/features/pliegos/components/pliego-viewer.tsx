@@ -14,12 +14,18 @@ interface Props {
 export function PliegoViewer({ pliegoId }: Props) {
   const [url, setUrl] = useState<string | null>(null);
   const [error, setError] = useState(false);
+  const [prevPliegoId, setPrevPliegoId] = useState(pliegoId);
+
+  // Reset state when pliegoId changes (before render, no cascading effect)
+  if (pliegoId !== prevPliegoId) {
+    setPrevPliegoId(pliegoId);
+    setUrl(null);
+    setError(false);
+  }
 
   useEffect(() => {
     let revoked: string | null = null;
     let cancelled = false;
-    setUrl(null);
-    setError(false);
 
     pliegosApi
       .fileObjectUrl(pliegoId)
