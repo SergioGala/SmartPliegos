@@ -19,7 +19,7 @@ function mockFetchOk() {
     headers: new Map([['content-type', 'application/pdf']]),
     arrayBuffer: () =>
       Promise.resolve(PDF_BYTES.buffer.slice(0, PDF_BYTES.byteLength)),
-  } as never);
+  });
 }
 
 describe('PliegosService', () => {
@@ -29,7 +29,7 @@ describe('PliegosService', () => {
     find: jest.fn(),
     findOne: jest.fn(),
     save: jest.fn((x) => Promise.resolve(x)),
-    create: jest.fn((x) => x),
+    create: jest.fn((x: Partial<PliegoDocument>) => x),
     createQueryBuilder: jest.fn(),
   };
   const licitacionesRepo = { findOne: jest.fn() };
@@ -85,7 +85,7 @@ describe('PliegosService', () => {
       expect(pliegosRepo.save).toHaveBeenCalledWith(
         expect.objectContaining({
           status: PliegoStatus.READY,
-          extractedText: expect.stringContaining('solvencia'),
+          extractedText: expect.stringContaining('solvencia') as string,
         }),
       );
     });
@@ -110,7 +110,7 @@ describe('PliegosService', () => {
     it('marca ERROR y continúa si la descarga falla', async () => {
       global.fetch = jest
         .fn()
-        .mockResolvedValue({ ok: false, status: 404 } as never);
+        .mockResolvedValue({ ok: false, status: 404 });
       licitacionesRepo.findOne.mockResolvedValue({
         id: 'lic-1',
         documentos: [{ tipo: 'OTRO', url: 'https://place.example/roto.pdf' }],

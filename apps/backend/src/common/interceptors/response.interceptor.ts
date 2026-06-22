@@ -50,7 +50,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<
           data,
           timestamp: new Date().toISOString(),
           path: request.url,
-        } as ApiResponse<T>;
+        };
       })
     );
   }

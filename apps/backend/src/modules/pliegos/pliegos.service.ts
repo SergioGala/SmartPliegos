@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import pdfParse from 'pdf-parse';
 
+
 import { PliegoDocument, PliegoStatus } from './entities/pliego-document.entity';
 import { Licitacion } from '../scraping/shared/entities/licitacion.entity';
 import { STORAGE_PROVIDER, type IStorageProvider } from '../../infrastructure/storage';
@@ -17,6 +18,8 @@ const MAX_BYTES = 25 * 1024 * 1024; // 25 MB
 const DOWNLOAD_TIMEOUT_MS = 30_000;
 const SNIPPET_CONTEXT = 120;
 const MAX_SNIPPETS = 20;
+const parsePdf = pdfParse as unknown as (data: Buffer) => Promise<{ text: string }>;
+
 
 export interface PliegoSnippet {
   /** Posición del match dentro del texto extraído. */
@@ -203,10 +206,9 @@ export class PliegosService {
 
     let extractedText: string | null = null;
     try {
-      const parsed = await pdfParse(buffer);
-      extractedText = parsed.text?.replace(/\u0000/g, '').trim() || null;
+      const parsed = await parsePdf(buffer);
+      extractedText = parsed.text?.split('\u0000').join('').trim() || null;
     } catch {
-      // PDF escaneado o cifrado: lo servimos igualmente, pero sin búsqueda.
       extractedText = null;
     }
 

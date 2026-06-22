@@ -28,7 +28,7 @@ describe('MembersService', () => {
     count: jest.fn(),
     save: jest.fn((x) => Promise.resolve(x)),
     remove: jest.fn(),
-    create: jest.fn((x) => x),
+    create: jest.fn((x: Partial<OrganizationMember>) => x),
   };
   const audit = { log: jest.fn() };
 
