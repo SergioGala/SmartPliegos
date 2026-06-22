@@ -22,10 +22,11 @@ import { RedisModule } from './infrastructure/redis';
 import { RequestIdMiddleware } from './common/middleware';
 import { AiInfrastructureModule } from './infrastructure/ai';
 import { AiModule } from './modules/ai/ai.module';
+import { SemanticModule } from './modules/semantic/semantic.module';
 import { StorageModule } from './infrastructure/storage';
 import { DocumentsModule } from './modules/documents/documents.module';
 import { RecordatoriosModule } from './modules/recordatorios/recordatorios.module';
-
+import { PliegosModule } from './modules/pliegos/pliegos.module';
 
 @Module({
   imports: [
@@ -50,9 +51,11 @@ import { RecordatoriosModule } from './modules/recordatorios/recordatorios.modul
     RedisModule,
     AiInfrastructureModule,
     AiModule,
-    StorageModule, 
+    SemanticModule,
+    StorageModule,
     DocumentsModule,
     RecordatoriosModule,
+    PliegosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
