@@ -9,8 +9,9 @@ export {
   RateLimitNone,
 } from './rate-limit.decorator';
 export { CurrentUser } from './current-user.decorator';
+export { CurrentOrg } from './current-org.decorator';
 export { ValidateOwnership } from './validate-ownership.decorator';
-export { SecureOwnershipEndpoint, SecureAuthEndpoint } from './secure-endpoint.decorator';
+export { SecureOwnershipEndpoint, SecureAuthEndpoint, SecureOrgEndpoint } from './secure-endpoint.decorator';
 export {
   ValidateResourceExists,
 } from './resource-guards.decorator';

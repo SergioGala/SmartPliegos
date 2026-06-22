@@ -26,7 +26,7 @@ export class SeedSuperAdminUser1779477787601 implements MigrationInterface {
     const plainPassword = process.env.SUPER_ADMIN_PASSWORD;
 
     if (!plainPassword) {
-      // eslint-disable-next-line no-console
+       
       console.warn(
         '[SeedSuperAdminUser] SUPER_ADMIN_PASSWORD no definida. ' +
           'Usando contraseña por defecto "ChangeMe123!" — CÁMBIALA cuanto antes.',

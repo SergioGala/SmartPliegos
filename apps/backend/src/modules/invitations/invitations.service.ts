@@ -15,6 +15,7 @@ import { EmailService } from '../../infrastructure/email/email.service';
 import { Role } from '../users/enums';
 import { EmailTemplatesService } from '../../common/email-templates';
 import { randomBytes } from 'crypto';
+import { MembersService } from '../members/members.service';
 
 @Injectable()
 export class InvitationsService {
@@ -28,6 +29,7 @@ export class InvitationsService {
     private readonly emailService: EmailService,
     private readonly emailTemplatesService: EmailTemplatesService,
     private readonly dataSource: DataSource,
+    private readonly membersService: MembersService,
   ) {}
 
   /**
@@ -106,6 +108,8 @@ export class InvitationsService {
       html: emailHtml,
     });
 
+    console.log(`[DEV ONLY] Token de invitación: ${token} (Usar en /join-organization?token=${token})`);
+
     return savedInvitation;
   }
 
@@ -166,6 +170,9 @@ export class InvitationsService {
       });
 
       const _savedUser = await queryRunner.manager.save(UserEntity, newUser);
+
+      // Crear el membership con el rol por defecto (MEMBER)
+      await this.membersService.addMember(invitation.organizationId, _savedUser.id);
 
       // 6. Actualizar invitación a ACCEPTED
       invitation.status = InvitationStatus.ACCEPTED;

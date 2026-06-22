@@ -36,6 +36,7 @@ export interface LicitacionCard {
     id: string;
     nombre: string;
   } | null;
+    _score?: number;
 }
 
 // ═══════════════════════════════════════════════
@@ -118,6 +119,7 @@ export interface SearchParams {
   sortOrder?: 'ASC' | 'DESC';
   page?: number;
   pageSize?: number;
+  mode?: 'text' | 'hybrid';
 }
 
 // Alias por compatibilidad
@@ -134,6 +136,7 @@ export interface SearchResult<T = LicitacionCard> {
   pageSize: number;
   totalPages: number;
   hasMore: boolean;
+  mode?: string;
 }
 
 // Alias por compatibilidad

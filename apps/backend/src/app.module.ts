@@ -16,6 +16,7 @@ import { LicitacionesModule } from './modules/licitaciones/licitaciones.module';
 import { InvitationsModule } from './modules/invitations/invitations.module';
 import { AlertsModule } from './modules/alerts/alerts.module';
 import { FavoritosModule } from './modules/favoritos/favoritos.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { SearchModule } from './modules/search/search.module';
 import { OrganosModule } from './modules/organos/organos.module';
 import { RedisModule } from './infrastructure/redis';
@@ -26,6 +27,9 @@ import { SemanticModule } from './modules/semantic/semantic.module';
 import { StorageModule } from './infrastructure/storage';
 import { DocumentsModule } from './modules/documents/documents.module';
 import { RecordatoriosModule } from './modules/recordatorios/recordatorios.module';
+import { KanbanModule } from './modules/kanban/kanban.module';
+
+import { MembersModule } from './modules/members/members.module';
 import { PliegosModule } from './modules/pliegos/pliegos.module';
 
 @Module({
@@ -46,6 +50,7 @@ import { PliegosModule } from './modules/pliegos/pliegos.module';
     InvitationsModule,
     AlertsModule,
     FavoritosModule,
+    DashboardModule,
     SearchModule,
     OrganosModule,
     RedisModule,
@@ -55,6 +60,8 @@ import { PliegosModule } from './modules/pliegos/pliegos.module';
     StorageModule,
     DocumentsModule,
     RecordatoriosModule,
+    KanbanModule,
+    MembersModule,
     PliegosModule,
   ],
   controllers: [AppController],

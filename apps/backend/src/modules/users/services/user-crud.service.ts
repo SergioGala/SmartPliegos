@@ -1,6 +1,5 @@
 import {
   Injectable,
-  BadRequestException,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
@@ -19,7 +18,7 @@ export class UserCrudService {
     private readonly usersRepository: Repository<UserEntity>,
     private readonly sanitizeHelper: UserSanitizeHelper,
     private readonly queryHelper: UserQueryHelper,
-  ) {}
+  ) { }
 
   /**
    * Listar usuarios de una organización

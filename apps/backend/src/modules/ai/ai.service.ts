@@ -42,6 +42,13 @@ export class AiService {
       { id, vector, payload },
     ]);
   }
+  
+    /** Batch upsert — usado por SemanticIndexerService. */
+  upsertLicitacionVectors(
+    records: { id: string; vector: number[]; payload: Record<string, unknown> }[],
+  ) {
+    return this.vectors.upsert(config.ai.qdrant.collectionLicitaciones, records);
+  }
 
   searchSimilarLicitaciones(
     vector: number[],

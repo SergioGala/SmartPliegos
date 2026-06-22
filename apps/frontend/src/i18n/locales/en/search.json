@@ -9,6 +9,11 @@
     "placeholder": "Search by keyword, CPV, contracting body...",
     "submitButton": "Search"
   },
+  
+  "smartToggle": {
+    "label": "Smart search",
+    "tooltip": "Enable search by meaning in addition to keywords"
+  },
   "results": {
     "empty": "No results",
     "emptyHint": "Try other terms or adjust the filters",

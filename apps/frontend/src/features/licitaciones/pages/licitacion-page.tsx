@@ -12,6 +12,7 @@ import type { LicitacionDocumento } from '../types';
 import { ResumenIaCard } from '../components/resumen-ia-card';
 import { FavoritoButton } from '../../favoritos/components/favorito-button';
 import { PliegosSection } from '../../pliegos/components/pliegos-section';
+import { AddToKanbanButton } from '../../kanban/components';
 import { useFavoritoIds } from '../../favoritos/hooks/use-favoritos';
 import { useLicitacion } from '../hooks/use-licitaciones';
 import {
@@ -369,18 +370,21 @@ export function LicitacionPage() {
               </div>
             )}
 
-            <div className="flex items-center gap-3 border-t border-border/60 pt-4">
-              <FavoritoButton licitacionId={lic.id} isSaved={isFavorite} />
-              {sourceUrl && (
-                <a
-                  href={sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-primary px-4 py-2.5 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.06em] text-primary-foreground transition-transform hover:-translate-y-0.5"
-                >
-                  ↗ {sourceLabel}
-                </a>
-              )}
+            <div className="flex flex-col gap-3 border-t border-border/60 pt-4">
+              <div className="flex items-center gap-3">
+                <FavoritoButton licitacionId={lic.id} isSaved={isFavorite} />
+                {sourceUrl && (
+                  <a
+                    href={sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-primary px-4 py-2.5 font-mono text-[0.7rem] font-semibold uppercase tracking-[0.06em] text-primary-foreground transition-transform hover:-translate-y-0.5"
+                  >
+                    ↗ {sourceLabel}
+                  </a>
+                )}
+              </div>
+              <AddToKanbanButton licitacionId={lic.id} />
             </div>
           </div>
         </aside>

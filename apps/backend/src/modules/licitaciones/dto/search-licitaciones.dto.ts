@@ -52,6 +52,7 @@ export const searchLicitacionesSchema = z.object({
   fechaHasta: z.string().date().optional(),
   soloConPlazo: z.preprocess(toOptionalBool, z.boolean().optional()),
   organoId: z.string().uuid().optional(),
+  mode: z.enum(['text', 'semantic', 'hybrid']).optional(),
 
   // Ordenación
   sortBy: z.enum(['fecha', 'importe', 'deadline']).optional(),
@@ -119,4 +120,7 @@ export class SearchLicitacionesDtoSwagger {
 
   @ApiPropertyOptional({ default: 20, maximum: 100, type: Number })
   pageSize?: number;
+  
+  @ApiPropertyOptional({ enum: ['text', 'semantic', 'hybrid'], description: 'Estrategia de búsqueda (default: text)' })
+  mode?: 'text' | 'semantic' | 'hybrid';
 }

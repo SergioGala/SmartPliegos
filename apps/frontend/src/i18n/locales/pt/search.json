@@ -9,6 +9,11 @@
     "placeholder": "Pesquisar por palavra-chave, CPV, órgão de contratação...",
     "submitButton": "Pesquisar"
   },
+  
+  "smartToggle": {
+    "label": "Pesquisa inteligente",
+    "tooltip": "Ativa a pesquisa por significado além das palavras-chave"
+  },
   "results": {
     "empty": "Sem resultados",
     "emptyHint": "Tenta com outros termos ou ajusta os filtros",

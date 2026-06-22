@@ -9,6 +9,10 @@
     "placeholder": "Cerca per paraula clau, CPV, òrgan de contractació...",
     "submitButton": "Cercar"
   },
+  "smartToggle": {
+    "label": "Cerca intel·ligent",
+    "tooltip": "Activa la cerca per significat a més de per paraules clau"
+  },
   "results": {
     "empty": "Sense resultats",
     "emptyHint": "Prova amb altres termes o ajusta els filtres",

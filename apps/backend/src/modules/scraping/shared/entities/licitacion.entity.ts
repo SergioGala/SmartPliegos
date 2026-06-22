@@ -106,6 +106,10 @@ export class Licitacion {
   @Column({ type: 'boolean', default: false })
   pliegosProcesados!: boolean;
 
+  @Column({ type: 'timestamp', nullable: true })
+  @Index('idx_licitaciones_indexed_at')
+  indexedAt!: Date | null;
+
   @Column({ type: 'uuid', nullable: true })
   organoId!: string | null;
 

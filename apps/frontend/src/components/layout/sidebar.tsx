@@ -176,7 +176,7 @@ export function Sidebar() {
   // Calendario incluido (la ruta /calendario ya existe). Analytics queda fuera
   // del rail por ahora; su ruta sigue existiendo. Si lo quieres, dímelo.
   const NAV: RailItemDef[] = [
-    { path: '/app', label: t('navigation.dashboard') },
+    { path: '/dashboard', label: t('navigation.dashboard') },
     { path: '/buscar', label: t('navigation.search') },
     {
       path: '/alertas',
@@ -184,13 +184,14 @@ export function Sidebar() {
       badge: activeAlertsCount > 0 ? activeAlertsCount : undefined,
     },
     { path: '/guardadas', label: t('navigation.saved') },
+    { path: '/kanban', label: t('navigation.kanban') },
     { path: '/documentos', label: t('navigation.documents') },
     { path: '/calendario', label: t('navigation.calendar') },
     { path: '/ajustes', label: t('navigation.settings') },
   ];
 
   return (
-    <aside className="flex h-screen w-full flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:w-[236px]">
+    <aside className="flex max-h-screen sticky top-0 w-full flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:w-[236px] overflow-y-auto">
       {/* ═══ LOGO ═══ */}
       <Link to="/app" className="flex items-center gap-2.5 px-6 py-6">
         <Isotipo />

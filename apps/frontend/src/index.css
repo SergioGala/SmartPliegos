@@ -45,8 +45,8 @@
     --color-success-foreground: var(--success-foreground);
     --color-warning: var(--warning);
     --color-warning-foreground: var(--warning-foreground);
-    --shadow-glow: 0 0 16px oklch(from var(--primary) l c h / 0.35);
-    --shadow-glow-lg: 0 0 40px oklch(from var(--primary) l c h / 0.5);
+    --shadow-glow: 0 0 16px color-mix(in srgb, var(--primary) 35%, transparent);
+    --shadow-glow-lg: 0 0 40px color-mix(in srgb, var(--primary) 50%, transparent);
     --color-accent-foreground: var(--accent-foreground);
     --color-accent: var(--accent);
     --color-muted-foreground: var(--muted-foreground);
@@ -72,10 +72,12 @@
 }
 
 /* ════════════════════════════════════════════════════════════════════
-   TOKENS CRUDOS DE MARCA (--sp-*) · válidos en ambos modos
-   Fuente de verdad = HEX de los prototipos. WCAG AA sobre --background.
+   TOKENS DE MARCA (--sp-*) + TEMA CLARO (por defecto)
+   Bloque :root unificado — evita doble declaración y confusión.
    ════════════════════════════════════════════════════════════════════ */
 :root {
+    /* ── Tokens crudos de marca ── */
+
     /* Lienzo oscuro (charcoal elevado — NO negro puro) */
     --sp-ink:        #101215;
     --sp-ink-2:      #161920;
@@ -119,13 +121,8 @@
     --sp-crit-l:     #cc3b2e;
     --sp-warn-l:     #9a6a00;
     --sp-ok-l:       #1f8a4c;
-}
 
-/* ════════════════════════════════════════════════════════════════════
-   LIGHT (por defecto, sin .dark) — editorial sobre papel.
-   La lima SOLO como relleno; los acentos de TEXTO van en oliva.
-   ════════════════════════════════════════════════════════════════════ */
-:root {
+    /* ── Tema claro (por defecto) — editorial sobre papel ── */
     --background:            var(--sp-paper);
     --foreground:            var(--sp-on-paper);
     --card:                  var(--sp-paper-card);
@@ -164,9 +161,9 @@
     --lime-deep:             #b4e000;
     --lime-ink:              var(--sp-lime-ink);
 
-    --radius: 0.625rem;   /* PRESERVADO de tu index.css (lo usa --radius-*) */
+    --radius: 0.625rem;   /* PRESERVADO (lo usa --radius-*) */
 
-    /* Rail/sidebar en claro = papel (sigue el tema, no se queda oscuro) */
+    /* Rail/sidebar en claro = papel */
     --sidebar:               #efebe0;
     --sidebar-foreground:    var(--sp-on-paper-dim);
     --sidebar-primary:       var(--sp-lime-solid);
@@ -178,7 +175,7 @@
 }
 
 /* ════════════════════════════════════════════════════════════════════
-   DARK (la app arranca aquí) — charcoal + lima. Reemplaza el .dark violeta.
+   DARK (la app arranca aquí) — charcoal + lima.
    ════════════════════════════════════════════════════════════════════ */
 .dark {
     --background:            var(--sp-ink);
@@ -262,24 +259,24 @@
     background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background: oklch(from var(--foreground) l c h / 0.15);
+    background: color-mix(in srgb, var(--foreground) 15%, transparent);
     border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: oklch(from var(--foreground) l c h / 0.25);
+    background: color-mix(in srgb, var(--foreground) 25%, transparent);
 }
 
 /* Firefox */
 * {
     scrollbar-width: thin;
-    scrollbar-color: oklch(from var(--foreground) l c h / 0.15) transparent;
+    scrollbar-color: color-mix(in srgb, var(--foreground) 15%, transparent) transparent;
 }
 
 /* ═══════════════════════════════════════════════════════
    SELECTION
    ═══════════════════════════════════════════════════════ */
 ::selection {
-    background: oklch(from var(--primary) l c h / 0.3);
+    background: color-mix(in srgb, var(--primary) 30%, transparent);
     color: var(--foreground);
 }
 
@@ -293,15 +290,15 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   UTILITIES (tuyas — conservadas)
+   UTILITIES (conservadas)
    ═══════════════════════════════════════════════════════ */
 
-/* Gradient text (ahora lima→verde, ya sin violeta) */
+/* Gradient text (lima→verde) */
 .text-gradient-primary {
     background: linear-gradient(
         135deg,
-        oklch(from var(--primary) l c h),
-        oklch(from var(--chart-3) l c h)
+        var(--primary),
+        var(--chart-3)
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -311,11 +308,11 @@
 /* Glow para elementos destacados */
 .glow-primary {
     box-shadow:
-        0 0 20px oklch(from var(--primary) l c h / 0.25),
-        0 0 40px oklch(from var(--primary) l c h / 0.1);
+        0 0 20px color-mix(in srgb, var(--primary) 25%, transparent),
+        0 0 40px color-mix(in srgb, var(--primary) 10%, transparent);
 }
 
-/* Grain sutil (tuyo) */
+/* Grain sutil */
 .bg-grain {
     position: relative;
 }

@@ -15,7 +15,7 @@ describe('ZodValidationPipe', () => {
     it('returns parsed data when valid', () => {
         const result = pipe.transform(
             { email: 'a@b.dev', age: 21 },
-            { type: 'body', metatype: undefined as never, data: undefined as never },
+            { type: 'body', metatype: undefined as never, data: undefined },
         );
         expect(result).toEqual<Input>({ email: 'a@b.dev', age: 21 });
     });
@@ -26,7 +26,7 @@ describe('ZodValidationPipe', () => {
             pipe.transform({ email: 'not-email', age: 5 }, {
                 type: 'body',
                 metatype: undefined as never,
-                data: undefined as never,
+                data: undefined,
             });
         } catch (e) {
             expect(e).toBeInstanceOf(BadRequestException);
@@ -45,7 +45,7 @@ describe('ZodValidationPipe', () => {
             strictPipe.transform({ a: 'x', extra: 'y' }, {
                 type: 'body',
                 metatype: undefined as never,
-                data: undefined as never,
+                data: undefined,
             }),
         ).toThrow(BadRequestException);
     });

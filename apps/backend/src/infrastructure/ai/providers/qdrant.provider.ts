@@ -59,7 +59,7 @@ export class QdrantProvider implements IVectorStore {
     return result.map((hit) => ({
       id: String(hit.id),
       score: hit.score,
-      payload: (hit.payload ?? {}) as Record<string, unknown>,
+      payload: (hit.payload ?? {}),
     }));
   }
 

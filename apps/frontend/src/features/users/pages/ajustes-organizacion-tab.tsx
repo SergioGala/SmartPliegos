@@ -5,11 +5,12 @@ import { Building2, UserPlus, X, Mail } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { useAuthStore } from '@/stores/auth-store';
-import { usersApi } from '@/features/users/api/users.api';
 import { invitationsApi } from '@/features/users/api/invitations.api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
+import { MemberRow } from '@/features/members/components/member-row';
+import { AuditPanel } from '@/features/members/components/audit-panel';
+import { useOrgMembers } from '@/features/members/hooks/use-members';
 
 interface InviteFormData {
   email: string;
@@ -22,12 +23,11 @@ export function AjustesOrganizacionTab() {
   const isOwner = user?.role === 'ORG_OWNER' || user?.role === 'SUPER_ADMIN';
   const orgId = user?.organizationId;
 
-  const { data: members = [], isLoading: loadingMembers } = useQuery({
-    queryKey: ['org-members', orgId],
-    queryFn: () => usersApi.listByOrganization(orgId!),
-    enabled: !!orgId,
-  });
-
+  const { data: members = [], isLoading: loadingMembers } = useOrgMembers();
+  
+  const currentUserId = user?.id;
+  const myRole = members?.find((m) => m.userId === currentUserId)?.role;
+  const canManage = myRole === 'OWNER' || myRole === 'ADMIN';
   const { data: invitations = [], isLoading: loadingInvitations } = useQuery({
     queryKey: ['org-invitations', orgId],
     queryFn: () => invitationsApi.listByOrganization(orgId!),
@@ -78,8 +78,15 @@ export function AjustesOrganizacionTab() {
         <p className="text-sm text-muted-foreground mt-0.5">{t('organization.subtitle')}</p>
       </div>
 
+      {!orgId && (
+        <div className="bg-amber-500/10 border border-amber-500/20 text-amber-500 p-4 rounded-md text-sm">
+          Aún no formas parte de ninguna organización. Las herramientas de gestión de miembros y facturación no están disponibles.
+        </div>
+      )}
+
       {/* Plan info */}
-      <div className="bg-card border border-border rounded-lg p-5">
+      {orgId && (
+        <div className="bg-card border border-border rounded-lg p-5">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-md bg-primary/10">
             <Building2 className="size-5 text-primary" />
@@ -90,38 +97,28 @@ export function AjustesOrganizacionTab() {
           </div>
         </div>
       </div>
+      )}
 
       {/* Miembros */}
-      <div className="bg-card border border-border rounded-lg p-5">
+      {orgId && (
+        <div className="bg-card border border-border rounded-lg p-5">
         <h3 className="text-sm font-medium mb-3">{t('organization.members.title')}</h3>
         {loadingMembers ? (
           <div className="text-sm text-muted-foreground">{t('common:status.loading')}</div>
         ) : members.length === 0 ? (
           <div className="text-sm text-muted-foreground">{t('organization.members.empty')}</div>
         ) : (
-          <ul className="space-y-2">
+          <div>
             {members.map((m) => (
-              <li key={m.id} className="flex items-center justify-between py-1.5">
-                <div>
-                  <div className="text-sm font-medium">
-                    {m.firstName} {m.lastName}
-                    {m.id === user.id && (
-                      <span className="ml-2 text-xs text-muted-foreground">
-                        ({t('organization.members.you')})
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-xs text-muted-foreground">{m.email}</div>
-                </div>
-                <Badge variant="outline" className="text-xs">{m.role}</Badge>
-              </li>
+              <MemberRow key={m.id} member={m} canManage={canManage} />
             ))}
-          </ul>
+          </div>
         )}
       </div>
+      )}
 
       {/* Invitaciones pendientes (solo owner) */}
-      {isOwner && (
+      {orgId && isOwner && (
         <div className="bg-card border border-border rounded-lg p-5">
           <h3 className="text-sm font-medium mb-3">{t('organization.invitations.title')}</h3>
           {loadingInvitations ? (
@@ -155,7 +152,7 @@ export function AjustesOrganizacionTab() {
       )}
 
       {/* Invitar (solo owner) */}
-      {isOwner && (
+      {orgId && isOwner && (
         <div className="bg-card border border-border rounded-lg p-5">
           <h3 className="text-sm font-medium mb-1">{t('organization.invite.title')}</h3>
           <p className="text-xs text-muted-foreground mb-3">{t('organization.invite.subtitle')}</p>
@@ -180,6 +177,16 @@ export function AjustesOrganizacionTab() {
             <p className="text-xs text-destructive mt-2">{t('organization.invite.errors.invalidEmail')}</p>
           )}
         </div>
+      )}
+
+      {/* nueva sección Actividad (visible solo si canManage) */}
+      {orgId && canManage && (
+        <section className="mt-8">
+          <h3 className="mb-3 text-sm font-medium">Actividad reciente</h3>
+          <div className="bg-card border border-border rounded-lg p-5">
+            <AuditPanel />
+          </div>
+        </section>
       )}
     </div>
   );

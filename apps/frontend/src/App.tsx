@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import { AppLayout } from '@/components/layout/app-layout';
 import { NotFoundPage } from '@/components/layout/not-found-page';
@@ -9,7 +9,8 @@ import { BuscarPage } from '@/features/licitaciones/pages/buscar-page';
 import { LicitacionPage } from '@/features/licitaciones/pages/licitacion-page';
 import { GuardadasPage } from './features/favoritos/pages/guardadas-page';
 import { CalendarioPage } from '@/features/calendario/pages/calendario-page';
-
+import { KanbanPage } from '@/features/kanban/pages/kanban-page';
+import { DashboardPage } from '@/features/dashboard/pages/dashboard-page';
 
 // ─── Auth ───
 import { LoginPage } from '@/features/auth/pages/login-page';
@@ -66,12 +67,13 @@ function App() {
           {/* El home orbital se mueve a /app */}
           <Route path="/app" element={<HomePage />} />
 
-          {/* Redirect para compatibilidad con Sprint A1 */}
-          <Route path="/dashboard" element={<Navigate to="/app" replace />} />
+          {/* Dashboard */}
+          <Route path="/dashboard" element={<DashboardPage />} />
 
           <Route path="/buscar" element={<BuscarPage />} />
           <Route path="/alertas" element={<AlertasPage />} />
           <Route path="/guardadas" element={<GuardadasPage />} />
+          <Route path="/kanban" element={<KanbanPage />} />
           <Route path="/analytics" element={<ComingSoon name="Analytics" />} />
           <Route path="/calendario" element={<CalendarioPage />} />
           <Route path="/documentos" element={<DocumentosPage />} />

@@ -170,5 +170,6 @@ export class UserSignupService {
     });
 
     this.logger.log(`Email de verificación enviado a: ${user.email}`);
+    this.logger.log(`[DEV ONLY] Link de verificación: ${verificationLink}`);
   }
 }
