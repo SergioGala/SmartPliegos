@@ -172,9 +172,9 @@ export function Sidebar() {
   });
   const activeAlertsCount = alerts.filter((a) => a.isActive).length;
 
-  // Navegación del diseño: 6 entradas tipográficas (01–06).
-  // Nota: Analytics y Calendario (ComingSoon) NO entran en el rail del
-  // rediseño; sus rutas siguen existiendo. Si los quieres en el rail, dímelo.
+  // Navegación del rail: 7 entradas tipográficas (01–07).
+  // Calendario incluido (la ruta /calendario ya existe). Analytics queda fuera
+  // del rail por ahora; su ruta sigue existiendo. Si lo quieres, dímelo.
   const NAV: RailItemDef[] = [
     { path: '/app', label: t('navigation.dashboard') },
     { path: '/buscar', label: t('navigation.search') },
@@ -185,6 +185,7 @@ export function Sidebar() {
     },
     { path: '/guardadas', label: t('navigation.saved') },
     { path: '/documentos', label: t('navigation.documents') },
+    { path: '/calendario', label: t('navigation.calendar') },
     { path: '/ajustes', label: t('navigation.settings') },
   ];
 

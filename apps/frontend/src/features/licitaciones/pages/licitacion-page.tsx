@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import type { LicitacionDocumento } from '../types';
 import { ResumenIaCard } from '../components/resumen-ia-card';
 import { FavoritoButton } from '../../favoritos/components/favorito-button';
+import { PliegosSection } from '../../pliegos/components/pliegos-section';
 import { useFavoritoIds } from '../../favoritos/hooks/use-favoritos';
 import { useLicitacion } from '../hooks/use-licitaciones';
 import {
@@ -325,6 +326,9 @@ export function LicitacionPage() {
               </div>
             </section>
           )}
+
+          {/* ── Pliegos (Sprint P10) ── */}
+          <PliegosSection licitacionId={lic.id} />
         </div>
 
         {/* ── DERECHA: panel IA + datos clave (sticky) ── */}
