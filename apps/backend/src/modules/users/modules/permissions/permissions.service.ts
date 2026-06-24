@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Injectable, Logger } from '@nestjs/common';
 import { UserEntity, OrganizationEntity } from '../../entities';
 import { Role, Plan } from '../../enums';
@@ -202,11 +201,27 @@ export class PermissionsService {
   ): CombinedPermission {
     const rolePerms = this.getRolePermissions(user.role);
 
-    let planPerms: any = {};
+    const defaultPlanPerms: OrganizationPlanPermission & UserPlanPermission = {
+      canCreatePipelines: false,
+      canCreateAlerts: false,
+      canUseIntegrations: false,
+      canUseWorkflows: false,
+      canAccessHistorical: false,
+      hasAdvancedSearch: false,
+      hasAdvancedFilters: false,
+    };
+
+    let planPerms: OrganizationPlanPermission & UserPlanPermission = defaultPlanPerms;
     if (organization) {
-      planPerms = this.getOrganizationPlanPermissions(organization.plan);
+      planPerms = {
+        ...defaultPlanPerms,
+        ...this.getOrganizationPlanPermissions(organization.plan),
+      };
     } else if (user.role === Role.PUBLIC_USER && user.userPlan) {
-      planPerms = this.getUserPlanPermissions(user.userPlan);
+      planPerms = {
+        ...defaultPlanPerms,
+        ...this.getUserPlanPermissions(user.userPlan),
+      };
     }
 
     return {

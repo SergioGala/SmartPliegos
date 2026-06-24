@@ -1,5 +1,7 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-yet';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { WinstonModule } from 'nest-winston';
 import { AppController } from './app.controller';
@@ -42,6 +44,7 @@ import { PliegosModule } from './modules/pliegos/pliegos.module';
     WinstonModule.forRoot(winstonConfig),
     ScheduleModule.forRoot(),
     HttpModule.register({ timeout: 120000 }),
+    MembersModule,
     AuthModule,
     UsersModule,
     HealthModule,
@@ -61,8 +64,20 @@ import { PliegosModule } from './modules/pliegos/pliegos.module';
     DocumentsModule,
     RecordatoriosModule,
     KanbanModule,
-    MembersModule,
     PliegosModule,
+    CacheModule.registerAsync({
+      isGlobal: true,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        const url = configService.get<string>('REDIS_URL') ?? 'redis://localhost:6379';
+        const store = await redisStore({
+          url,
+          ttl: 60 * 1000, // 60 seconds default TTL in ms
+        });
+        return { store };
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

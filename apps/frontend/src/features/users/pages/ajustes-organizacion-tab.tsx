@@ -47,7 +47,10 @@ export function AjustesOrganizacionTab() {
     },
     onError: (error) => {
       if (axios.isAxiosError(error)) {
-        if (error.response?.status === 409) {
+        const backendMessage = error.response?.data?.message;
+        if (backendMessage && typeof backendMessage === 'string') {
+          toast.error(backendMessage);
+        } else if (error.response?.status === 409) {
           toast.error(t('organization.invite.errors.alreadyExists'));
         } else if (error.response?.status === 403) {
           toast.error(t('organization.invite.errors.forbidden'));

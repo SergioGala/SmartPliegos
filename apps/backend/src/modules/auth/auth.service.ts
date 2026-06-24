@@ -26,6 +26,7 @@ import {
   OAUTH_GOOGLE_PROVIDER,
   type IOAuthProvider,
 } from '../../infrastructure/oauth';
+import { OrganizationsService } from '../users/modules/organizations/organizations.service';
 
 @Injectable()
 export class AuthService {
@@ -37,6 +38,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly bruteForceService: BruteForceService,
+    private readonly organizationsService: OrganizationsService,
     @Inject(REDIS_CLIENT) private readonly redisClient: RedisClientType,
     @Inject(OAUTH_GOOGLE_PROVIDER) private readonly googleOAuth: IOAuthProvider,
   ) {}
@@ -215,10 +217,12 @@ export class AuthService {
         passwordConfirm,
       );
 
-      await this.bruteForceService.resetAttempts(clientIp);
-      this.logger.log(`Signup completado: ${user.email} desde IP: ${clientIp}`);
+      const userWithOrg = await this.organizationsService.ensureOrganizationForUser(user);
 
-      return this.generateTokensResponse(user);
+      await this.bruteForceService.resetAttempts(clientIp);
+      this.logger.log(`Signup completado: ${userWithOrg.email} desde IP: ${clientIp}`);
+
+      return this.generateTokensResponse(userWithOrg);
     } catch (error) {
       await this.bruteForceService.recordFailedAttempt(clientIp);
       this.logger.error(
@@ -269,8 +273,10 @@ export class AuthService {
         userPlan: Plan.FREE,
       });
 
-      this.logger.log(`Nuevo usuario creado vía Google: ${newUser.email}`);
-      return this.generateTokensResponse(newUser);
+      const newUserWithOrg = await this.organizationsService.ensureOrganizationForUser(newUser);
+
+      this.logger.log(`Nuevo usuario creado vía Google: ${newUserWithOrg.email}`);
+      return this.generateTokensResponse(newUserWithOrg);
     } catch (error) {
       this.logger.error(`Error en Google OAuth: ${(error as Error).message}`);
       throw error;

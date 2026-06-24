@@ -44,8 +44,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
     // Extraer mensaje de la excepción
     let message: string | string[] = 'Internal server error';
     if (typeof exceptionResponse === 'object' && exceptionResponse !== null) {
-      message =
-        (exceptionResponse as any).message || exceptionResponse.toString();
+      const resObj = exceptionResponse as Record<string, unknown>;
+      if ('message' in resObj && (typeof resObj.message === 'string' || Array.isArray(resObj.message))) {
+        message = resObj.message as string | string[];
+      } else {
+        message = exceptionResponse.toString();
+      }
     }
 
     const errorResponse: ErrorResponse = {

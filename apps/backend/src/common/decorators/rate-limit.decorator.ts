@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 import { UseGuards, SetMetadata } from '@nestjs/common';
 import { RateLimitGuard, RATE_LIMIT_KEY } from '../guards/rate-limiting/rate-limit.guard';
@@ -7,17 +5,17 @@ import { RateLimitGuard, RATE_LIMIT_KEY } from '../guards/rate-limiting/rate-lim
 /**
  * Decorador para aplicar Rate Limiting a un endpoint
  */
-export function RateLimit(limit: number, windowMs: number): any {
-  return (target: any, propertyKey?: string | symbol, descriptor?: PropertyDescriptor): any => {
+export function RateLimit(limit: number, windowMs: number): ClassDecorator & MethodDecorator {
+  return (target: object, propertyKey?: string | symbol, descriptor?: PropertyDescriptor): void => {
     const safePropertyKey = propertyKey ?? '';
     const safeDescriptor = descriptor ?? ({} as PropertyDescriptor);
     
     SetMetadata(RATE_LIMIT_KEY, { limit, windowMs })(
       target,
-      safePropertyKey as string | symbol,
+      safePropertyKey,
       safeDescriptor,
     );
-    UseGuards(RateLimitGuard)(target, safePropertyKey as string | symbol, safeDescriptor);
+    UseGuards(RateLimitGuard)(target, safePropertyKey, safeDescriptor);
   };
 }
 

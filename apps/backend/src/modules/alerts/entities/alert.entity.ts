@@ -6,10 +6,13 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  Index,
 } from 'typeorm';
 import { UserEntity } from '../../users/entities/user.entity';
 
 @Entity('alerts')
+@Index(['userId'])
+@Index(['cpvCodes'])
 export class AlertEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;

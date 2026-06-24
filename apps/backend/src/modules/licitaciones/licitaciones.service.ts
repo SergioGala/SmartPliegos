@@ -1,4 +1,6 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, Inject } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from 'cache-manager';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Licitacion } from '../scraping/shared/entities/licitacion.entity';
@@ -16,6 +18,8 @@ import { SemanticSearchService } from '../semantic/semantic-search.service';
 
 
 
+import { LicitacionListItemDto } from './interfaces/licitacion-formatter.interface';
+
 @Injectable()
 export class LicitacionesService {
   private readonly logger = new Logger(LicitacionesService.name);
@@ -27,6 +31,7 @@ export class LicitacionesService {
     private readonly orgRepo: Repository<OrganoContratacion>,
     private readonly formatter: LicitacionFormatterService,
     private readonly semanticSearch: SemanticSearchService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) { }
 
 
@@ -37,10 +42,28 @@ export class LicitacionesService {
    * 'semantic' y 'hybrid'. Ver Sprint 2 · Búsqueda semántica.
    *
    * @param dto - Objeto SearchLicitacionesDto con todos los filtros
-   * @returns {Promise<ISearchResponse>} Respuesta paginada
    */
-  async search(dto: SearchLicitacionesDto): Promise<ISearchResponse<any>> {
-    return this.semanticSearch.search(dto);
+  async search(dto: SearchLicitacionesDto): Promise<ISearchResponse<LicitacionListItemDto>> {
+    const cacheKey = `search:${JSON.stringify(dto)}`;
+    try {
+      const cached = await this.cacheManager.get<ISearchResponse<LicitacionListItemDto>>(cacheKey);
+      if (cached) {
+        this.logger.log(`[Cache Hit] Búsqueda devuelta desde cache para key: ${cacheKey}`);
+        return cached;
+      }
+    } catch (err) {
+      this.logger.warn(`Error al leer cache para búsqueda: ${err instanceof Error ? err.message : 'desconocido'}`);
+    }
+
+    const result = await this.semanticSearch.search(dto);
+
+    try {
+      await this.cacheManager.set(cacheKey, result, 30 * 1000); // cache por 30s
+    } catch (err) {
+      this.logger.warn(`Error al guardar en cache para búsqueda: ${err instanceof Error ? err.message : 'desconocido'}`);
+    }
+
+    return result;
   }
 
 

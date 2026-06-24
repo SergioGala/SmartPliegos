@@ -55,6 +55,7 @@ export class PlaceScraperService {
         const { entries, nextUrl } = this.parser.parseAtomFeed(data);
         this.logger.log(`[PLACE] Pág ${page}: ${entries.length} entries`);
 
+        // secuencial a propósito: throttling
         for (const entry of entries) {
           try {
             const result = await this.upsertWithTransaction(entry);

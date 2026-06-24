@@ -7,6 +7,7 @@ import { REDIS_CLIENT } from '../../infrastructure/redis';
 import { UnauthorizedException } from '@nestjs/common';
 import { Role, Plan } from '../users/enums';
 import { OAUTH_GOOGLE_PROVIDER } from '../../infrastructure/oauth';
+import { OrganizationsService } from '../users/modules/organizations/organizations.service';
 
 const mockUser = {
   id: 'user-uuid-1',
@@ -62,6 +63,10 @@ const mockRedis = {
   exists: jest.fn(),
 };
 
+const mockOrganizationsService = {
+  ensureOrganizationForUser: jest.fn().mockImplementation((user) => Promise.resolve(user)),
+};
+
 describe('AuthService', () => {
   let service: AuthService;
 
@@ -73,6 +78,7 @@ describe('AuthService', () => {
         { provide: UsersService, useValue: mockUsersService },
         { provide: JwtService, useValue: mockJwtService },
         { provide: BruteForceService, useValue: mockBruteForceService },
+        { provide: OrganizationsService, useValue: mockOrganizationsService },
         { provide: REDIS_CLIENT, useValue: mockRedis },
         { provide: OAUTH_GOOGLE_PROVIDER, useValue: mockGoogleOAuthProvider },
       ],

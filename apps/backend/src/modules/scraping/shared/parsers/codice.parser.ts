@@ -98,19 +98,21 @@ export class CodiceParser {
     return { entries, nextUrl };
   }
 
-  private parseEntry(entry: any): ParsedLicitacion | null {
-    const externalId = this.text(entry.id) || '';
+  private parseEntry(entry: unknown): ParsedLicitacion | null {
+    if (!entry || typeof entry !== 'object') return null;
+    const e = entry as Record<string, unknown>;
+    const externalId = this.text(e.id) || '';
     if (!externalId) return null;
 
-    const title = this.text(entry.title) || 'Sin título';
-    const updated = this.text(entry.updated) || new Date().toISOString();
-    const cf = this.getLocal(entry, 'ContractFolderStatus');
+    const title = this.text(e.title) || 'Sin título';
+    const updated = this.text(e.updated) || new Date().toISOString();
+    const cf = this.getLocal(e, 'ContractFolderStatus');
 
     const base = {
       externalId,
       source: 'PLACE',
       title,
-      description: this.text(entry.summary) || null,
+      description: this.text(e.summary) || null,
       updated,
     };
 
@@ -204,7 +206,7 @@ export class CodiceParser {
    *       Address:
    *         CityName: "Albolote (Granada)"    (municipio)
    */
-  private extractGeo(cf: any): {
+  private extractGeo(cf: unknown): {
     provincia: string | null;
     ccaa: string | null;
     municipio: string | null;
@@ -234,19 +236,19 @@ export class CodiceParser {
     return { provincia, ccaa, municipio };
   }
 
-  private extractOrganoId(cf: any): string | null {
+  private extractOrganoId(cf: unknown): string | null {
     const lcp = this.getLocal(cf, 'LocatedContractingParty');
     return this.text(this.getLocal(lcp, 'BuyerProfileURIID'));
   }
 
-  private extractOrganoName(cf: any): string | null {
+  private extractOrganoName(cf: unknown): string | null {
     const lcp = this.getLocal(cf, 'LocatedContractingParty');
     const party = this.getLocal(lcp, 'Party');
     const partyName = this.getLocal(party, 'PartyName');
     return this.text(this.getLocal(partyName, 'Name'));
   }
 
-  private extractOrganoType(cf: any): string | null {
+  private extractOrganoType(cf: unknown): string | null {
     const lcp = this.getLocal(cf, 'LocatedContractingParty');
     // ContractingPartyTypeCode está a nivel de LocatedContractingParty, no de Party
     return (
@@ -255,31 +257,31 @@ export class CodiceParser {
     );
   }
 
-  private extractStatusCode(cf: any): string | null {
+  private extractStatusCode(cf: unknown): string | null {
     return this.text(this.getLocal(cf, 'ContractFolderStatusCode'));
   }
 
-  private extractProjectTypeCode(cf: any): string | null {
+  private extractProjectTypeCode(cf: unknown): string | null {
     const project = this.getLocal(cf, 'ProcurementProject');
     return this.text(this.getLocal(project, 'TypeCode'));
   }
 
-  private extractProcedureCode(cf: any): string | null {
+  private extractProcedureCode(cf: unknown): string | null {
     const tp = this.getLocal(cf, 'TenderingProcess');
     return this.text(this.getLocal(tp, 'ProcedureCode'));
   }
 
-  private extractUrgencyCode(cf: any): string | null {
+  private extractUrgencyCode(cf: unknown): string | null {
     const tp = this.getLocal(cf, 'TenderingProcess');
     return this.text(this.getLocal(tp, 'UrgencyCode'));
   }
 
-  private cpvs(cf: any): string[] {
+  private cpvs(cf: unknown): string[] {
     try {
       const proj = this.getLocal(cf, 'ProcurementProject');
       const cls = this.getLocal(proj, 'RequiredCommodityClassification');
       if (!cls) return [];
-      const items = Array.isArray(cls) ? cls : [cls];
+      const items = Array.isArray(cls) ? (cls as unknown[]) : [cls];
       return items
         .map((i) => this.text(this.getLocal(i, 'ItemClassificationCode')))
         .filter(Boolean) as string[];
@@ -288,7 +290,7 @@ export class CodiceParser {
     }
   }
 
-  private money(cf: any, field: string): string | null {
+  private money(cf: unknown, field: string): string | null {
     try {
       const project = this.getLocal(cf, 'ProcurementProject');
       const budget = this.getLocal(project, 'BudgetAmount');
@@ -299,7 +301,7 @@ export class CodiceParser {
     }
   }
 
-  private deadline(cf: any): Date | null {
+  private deadline(cf: unknown): Date | null {
     try {
       const tp = this.getLocal(cf, 'TenderingProcess');
       const period = this.getLocal(tp, 'TenderSubmissionDeadlinePeriod');
@@ -311,7 +313,7 @@ export class CodiceParser {
     }
   }
 
-  private awardDate(cf: any): Date | null {
+  private awardDate(cf: unknown): Date | null {
     try {
       return this.date(this.text(this.getLocal(this.result(cf), 'AwardDate')));
     } catch {
@@ -319,7 +321,7 @@ export class CodiceParser {
     }
   }
 
-  private winnerName(cf: any): string | null {
+  private winnerName(cf: unknown): string | null {
     try {
       const party = this.getLocal(this.result(cf), 'WinningParty');
       const partyName = this.getLocal(party, 'PartyName');
@@ -329,7 +331,7 @@ export class CodiceParser {
     }
   }
 
-  private winnerNif(cf: any): string | null {
+  private winnerNif(cf: unknown): string | null {
     try {
       const party = this.getLocal(this.result(cf), 'WinningParty');
       const id = this.getLocal(party, 'PartyIdentification');
@@ -339,7 +341,7 @@ export class CodiceParser {
     }
   }
 
-  private awardAmount(cf: any): string | null {
+  private awardAmount(cf: unknown): string | null {
     try {
       const atp = this.getLocal(this.result(cf), 'AwardedTenderedProject');
       const total = this.getLocal(atp, 'LegalMonetaryTotal');
@@ -350,7 +352,7 @@ export class CodiceParser {
     }
   }
 
-  private tenderCount(cf: any): number | null {
+  private tenderCount(cf: unknown): number | null {
     try {
       const val = this.text(
         this.getLocal(this.result(cf), 'ReceivedTenderQuantity'),
@@ -361,7 +363,7 @@ export class CodiceParser {
     }
   }
 
-  private baja(cf: any): number | null {
+  private baja(cf: unknown): number | null {
     const p = this.money(cf, 'TaxExclusiveAmount');
     const a = this.awardAmount(cf);
     if (p && a) {
@@ -372,11 +374,11 @@ export class CodiceParser {
     return null;
   }
 
-  private docs(cf: any): any[] {
+  private docs(cf: unknown): LicitacionDocumento[] {
     try {
       const refs = this.getLocal(cf, 'AdditionalDocumentReference');
       if (!refs) return [];
-      const items = Array.isArray(refs) ? refs : [refs];
+      const items = Array.isArray(refs) ? (refs as unknown[]) : [refs];
       return items
         .map((doc) => {
           const attach = this.getLocal(doc, 'Attachment');
@@ -389,7 +391,7 @@ export class CodiceParser {
             tipo: this.text(this.getLocal(doc, 'DocumentTypeCode')) || 'OTRO',
           };
         })
-        .filter(Boolean);
+        .filter(Boolean) as LicitacionDocumento[];
     } catch {
       return [];
     }
@@ -497,7 +499,7 @@ export class CodiceParser {
   // UTILS — NAVEGACIÓN DEL OBJETO XML
   // ═══════════════════════════════════════════
 
-  private result(cf: any): any {
+  private result(cf: unknown): unknown {
     const r = this.getLocal(cf, 'TenderResult');
     return Array.isArray(r) ? r[0] : r;
   }
@@ -511,11 +513,11 @@ export class CodiceParser {
    *   2. Match con namespace: 'cac:Party' → local name es 'Party' → match
    *   3. No matchea si el local name es distinto (ej. 'ContractingPartyTypeCode')
    */
-  private getLocal(obj: any, localName: string): any {
+  private getLocal(obj: unknown, localName: string): unknown {
     if (!obj || typeof obj !== 'object') return null;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- parser CODICE acepta cualquier shape de XML
-    for (const k of Object.keys(obj)) {
-      if (this.localNameOf(k) === localName) return obj[k];
+    const record = obj as Record<string, unknown>;
+    for (const k of Object.keys(record)) {
+      if (this.localNameOf(k) === localName) return record[k];
     }
     return null;
   }
@@ -531,12 +533,18 @@ export class CodiceParser {
     return idx >= 0 ? key.slice(idx + 1) : key;
   }
 
-  private text(node: any): string | null {
+  private text(node: unknown): string | null {
     if (!node) return null;
     if (typeof node === 'string') return node;
     if (typeof node === 'number') return String(node);
-    if (typeof node === 'object' && node['#text'] !== undefined) {
-      return String(node['#text']);
+    if (typeof node === 'object' && node !== null) {
+      const record = node as Record<string, unknown>;
+      if (record['#text'] !== undefined) {
+        const val = record['#text'];
+        if (typeof val === 'string' || typeof val === 'number' || typeof val === 'boolean') {
+          return String(val);
+        }
+      }
     }
     return null;
   }

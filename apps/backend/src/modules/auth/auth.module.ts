@@ -8,6 +8,7 @@ import { JwtStrategy } from './strategies';
 import { UsersModule } from '../users/users.module';
 import { CommonModule } from '../../common/common.module';
 import { OAuthModule } from '../../infrastructure/oauth';
+import { OrganizationsModule } from '../users/modules/organizations/organizations.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { OAuthModule } from '../../infrastructure/oauth';
     UsersModule,
     CommonModule,
     OAuthModule,
+    OrganizationsModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],

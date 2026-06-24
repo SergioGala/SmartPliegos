@@ -10,6 +10,7 @@ export class UserQueryHelper {
     'user.firstName',
     'user.lastName',
     'user.role',
+    'user.organizationId',
     'user.isActive',
     'user.createdAt',
     'user.updatedAt',
@@ -21,6 +22,7 @@ export class UserQueryHelper {
     'user.firstName',
     'user.lastName',
     'user.role',
+    'user.organizationId',
     'user.isActive',
     'user.createdAt',
   ];

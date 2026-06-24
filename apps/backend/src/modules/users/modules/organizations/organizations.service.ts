@@ -73,6 +73,35 @@ export class OrganizationsService {
 }
 
   /**
+   * Garantiza que el usuario tenga organización. Idempotente: si ya tiene
+   * una (p.ej. porque entró por invitación), no hace nada.
+   *
+   * Pensado para llamarse justo después de activar una cuenta nueva
+   * (signup por email o por Google). Los usuarios que llegan por invitación
+   * NUNCA deberían pasar por aquí (ya tienen organizationId asignado por
+   * InvitationsService), pero el guard de abajo los protege igualmente.
+   */
+  async ensureOrganizationForUser(user: UserEntity): Promise<UserEntity> {
+    if (user.organizationId) {
+      return user;
+    }
+
+    const defaultName = `Organización de ${user.firstName}`.trim();
+
+    await this.createOrganization(user.id, { name: defaultName });
+
+    const updatedUser = await this.usersRepository.findOne({
+      where: { id: user.id },
+    });
+
+    if (!updatedUser) {
+      throw new NotFoundException('Usuario no encontrado tras crear organización');
+    }
+
+    return updatedUser;
+  }
+
+  /**
    * Obtener organización por ID
    * @param organizationId - ID de la organización
    * @returns Datos de la organización

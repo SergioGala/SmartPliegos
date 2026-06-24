@@ -119,7 +119,7 @@ export class Licitacion {
 
   @Column({ type: 'tsvector', nullable: true, select: false })
   @Index('idx_licitaciones_search', { synchronize: false }) // Lo creamos manual
-  searchVector: any;
+  searchVector!: string | null;
 
   @CreateDateColumn()
   createdAt!: Date;

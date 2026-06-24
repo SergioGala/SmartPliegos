@@ -3,9 +3,12 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  Index,
 } from 'typeorm';
 
 @Entity('scraping_logs')
+@Index(['createdAt'])
+@Index(['source'])
 export class ScrapingLog {
   @PrimaryGeneratedColumn('uuid')
   id: string;

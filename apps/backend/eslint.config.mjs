@@ -24,9 +24,9 @@ export default tseslint.config(
   },
   {
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-unsafe-argument': 'warn',
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-unsafe-argument': 'error',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
@@ -36,6 +36,14 @@ export default tseslint.config(
           destructuredArrayIgnorePattern: '^_',
         },
       ],
+    },
+  },
+  {
+    files: ['**/*.spec.ts', '**/*.test.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-floating-promises': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
     },
   },
 );

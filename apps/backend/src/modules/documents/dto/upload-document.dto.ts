@@ -8,7 +8,7 @@ export const uploadDocumentSchema = z.object({
 export type UploadDocumentDto = z.infer<typeof uploadDocumentSchema>;
 
 export class UploadDocumentDtoSwagger {
-  @ApiPropertyOptional({ type: 'string', format: 'binary' }) file!: any;
+  @ApiPropertyOptional({ type: 'string', format: 'binary' }) file!: Express.Multer.File;
   @ApiPropertyOptional({ example: 'Solvencia' }) folder?: string;
   @ApiPropertyOptional({ format: 'uuid' }) licitacionId?: string;
 }
