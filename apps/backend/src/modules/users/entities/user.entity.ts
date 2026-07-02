@@ -4,11 +4,13 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   JoinColumn,
+  Index,
 } from 'typeorm';
 import { Role, Plan, Timezone } from '../enums';
 import { OrganizationEntity } from './organization.entity';
 
 @Entity('users')
+@Index(['organizationId'])
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;

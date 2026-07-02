@@ -1,26 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Licitacion } from '../../scraping/shared/entities/licitacion.entity';
-import { ILicitacionFormatter } from '../interfaces/licitacion-formatter.interface';
-
-
-export interface LicitacionListItemDto {
-  id: string;
-  title: string;
-  estado: unknown;
-  tipoContrato: unknown;
-  procedimiento: unknown;
-  presupuestoBase: number | null;
-  presupuestoConIva: number | null;
-  cpvCodes: unknown;
-  ccaa: unknown;
-  provincia: unknown;
-  fechaPublicacion: unknown;
-  fechaPresentacion: unknown;
-  organo: { id: string; nombre: string } | null;
-  tieneLotes: unknown;
-}
-
-export type LicitacionDetailDto = Record<string, unknown>;
+import {
+  ILicitacionFormatter,
+  LicitacionListItemDto,
+  LicitacionDetailDto,
+} from '../interfaces/licitacion-formatter.interface';
 
 /**
  * Tipo mínimo que esperamos de un valor "decimal-like" devuelto por TypeORM.

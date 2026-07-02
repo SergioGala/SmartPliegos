@@ -6,6 +6,7 @@ import { SearchQueryBuilderService } from '../licitaciones/services/search-query
 import { LicitacionFormatterService } from '../licitaciones/services/licitacion-formatter.service';
 import { SearchLicitacionesDto } from '../licitaciones/dto/search-licitaciones.dto';
 import { ISearchResponse } from '../licitaciones/interfaces/search-response.interface';
+import { LicitacionListItemDto } from '../licitaciones/interfaces/licitacion-formatter.interface';
 import { AiService } from '../ai/ai.service';
 import { EMBEDDINGS_PROVIDER, type IEmbeddingsProvider } from '../../infrastructure/ai';
 import { reciprocalRankFusion } from './rrf';
@@ -43,7 +44,7 @@ export class SemanticSearchService {
       .build();
   }
 
-  async search(dto: SearchLicitacionesDto): Promise<ISearchResponse<any> & { mode: string }> {
+  async search(dto: SearchLicitacionesDto): Promise<ISearchResponse<LicitacionListItemDto> & { mode: string }> {
     const wantSemantic = (dto.mode === 'semantic' || dto.mode === 'hybrid') && !!dto.q?.trim();
 
     // Fallback transparente si no hay embeddings configurados
@@ -108,7 +109,7 @@ export class SemanticSearchService {
         const row = byId.get(p.id);
         return row ? { ...this.formatter.formatList(row), _score: p.score } : null;
       })
-      .filter(Boolean);
+      .filter(Boolean) as LicitacionListItemDto[];
 
     return {
       data,
@@ -122,7 +123,7 @@ export class SemanticSearchService {
   }
 
   /** Búsqueda full-text actual (movida tal cual desde LicitacionesService.search). */
-  private async textSearch(dto: SearchLicitacionesDto): Promise<ISearchResponse<any>> {
+  private async textSearch(dto: SearchLicitacionesDto): Promise<ISearchResponse<LicitacionListItemDto>> {
     const page = Math.max(1, dto.page ?? 1);
     const pageSize = Math.min(Math.max(1, dto.pageSize ?? 20), 100);
 

@@ -337,17 +337,26 @@ export class AlertsService {
         relations: ['user'],
       });
 
-      for (const alert of activeAlerts) {
-        // Verificar si la licitación cumple los criterios
-        if (this.matchesAlert(alert, licitacion)) {
-          await this.sendAlertEmail(alert, licitacion);
-          
-          // Actualizar trigger count y last triggered date
-          alert.lastTriggeredAt = new Date();
-          alert.triggerCount++;
-          await this.alertRepo.save(alert);
-        }
-      }
+      await Promise.all(
+        activeAlerts.map(async (alert) => {
+          try {
+            // Verificar si la licitación cumple los criterios
+            if (this.matchesAlert(alert, licitacion)) {
+              await this.sendAlertEmail(alert, licitacion);
+              
+              // Actualizar trigger count y last triggered date
+              alert.lastTriggeredAt = new Date();
+              alert.triggerCount++;
+              await this.alertRepo.save(alert);
+            }
+          } catch (error) {
+            this.logger.error(
+              `Error procesando alerta individual ${alert.id} para licitación ${licitacion.id}`,
+              error,
+            );
+          }
+        })
+      );
     } catch (error) {
       this.logger.error(
         `Error disparando alertas para licitación ${licitacion.id}`,
@@ -548,43 +557,45 @@ whereIn(qb, 'l.provincia', 'provs', alert.provincias);
     let sent = 0;
     let errors = 0;
 
-    for (const alert of activeAlerts) {
-      try {
-        const destination = alert.email || alert.user?.email;
-        if (!destination) {
-          this.logger.warn(`[Digest] Alerta ${alert.id} sin email destino, skip`);
-          continue;
+    await Promise.all(
+      activeAlerts.map(async (alert) => {
+        try {
+          const destination = alert.email || alert.user?.email;
+          if (!destination) {
+            this.logger.warn(`[Digest] Alerta ${alert.id} sin email destino, skip`);
+            return;
+          }
+
+          const { licitaciones, total } = await this.findLicitacionesForAlert(alert, 10);
+
+          // No enviar email si no hay licitaciones coincidentes
+          if (total === 0) {
+            this.logger.debug(`[Digest] Sin resultados para alerta "${alert.name}", skip`);
+            return;
+          }
+
+          const html = generateAlertDigestEmailTemplate(alert, licitaciones, total);
+          const subject = `📋 ${total} licitación${total !== 1 ? 'es' : ''} para tu alerta "${alert.name}"`;
+
+          await this.emailService.sendEmail({ to: destination, subject, html });
+
+          alert.lastTriggeredAt = new Date();
+          alert.triggerCount += 1;
+          await this.alertRepo.save(alert);
+
+          sent++;
+          this.logger.debug(
+            `[Digest] Enviado a ${destination} — alerta "${alert.name}" — ${total} licitaciones`,
+          );
+        } catch (error) {
+          errors++;
+          this.logger.error(
+            `[Digest] Error procesando alerta ${alert.id}`,
+            error,
+          );
         }
-
-        const { licitaciones, total } = await this.findLicitacionesForAlert(alert, 10);
-
-        // No enviar email si no hay licitaciones coincidentes
-        if (total === 0) {
-          this.logger.debug(`[Digest] Sin resultados para alerta "${alert.name}", skip`);
-          continue;
-        }
-
-        const html = generateAlertDigestEmailTemplate(alert, licitaciones, total);
-        const subject = `📋 ${total} licitación${total !== 1 ? 'es' : ''} para tu alerta "${alert.name}"`;
-
-        await this.emailService.sendEmail({ to: destination, subject, html });
-
-        alert.lastTriggeredAt = new Date();
-        alert.triggerCount += 1;
-        await this.alertRepo.save(alert);
-
-        sent++;
-        this.logger.debug(
-          `[Digest] Enviado a ${destination} — alerta "${alert.name}" — ${total} licitaciones`,
-        );
-      } catch (error) {
-        errors++;
-        this.logger.error(
-          `[Digest] Error procesando alerta ${alert.id}`,
-          error,
-        );
-      }
-    }
+      })
+    );
 
     this.logger.log(
       `[Digest] Finalizado: ${sent} enviados, ${errors} errores`,

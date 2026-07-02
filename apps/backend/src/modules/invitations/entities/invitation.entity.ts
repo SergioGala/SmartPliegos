@@ -6,12 +6,15 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   JoinColumn,
+  Index,
 } from 'typeorm';
 import { InvitationStatus } from '../enums/invitation-status.enum';
 import { OrganizationEntity } from '../../users/entities/organization.entity';
 import { UserEntity } from '../../users/entities/user.entity';
 
 @Entity('invitations')
+@Index(['organizationId'])
+@Index(['email'])
 export class InvitationEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

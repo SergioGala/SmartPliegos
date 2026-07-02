@@ -74,6 +74,7 @@ export class PliegosService {
     let ready = 0;
     let errors = 0;
 
+    // secuencial a propósito: throttling
     for (const fuente of fuentes) {
       const prev = byUrl.get(fuente.url);
       if (prev && prev.status === PliegoStatus.READY) continue; // ya descargado

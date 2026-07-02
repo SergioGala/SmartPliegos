@@ -30,6 +30,7 @@ import { completeSignupSchema, type CompleteSignupDto, CompleteSignupDtoSwagger 
 import { refreshTokenSchema, type RefreshTokenDto, RefreshTokenDtoSwagger } from './dto/refresh-token.dto';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { BruteForceCooldown, RateLimitStrict, SecureAuthEndpoint } from '../../common/decorators';
+import type { AuthUserResponse } from './auth.types';
 
 
 /**
@@ -140,11 +141,7 @@ export class AuthController {
   async login(
     @ZodBody(loginSchema) loginDto: LoginDto,
     @Request() request: ExpressRequest,
-  ): Promise<{
-    access_token: string;
-    refresh_token: string;
-    user: any;
-  }> {
+  ): Promise<AuthUserResponse> {
     const clientIp = this.getClientIp(request);
     return this.authService.login(loginDto, clientIp);
   }
@@ -378,11 +375,7 @@ export class AuthController {
     @Param('token') token: string,
     @ZodBody(completeSignupSchema) completeSignupDto: CompleteSignupDto,
     @Request() request: ExpressRequest,
-  ): Promise<{
-    access_token: string;
-    refresh_token: string;
-    user: any;
-  }> {
+  ): Promise<AuthUserResponse> {
     const clientIp = this.getClientIp(request);
     return this.authService.completeSignup(token, completeSignupDto, clientIp);
   }

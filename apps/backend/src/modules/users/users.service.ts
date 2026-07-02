@@ -1,9 +1,9 @@
-﻿import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './entities';
 import { CreateUserDto, UpdateUserDto } from './dto';
-import { Role } from './enums';
+import { Role, Plan } from './enums';
 import {
   UserCrudService,
   UserAuthService,
@@ -150,7 +150,7 @@ export class UsersService {
     firstName: string;
     lastName: string;
     role?: Role;
-    userPlan?: any;
+    userPlan?: Plan;
   }): Promise<UserEntity> {
     return this.organizationService.createUserWithGoogle(googleUserData);
   }

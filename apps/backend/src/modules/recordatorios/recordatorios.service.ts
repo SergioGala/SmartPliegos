@@ -101,26 +101,28 @@ export class RecordatoriosService {
     });
 
     let sent = 0;
-    for (const rec of due) {
-      try {
-        const to = rec.user?.email;
-        if (!to) {
-          this.logger.warn(`Recordatorio ${rec.id} sin email destino, skip`);
-          continue;
+    await Promise.all(
+      due.map(async (rec) => {
+        try {
+          const to = rec.user?.email;
+          if (!to) {
+            this.logger.warn(`Recordatorio ${rec.id} sin email destino, skip`);
+            return;
+          }
+          await this.emailService.sendEmail({
+            to,
+            subject: `⏰ Tu plazo vence en ${rec.daysBefore} día(s): ${rec.licitacion.title}`,
+            html: recordatorioTemplate(rec.licitacion, rec.daysBefore),
+          });
+          rec.status = 'SENT';
+          rec.sentAt = new Date();
+          await this.repo.save(rec);
+          sent++;
+        } catch (e) {
+          this.logger.error(`Error enviando recordatorio ${rec.id}: ${e instanceof Error ? e.message : 'unknown'}`);
         }
-        await this.emailService.sendEmail({
-          to,
-          subject: `⏰ Tu plazo vence en ${rec.daysBefore} día(s): ${rec.licitacion.title}`,
-          html: recordatorioTemplate(rec.licitacion, rec.daysBefore),
-        });
-        rec.status = 'SENT';
-        rec.sentAt = new Date();
-        await this.repo.save(rec);
-        sent++;
-      } catch (e) {
-        this.logger.error(`Error enviando recordatorio ${rec.id}: ${e instanceof Error ? e.message : 'unknown'}`);
-      }
-    }
+      })
+    );
     if (sent) this.logger.log(`Enviados ${sent} recordatorios`);
     return sent;
   }
