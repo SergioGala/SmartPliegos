@@ -71,7 +71,7 @@ jobs:
         run: npm run build -w frontend
 
       - name: Test backend
-        run: npm test -w backend
+        run: npm test -w backend -- --coverage
         env:
           NODE_ENV: test
           DB_HOST: localhost
@@ -82,3 +82,11 @@ jobs:
           JWT_SECRET: ci-jwt-secret-not-for-prod-must-be-32-chars-long-yes
           RESEND_API_KEY: re_ci_dummy_key
           REDIS_URL: redis://localhost:6379
+      - name: Test frontend
+        run: npm test -w frontend
+
+      - name: Instalar navegadores Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Test e2e
+        run: npm run test:e2e -w frontend
